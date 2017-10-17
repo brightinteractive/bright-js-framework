@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "noImplicitAny": true,
+    "noEmitOnError": true,
+    "noUnusedLocals": true,
+    "strict": true,
+    "allowUnreachableCode": false,
+    "target": "es5",
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "experimentalDecorators": true,
+    "rootDir": "src",
+    "importHelpers": true,
+    "lib": [
+      "dom",
+      "es2017",
+      "esnext.asynciterable"
+    ],
+    "typeRoots": [
+      "typings"
+    ],
+    "types": [
+      "mocha",
+      "chai-enzyme"
+    ]
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

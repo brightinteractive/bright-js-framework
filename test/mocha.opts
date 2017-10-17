@@ -1,0 +1,3 @@
+-r test/init
+src/*/**/*.test.tsx
+src/*/**/*.test.ts

@@ -1,0 +1,20 @@
+# Platform / IDE
+.vscode
+.DS_Store
+.idea
+/.nyc_output
+/coverage
+*.log
+
+# Dependencies
+node_modules
+
+# Build artifacts
+/.build
+/site/public
+.coverrun
+
+# Dist files
+/index.js
+/lib
+/*.d.ts
