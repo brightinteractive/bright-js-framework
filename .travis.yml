@@ -20,4 +20,13 @@ deploy:
   on:
     repo: brightinteractive/bright-js-framework
     branch: master
+- provider: pages
+  skip_cleanup: true
+  github_token:
+    secure: YeejTFSQ3q6+FR1dG/YCtT1IRlPdQUA4TD+6I3F55+gyTCTkdU99gqzenGsfTVSyi/eUGX3n7M/XfnQRcECmpTSZC8Eug6dcfJV3qVDi0mpLC2QDrAzMxV8kHDRs4RIsDAXqlqdFDt0vlWB8mdq4INvk7M7tprI7fpPDewVHyNdC1Vl6CfW3MCE6vJHg4XOoiUQLjuI0qjJ5n6ce8f1Vrpg759vHZvoTpdQQNGbg0jSluDcVvNtcpClQfCz4+FXcOFrZA/DK7AswLeh3X4rkdz+wyfCtzXPMX28uDtkYrEyJYDhQeJEwWxzwdM+m9K6I7Cxzt79yGy4AkwwhGY+z/T2rX6e5uVUSCWwkTuhsFW/TQGBG1FBMKa+3DwxTqMJAvaVYHZrwg6By8YeEIlsYkyzARusC4YZwiXCKChb+dV9MeFO4WeGe/5G7/NBdlrQgYVBIQsEOr2bZp7v0ix20cuWNuMsMrNyyWphZ2nJNit6khgmIkOeS8I5+rwlVCQoEIGbeBwExPUhEPI/fVlsopWFrsC2ri1HgH9o3FhO7/YO0r0F7b+yk1Eh3yCOJanuorA+L7A5HkQry+mnPnuXQy9p18hkil+RKmWHZIssuSenhCa54xfH2zwVErhDqnrmVpFwzyFmZkmRD6UUUlJGWYso0LKFodQC2+SraN1Qw3SE=
+  on:
+    repo: brightinteractive/bright-js-framework
+    branch: master
+  local_dir:
+    ./site/public
 
