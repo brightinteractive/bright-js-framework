@@ -60,10 +60,6 @@ gulp.task('site:typedoc', function () {
     }))
 })
 
-gulp.task('site:typedoc:watch', function () {
-  return gulp.watch(PUBLIC_SOURCE_FILES, gulp.parallel(['site:typedoc']))
-})
-
 gulp.task('site:build', shell.task(['npm run build'], { cwd: './site' }))
 
 gulp.task('site:build:watch', shell.task(['npm run develop'], { cwd: './site' }))
@@ -74,7 +70,7 @@ gulp.task('site', gulp.series(['site:clean', 'site:typedoc', 'site:build']))
 
 gulp.task('site:watch', gulp.series(
   'site:typedoc',
-  gulp.parallel('site:typedoc:watch', 'site:build:watch'),
+  gulp.parallel('site:build:watch'),
 ))
 
 

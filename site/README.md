@@ -17,6 +17,8 @@ After this, you can run the project site in development mode using:
 gulp site:watch
 ```
 
+Note that you'll need to exit and restart this task if you want to reflect any updated API docs.
+
 Important sources:
 --
 
