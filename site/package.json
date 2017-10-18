@@ -1,7 +1,7 @@
 {
   "name": "bright-js-framework-docs",
   "private": true,
-  "description": "Documentation for React Serve",
+  "description": "Documentation for bright-js-framework",
   "version": "1.0.0",
   "author": "Chris Devereux",
   "dependencies": {
