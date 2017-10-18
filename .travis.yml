@@ -1,10 +1,23 @@
 language: node_js
 node_js:
-  - "8"
+- '8'
 cache:
   directories:
-    - $HOME/.npm
+  - "$HOME/.npm"
 before_install:
-  - npm i -g npm@5.5.1 gulp-cli
+- npm i -g npm@5.5.1 gulp-cli
 script:
-  - gulp
+- gulp
+before_deploy:
+- git checkout .
+- gulp build
+- npm version patch
+deploy:
+- provider: npm
+  email: admin@bright-interactive.co.uk
+  api_key:
+    secure: q5XwawaZmDBVCRo2lfxKwg8d3B0ogJTi7kOpVhJrw6+7YO3mee0zt+099pg9V8m8KDuuCWLpN+TCLgJyL/iMzqTsXtkaOO8D8a8NEdjHHIuSM2agppfXuzM2OvfryOxMVkgQ8NlrxmFQehdEYeiqSheIJZLpoHp8ynDBSpL9n7IxpNV0Is6T0qLT/IKLYLVScls5PNDIJ4ckZcsBeRXu0NYpIwsn6oeQO8HvKnUpepelSu9nWZO8dp/B83eH95BkFoPtYOZzDPesomqN8w2b5cfJhh1GH7Zuv69AoO6yX5nuwVqAB2m937yAHslXZquwdRHKfx8FC6FCN/4/ASV0i9n6cQEZh1BIhcqEUMktGOD9lcNaqgzPosPHoEX7k9mpZFznkjeiHC/x3NTtdc+ZVbpmQRUfTnqcFcYhNMBoI1MUOYmAwI0xuD8rxoeFx3h1zQRo9KuqqfuI/sawOYXrQ9tWw8ZkJWdNF9ODV5uv0Vq5hzcUVQOB/CdzExuJ5yEpIVq/kKcDve6kNPWrmRwwBfKPeTDbxKpXTYpzlPgKOMf4PiMKtGq12CcTpIZ+O9YmR/F+neC/uKHrk35jeM0pOTCwgRYvEL+fR0mebo5vIrFumw1lVDbfS6QixEPR96VVGLwZDsHJfF9XztesxKSFONOGoa0xuzrRJztra7C8osc=
+  on:
+    repo: brightinteractive/bright-js-framework
+    branch: master
+
