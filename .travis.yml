@@ -28,5 +28,5 @@ deploy:
     repo: brightinteractive/bright-js-framework
     branch: master
   local_dir:
-    ./site/public
+    ./docs-site/public
 

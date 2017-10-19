@@ -48,10 +48,6 @@ gulp.task('coverage', gulp.series('coverage:clean', 'coverage:run'))
  * Site generator
  */
 
-gulp.task('site:clean', function () {
-  return del(['./site'])
-})
-
 gulp.task('site:typedoc', function () {
   return gulp.src(PUBLIC_SOURCE_FILES)
     .pipe(typedoc({
@@ -60,13 +56,13 @@ gulp.task('site:typedoc', function () {
     }))
 })
 
-gulp.task('site:build', shell.task(['npm run build'], { cwd: './site' }))
+gulp.task('site:build', shell.task(['npm run build'], { cwd: './docs-site' }))
 
-gulp.task('site:build:watch', shell.task(['npm run develop'], { cwd: './site' }))
+gulp.task('site:build:watch', shell.task(['npm run develop'], { cwd: './docs-site' }))
 
-gulp.task('site:bootstrap', shell.task(['npm install'], { cwd: './site' }))
+gulp.task('site:bootstrap', shell.task(['npm install'], { cwd: './docs-site' }))
 
-gulp.task('site', gulp.series(['site:clean', 'site:typedoc', 'site:build']))
+gulp.task('site', gulp.series(['site:typedoc', 'site:build']))
 
 gulp.task('site:watch', gulp.series(
   'site:typedoc',
