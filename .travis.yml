@@ -1,4 +1,7 @@
 language: node_js
+branches:
+  only:
+    - master
 node_js:
 - '8'
 cache:
@@ -8,11 +11,11 @@ before_install:
 - npm i -g npm@5.5.1 gulp-cli
 script:
 - gulp
-before_deploy:
-- gulp site:bootstrap
-- git checkout .
-- gulp build
-- npm version patch
+after_success:
+- 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then gulp site:bootstrap ; fi'
+- 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then gulp build site ; fi'
+- 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then git checkout . ; fi'
+- 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then npm version patch ; fi'
 deploy:
 - provider: npm
   email: admin@bright-interactive.co.uk
@@ -21,6 +24,7 @@ deploy:
   on:
     repo: brightinteractive/bright-js-framework
     branch: master
+  skip_cleanup: true
 - provider: pages
   skip_cleanup: true
   github_token:
