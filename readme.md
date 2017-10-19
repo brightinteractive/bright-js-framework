@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/brightinteractive/bright-js-framework.svg?branch=master)](https://travis-ci.org/brightinteractive/bright-js-framework)
+[![Coverage Status](https://coveralls.io/repos/github/brightinteractive/bright-js-framework/badge.svg?branch=AP-84_coveralls)](https://coveralls.io/github/brightinteractive/bright-js-framework?branch=master)
+![NPM Version](https://img.shields.io/npm/v/@brightinteractive/bright-js-framework.svg)
 
 A batteries-included React framework for rapidly developing fast, testable, desktop-calibre web apps in React.
 

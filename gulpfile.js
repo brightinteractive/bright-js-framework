@@ -6,6 +6,7 @@ const typedoc = require('gulp-typedoc')
 const mocha = require('gulp-mocha')
 const tslint = require('gulp-tslint')
 const format = require('gulp-typescript-formatter')
+const coveralls = require('gulp-coveralls')
 const distFiles = require('./package.json').files
 
 const SOURCE_FILES = ["./src/**/*.ts", "./src/**/*.tsx"]
@@ -63,6 +64,10 @@ gulp.task('coverage:run', shell.task([
 ]))
 
 gulp.task('coverage', gulp.series('coverage:clean', 'coverage:run'))
+
+gulp.task('coverage:submit', function () {
+  return gulp.src('./coverage/lcov.info').pipe(coveralls())
+})
 
 
 /**
@@ -129,6 +134,11 @@ gulp.task('default', gulp.parallel(
   'lint',
   'coverage',
   'typecheck'
+))
+
+gulp.task('ci', gulp.series(
+  'default',
+  'coverage:submit'
 ))
 
 gulp.task('watch', function () {
