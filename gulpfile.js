@@ -5,6 +5,7 @@ const ts = require('gulp-typescript')
 const typedoc = require('gulp-typedoc')
 const mocha = require('gulp-mocha')
 const tslint = require('gulp-tslint')
+const format = require('gulp-typescript-formatter')
 const distFiles = require('./package.json').files
 
 const SOURCE_FILES = ["./src/**/*.ts", "./src/**/*.tsx"]
@@ -29,6 +30,26 @@ gulp.task('typecheck', function () {
   return gulp.src(TEST_FILES)
     .pipe(ts())
 })
+
+
+/** Autofixing & formatting */
+
+gulp.task('format', function () {
+  return gulp.src('src/**/*.ts')
+    .pipe(format({
+        baseDir: '.',
+        tslint: true,
+        editorconfig: true
+    }))
+    .pipe(gulp.dest('src'))
+})
+
+gulp.task('lint:fix', function () {
+  return gulp.src(SOURCE_FILES)
+    .pipe(tslint({ fix: true }))
+})
+
+gulp.task('fix', gulp.series('format', 'lint:fix'))
 
 
 /** Coverage */
