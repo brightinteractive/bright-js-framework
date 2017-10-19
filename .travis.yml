@@ -1,7 +1,8 @@
 language: node_js
+sudo: required
 branches:
   only:
-    - master
+  - master
 node_js:
 - '8'
 cache:
@@ -12,26 +13,14 @@ before_install:
 script:
 - gulp ci
 after_success:
-- 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then gulp site:bootstrap ; fi'
-- 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then gulp build site ; fi'
-- 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then git checkout . ; fi'
-- 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then npm version patch ; fi'
+- bash ci/github.sh
+- bash ci/predeploy.sh
 deploy:
 - provider: npm
   email: admin@bright-interactive.co.uk
   api_key:
     secure: q5XwawaZmDBVCRo2lfxKwg8d3B0ogJTi7kOpVhJrw6+7YO3mee0zt+099pg9V8m8KDuuCWLpN+TCLgJyL/iMzqTsXtkaOO8D8a8NEdjHHIuSM2agppfXuzM2OvfryOxMVkgQ8NlrxmFQehdEYeiqSheIJZLpoHp8ynDBSpL9n7IxpNV0Is6T0qLT/IKLYLVScls5PNDIJ4ckZcsBeRXu0NYpIwsn6oeQO8HvKnUpepelSu9nWZO8dp/B83eH95BkFoPtYOZzDPesomqN8w2b5cfJhh1GH7Zuv69AoO6yX5nuwVqAB2m937yAHslXZquwdRHKfx8FC6FCN/4/ASV0i9n6cQEZh1BIhcqEUMktGOD9lcNaqgzPosPHoEX7k9mpZFznkjeiHC/x3NTtdc+ZVbpmQRUfTnqcFcYhNMBoI1MUOYmAwI0xuD8rxoeFx3h1zQRo9KuqqfuI/sawOYXrQ9tWw8ZkJWdNF9ODV5uv0Vq5hzcUVQOB/CdzExuJ5yEpIVq/kKcDve6kNPWrmRwwBfKPeTDbxKpXTYpzlPgKOMf4PiMKtGq12CcTpIZ+O9YmR/F+neC/uKHrk35jeM0pOTCwgRYvEL+fR0mebo5vIrFumw1lVDbfS6QixEPR96VVGLwZDsHJfF9XztesxKSFONOGoa0xuzrRJztra7C8osc=
-  on:
-    repo: brightinteractive/bright-js-framework
-    branch: master
   skip_cleanup: true
-- provider: pages
+- provider: script
+  script: gulp site:ci
   skip_cleanup: true
-  github_token:
-    secure: YeejTFSQ3q6+FR1dG/YCtT1IRlPdQUA4TD+6I3F55+gyTCTkdU99gqzenGsfTVSyi/eUGX3n7M/XfnQRcECmpTSZC8Eug6dcfJV3qVDi0mpLC2QDrAzMxV8kHDRs4RIsDAXqlqdFDt0vlWB8mdq4INvk7M7tprI7fpPDewVHyNdC1Vl6CfW3MCE6vJHg4XOoiUQLjuI0qjJ5n6ce8f1Vrpg759vHZvoTpdQQNGbg0jSluDcVvNtcpClQfCz4+FXcOFrZA/DK7AswLeh3X4rkdz+wyfCtzXPMX28uDtkYrEyJYDhQeJEwWxzwdM+m9K6I7Cxzt79yGy4AkwwhGY+z/T2rX6e5uVUSCWwkTuhsFW/TQGBG1FBMKa+3DwxTqMJAvaVYHZrwg6By8YeEIlsYkyzARusC4YZwiXCKChb+dV9MeFO4WeGe/5G7/NBdlrQgYVBIQsEOr2bZp7v0ix20cuWNuMsMrNyyWphZ2nJNit6khgmIkOeS8I5+rwlVCQoEIGbeBwExPUhEPI/fVlsopWFrsC2ri1HgH9o3FhO7/YO0r0F7b+yk1Eh3yCOJanuorA+L7A5HkQry+mnPnuXQy9p18hkil+RKmWHZIssuSenhCa54xfH2zwVErhDqnrmVpFwzyFmZkmRD6UUUlJGWYso0LKFodQC2+SraN1Qw3SE=
-  on:
-    repo: brightinteractive/bright-js-framework
-    branch: master
-  local_dir:
-    ./docs-site/public
-
