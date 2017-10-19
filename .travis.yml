@@ -9,6 +9,7 @@ before_install:
 script:
 - gulp
 before_deploy:
+- gulp site:bootstrap
 - git checkout .
 - gulp build
 - npm version patch
