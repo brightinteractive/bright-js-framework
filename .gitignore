@@ -2,17 +2,15 @@
 .vscode
 .DS_Store
 .idea
-/.nyc_output
-/coverage
-*.log
 
 # Dependencies
 node_modules
 
-# Build artifacts
-/.build
-/site/public
+# Artifacts
 .coverrun
+/.nyc_output
+/coverage
+*.log
 
 # Dist files
 /index.js

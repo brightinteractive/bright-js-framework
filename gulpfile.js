@@ -2,14 +2,16 @@ const gulp = require('gulp')
 const del = require('del')
 const shell = require('gulp-shell')
 const ts = require('gulp-typescript')
+const typedoc = require('gulp-typedoc')
 const mocha = require('gulp-mocha')
 const tslint = require('gulp-tslint')
 const format = require('gulp-typescript-formatter')
 const distFiles = require('./package.json').files
 
-const PRIVATE_INTERFACE_FILES = ["./src/lib/**/*.d.ts"]
 const SOURCE_FILES = ["./src/**/*.ts", "./src/**/*.tsx"]
 const TEST_FILES = ["./src/**/*.test.ts", "./src/**/*.test.tsx"]
+const PUBLIC_SOURCE_FILES = ["./src/api/**/*.ts", "./src/api/**/*.tsx"]
+const PRIVATE_INTERFACE_FILES = ["./src/lib/**/*.d.ts"]
 
 
 /** Test / Lint */
@@ -63,6 +65,32 @@ gulp.task('coverage:run', shell.task([
 gulp.task('coverage', gulp.series('coverage:clean', 'coverage:run'))
 
 
+/**
+ * Site generator
+ */
+
+gulp.task('site:typedoc', function () {
+  return gulp.src(PUBLIC_SOURCE_FILES)
+    .pipe(typedoc({
+      json: 'site/docs.json',
+      module: 'commonjs'
+    }))
+})
+
+gulp.task('site:build', shell.task(['npm run build'], { cwd: './docs-site' }))
+
+gulp.task('site:build:watch', shell.task(['npm run develop'], { cwd: './docs-site' }))
+
+gulp.task('site:bootstrap', shell.task(['npm install'], { cwd: './docs-site' }))
+
+gulp.task('site', gulp.series(['site:typedoc', 'site:build']))
+
+gulp.task('site:watch', gulp.series(
+  'site:typedoc',
+  gulp.parallel('site:build:watch'),
+))
+
+
 /** Build */
 
 gulp.task('build:clean', function () {
@@ -79,17 +107,13 @@ gulp.task('build:delete-private-interfaces', function () {
   return del(PRIVATE_INTERFACE_FILES);
 })
 
-gulp.task('watch', function () {
-  return gulp.watch(SOURCE_FILES, )
-})
-
 gulp.task('rebuild', gulp.series([
   'build:transpile',
   'build:delete-private-interfaces'
 ]))
 
 gulp.task('watch:rebuild', function () {
-  return gulp.watch(SOURCE_FILES, ['rebuild'])
+  return gulp.watch(SOURCE_FILES, gulp.parallel(['rebuild']))
 })
 
 gulp.task('build', gulp.series(
@@ -108,5 +132,5 @@ gulp.task('default', gulp.parallel(
 ))
 
 gulp.task('watch', function () {
-  return gulp.watch(SOURCE_FILES, ['default'])
+  return gulp.watch(SOURCE_FILES, gulp.parallel(['default']))
 })

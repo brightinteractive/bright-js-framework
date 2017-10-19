@@ -22,6 +22,7 @@
     "gulp-mocha": "^4.3.1",
     "gulp-shell": "^0.6.3",
     "gulp-tslint": "^8.1.2",
+    "gulp-typedoc": "^2.1.0",
     "gulp-typescript": "^3.2.2",
     "gulp-typescript-formatter": "^0.1.3",
     "jsdom": "^11.1.0",
@@ -51,14 +52,14 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/brightinteractive/react-serve.git"
+    "url": "git+https://github.com/brightinteractive/bright-js-framework.git"
   },
   "author": "Bright Interactive",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/brightinteractive/react-serve/issues"
+    "url": "https://github.com/brightinteractive/bright-js-framework/issues"
   },
-  "homepage": "https://github.com/brightinteractive/react-serve#readme",
+  "homepage": "https://github.com/brightinteractive/bright-js-framework#readme",
   "files": [
     "server.js",
     "index.js",
