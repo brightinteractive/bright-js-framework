@@ -51,7 +51,7 @@ gulp.task('coverage', gulp.series('coverage:clean', 'coverage:run'))
 gulp.task('site:typedoc', function () {
   return gulp.src(PUBLIC_SOURCE_FILES)
     .pipe(typedoc({
-      json: 'site/docs.json',
+      json: 'docs-site/docs.json',
       module: 'commonjs'
     }))
 })
