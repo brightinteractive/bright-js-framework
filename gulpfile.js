@@ -6,6 +6,7 @@ const typedoc = require('gulp-typedoc')
 const mocha = require('gulp-mocha')
 const tslint = require('gulp-tslint')
 const format = require('gulp-typescript-formatter')
+const pages = require('gulp-gh-pages')
 const coveralls = require('gulp-coveralls')
 const distFiles = require('./package.json').files
 
@@ -74,6 +75,8 @@ gulp.task('coverage:submit', function () {
  * Site generator
  */
 
+gulp.task('site:bootstrap', shell.task(['npm install'], { cwd: './docs-site' }))
+
 gulp.task('site:typedoc', function () {
   return gulp.src(PUBLIC_SOURCE_FILES)
     .pipe(typedoc({
@@ -86,9 +89,11 @@ gulp.task('site:build', shell.task(['npm run build'], { cwd: './docs-site' }))
 
 gulp.task('site:build:watch', shell.task(['npm run develop'], { cwd: './docs-site' }))
 
-gulp.task('site:bootstrap', shell.task(['npm install'], { cwd: './docs-site' }))
-
 gulp.task('site', gulp.series(['site:typedoc', 'site:build']))
+
+gulp.task('site:ci', gulp.series('site:bootstrap', 'site', function () {
+  return gulp.src('./docs-site/public/**/*').pipe(pages())
+}))
 
 gulp.task('site:watch', gulp.series(
   'site:typedoc',
