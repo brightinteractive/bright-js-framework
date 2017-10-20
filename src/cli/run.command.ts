@@ -6,8 +6,10 @@ import * as express from 'express'
 import * as path from 'path'
 import * as glob from 'glob'
 import * as dotenv from 'dotenv'
+import { pick } from 'lodash'
 import { getWebpackConfig } from '../lib/bundler/getWebpackConfig'
 import { renderHtmlWrapper } from '../lib/server/renderHtmlWrapper'
+import { getConfig } from './getConfig'
 
 interface RunCommandOpts {
   entry: string
@@ -33,14 +35,20 @@ export const runCommand: yargs.CommandModule = {
   },
 
   handler({ entry, port }: RunCommandOpts) {
+    // Load config
+    const appConfig = getConfig()
+
     // Load development environment
     dotenv.config()
+    const frontendEnvironment: NodeJS.ProcessEnv = pick(process.env, appConfig.frontendEnvironment)
 
+    // Configure webpack
     const entrypoints = glob.sync(entry).map((subpath) => path.resolve(subpath))
     const webpackConfig = getWebpackConfig({
       entrypoints,
     })
 
+    // Start server
     const bundler = webpack(webpackConfig)
     const app = express()
 
@@ -49,7 +57,7 @@ export const runCommand: yargs.CommandModule = {
 
     app.get('*', (req, res) => {
       res.writeHead(200, { 'Content-Type': 'text/html' })
-      res.write(renderHtmlWrapper())
+      res.write(renderHtmlWrapper({ config: frontendEnvironment }))
       res.end()
     })
 
