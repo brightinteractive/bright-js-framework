@@ -57,7 +57,7 @@
     "url": "git+https://github.com/brightinteractive/bright-js-framework.git"
   },
   "author": "Bright Interactive",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/brightinteractive/bright-js-framework/issues"
   },
