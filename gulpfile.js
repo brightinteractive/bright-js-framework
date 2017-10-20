@@ -8,6 +8,7 @@ const tslint = require('gulp-tslint')
 const format = require('gulp-typescript-formatter')
 const pages = require('gulp-gh-pages')
 const coveralls = require('gulp-coveralls')
+
 const distFiles = require('./package.json').files
 
 const SOURCE_FILES = ["./src/**/*.ts", "./src/**/*.tsx"]
@@ -15,11 +16,12 @@ const TEST_FILES = ["./src/**/*.test.ts", "./src/**/*.test.tsx"]
 const PUBLIC_SOURCE_FILES = ["./src/api/**/*.ts", "./src/api/**/*.tsx"]
 const PRIVATE_INTERFACE_FILES = ["./src/lib/**/*.d.ts"]
 
+const tsProject = ts.createProject('tsconfig.json')
 
 /** Test / Lint */
 
 gulp.task('lint', function () {
-  return gulp.src(SOURCE_FILES)
+  return tsProject.src()
     .pipe(tslint())
 })
 
@@ -30,7 +32,7 @@ gulp.task('test', function () {
 
 gulp.task('typecheck', function () {
   return gulp.src(TEST_FILES)
-    .pipe(ts())
+    .pipe(tsProject())
 })
 
 
@@ -47,7 +49,7 @@ gulp.task('format', function () {
 })
 
 gulp.task('lint:fix', function () {
-  return gulp.src(SOURCE_FILES)
+  return tsProject.src()
     .pipe(tslint({ fix: true }))
 })
 
@@ -108,8 +110,8 @@ gulp.task('build:clean', function () {
 });
 
 gulp.task('build:transpile', function () {
-  return gulp.src(SOURCE_FILES)
-    .pipe(ts())
+  return tsProject.src()
+    .pipe(tsProject())
     .pipe(gulp.dest('.'))
 })
 
