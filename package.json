@@ -3,14 +3,22 @@
   "version": "1.0.2",
   "description": "React at the speed of ⚡️",
   "devDependencies": {
+    "@types/autoprefixer": "^6.7.3",
     "@types/chai": "^3.5.2",
     "@types/chai-enzyme": "^0.6.2",
+    "@types/express": "^4.0.37",
+    "@types/glob": "^5.0.33",
     "@types/lodash": "^4.14.63",
     "@types/mocha": "^2.2.41",
+    "@types/node": "^8.0.46",
     "@types/prop-types": "^15.5.1",
     "@types/react": "^16.0.9",
-    "@types/react-dom": "^16.0.0",
+    "@types/react-dom": "^16.0.2",
     "@types/rimraf": "^0.0.28",
+    "@types/webpack": "^3.0.13",
+    "@types/webpack-dev-middleware": "^1.9.3",
+    "@types/webpack-hot-middleware": "^2.16.0",
+    "@types/yargs": "^8.0.2",
     "chai": "^3.5.0",
     "chai-enzyme": "^1.0.0-beta.0",
     "cheerio": "1.0.0-rc.1",
@@ -30,6 +38,7 @@
     "jsdom": "^11.1.0",
     "jsdom-global": "^3.0.2",
     "mocha": "^3.3.0",
+    "nyc": "^11.2.1",
     "raf": "^3.4.0",
     "react": "^16.0.0",
     "react-test-renderer": "^16.0.0",
@@ -45,11 +54,27 @@
     "react": "^16.0.0"
   },
   "dependencies": {
+    "autoprefixer": "^7.1.5",
+    "core-js": "^2.5.1",
+    "css-loader": "^0.28.7",
+    "express": "^4.16.2",
+    "glob": "^7.1.2",
+    "json-loader": "^0.5.7",
     "lodash": "^4.17.4",
-    "nyc": "^11.2.1",
+    "node-sass": "^4.5.3",
     "react-dom": "^16.0.0",
+    "sass-loader": "^6.0.6",
+    "source-map-loader": "^0.2.2",
+    "style-loader": "^0.19.0",
+    "ts-loader": "^3.0.4",
     "ts-node": "^3.0.2",
-    "tslib": "^1.8.0"
+    "tslib": "^1.8.0",
+    "url-loader": "^0.6.2",
+    "webpack": "^3.8.1",
+    "webpack-dev-middleware": "^1.12.0",
+    "webpack-hot-middleware": "^2.20.0",
+    "whatwg-fetch": "^2.0.3",
+    "yargs": "^9.0.1"
   },
   "main": "index.js",
   "repository": {
@@ -68,6 +93,10 @@
     "*.d.ts",
     "lib",
     "api",
+    "cli",
     "plugins"
-  ]
+  ],
+  "bin": {
+    "bright-js-framework": "cli/cli.js"
+  }
 }
