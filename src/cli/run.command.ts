@@ -5,6 +5,7 @@ import * as hot from 'webpack-hot-middleware'
 import * as express from 'express'
 import * as path from 'path'
 import * as glob from 'glob'
+import * as dotenv from 'dotenv'
 import { getWebpackConfig } from '../lib/bundler/getWebpackConfig'
 import { renderHtmlWrapper } from '../lib/server/renderHtmlWrapper'
 
@@ -32,6 +33,9 @@ export const runCommand: yargs.CommandModule = {
   },
 
   handler({ entry, port }: RunCommandOpts) {
+    // Load development environment
+    dotenv.config()
+
     const entrypoints = glob.sync(entry).map((subpath) => path.resolve(subpath))
     const webpackConfig = getWebpackConfig({
       entrypoints,
