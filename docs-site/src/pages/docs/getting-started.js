@@ -19,10 +19,10 @@ export default () => {
           </li>
           <li>
             <p>
-              Install bright-js-framework and React.
+              Install bright-js-framework.
             </p>
             <CodeBlock language="bash">
-              $ npm install react @brightinteractive/bright-js-framework
+              $ npm install @brightinteractive/bright-js-framework
             </CodeBlock>
           </li>
           <li>
