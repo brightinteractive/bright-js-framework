@@ -63,7 +63,7 @@ gulp.task('coverage:clean', function () {
 })
 
 gulp.task('coverage:run', shell.task([
-  'node_modules/.bin/nyc --reporter html --reporter lcov --extension .ts --extension.tsx --include src/lib --exclude src/**/*.test.ts --exclude src/**/*.test.tsx --all node_modules/.bin/mocha'
+  'node_modules/.bin/nyc --reporter html --reporter lcov --extension .ts --extension .tsx --include src/lib --exclude src/**/*.test.ts --exclude src/**/*.test.tsx --all node_modules/.bin/mocha'
 ]))
 
 gulp.task('coverage', gulp.series('coverage:clean', 'coverage:run'))
