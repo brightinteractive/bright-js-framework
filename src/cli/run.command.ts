@@ -11,7 +11,7 @@ import { getWebpackConfig } from '../lib/bundler/getWebpackConfig'
 import { renderHtmlWrapper } from '../lib/server/renderHtmlWrapper'
 import { getConfig } from './getConfig'
 
-const ENTRY_PATTERN = 'src/pages/**/*.tsx?'
+const ENTRY_PATTERN = 'src/pages/**/*.@(t|j)s?(x)'
 
 interface RunCommandOpts {
   entry: string
