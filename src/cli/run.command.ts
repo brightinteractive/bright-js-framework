@@ -11,6 +11,8 @@ import { getWebpackConfig } from '../lib/bundler/getWebpackConfig'
 import { renderHtmlWrapper } from '../lib/server/renderHtmlWrapper'
 import { getConfig } from './getConfig'
 
+const ENTRY_PATTERN = 'src/pages/**/*.tsx?'
+
 interface RunCommandOpts {
   entry: string
   port: number
@@ -20,12 +22,6 @@ export const runCommand: yargs.CommandModule = {
   command: 'run',
 
   builder: {
-    entry: {
-      alias: 'e',
-      type: 'string',
-      description: 'Path pattern to load pages from',
-      default: './src/pages/**/*.tsx',
-    },
     port: {
       alias: 'port',
       type: 'number',
@@ -34,7 +30,7 @@ export const runCommand: yargs.CommandModule = {
     },
   },
 
-  handler({ entry, port }: RunCommandOpts) {
+  handler({ port }: RunCommandOpts) {
     // Load config
     const appConfig = getConfig()
 
@@ -42,8 +38,8 @@ export const runCommand: yargs.CommandModule = {
     dotenv.config()
     const frontendEnvironment: NodeJS.ProcessEnv = pick(process.env, appConfig.frontendEnvironment)
 
-    // Configure webpack
-    const entrypoints = glob.sync(entry).map((subpath) => path.resolve(subpath))
+    // Get development webpack config starting from the entry files
+    const entrypoints = glob.sync(ENTRY_PATTERN).map((subpath) => path.resolve(subpath))
     const webpackConfig = getWebpackConfig({
       entrypoints,
     })
@@ -52,6 +48,7 @@ export const runCommand: yargs.CommandModule = {
     const bundler = webpack(webpackConfig)
     const app = express()
 
+    // Add development middleware
     app.use(hot(bundler))
     app.use(devserver(bundler))
 
@@ -61,6 +58,9 @@ export const runCommand: yargs.CommandModule = {
       res.end()
     })
 
-    app.listen(port)
+    const server = app.listen(port, () => {
+      const address = `http://localhost:${server.address().port}`
+      process.stderr.write(`Development server started on ${address}\n`)
+    })
   }
 }
