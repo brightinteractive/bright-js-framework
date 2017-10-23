@@ -17,7 +17,6 @@ const schema = {
 
 const ajv = new Ajv({ useDefaults: true })
 
-
 export function getConfig(): Config {
   const config = loadConfig()
   return validateConfig(config)
