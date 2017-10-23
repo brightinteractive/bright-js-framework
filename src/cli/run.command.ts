@@ -11,8 +11,6 @@ import { getWebpackConfig } from '../lib/bundler/getWebpackConfig'
 import { renderHtmlWrapper } from '../lib/server/renderHtmlWrapper'
 import { getConfig } from './getConfig'
 
-const ENTRY_PATTERN = 'src/pages/**/*.@(t|j)s?(x)'
-
 interface RunCommandOpts {
   entry: string
   port: number
@@ -31,30 +29,22 @@ export const runCommand: yargs.CommandModule = {
   },
 
   handler({ port }: RunCommandOpts) {
-    // Load config
     const appConfig = getConfig()
+    loadEnvironment()
 
-    // Load development environment
-    dotenv.config()
-    const frontendEnvironment: NodeJS.ProcessEnv = pick(process.env, appConfig.frontendEnvironment)
-
-    // Get development webpack config starting from the entry files
-    const entrypoints = glob.sync(ENTRY_PATTERN).map((subpath) => path.resolve(subpath))
     const webpackConfig = getWebpackConfig({
-      entrypoints,
+      entrypoints: getEntrypointFiles(),
     })
 
-    // Start server
     const bundler = webpack(webpackConfig)
     const app = express()
 
-    // Add development middleware
     app.use(hot(bundler))
     app.use(devserver(bundler))
 
     app.get('*', (req, res) => {
       res.writeHead(200, { 'Content-Type': 'text/html' })
-      res.write(renderHtmlWrapper({ config: frontendEnvironment }))
+      res.write(renderHtmlWrapper({ config: getFrontendEnvironment() }))
       res.end()
     })
 
@@ -62,5 +52,18 @@ export const runCommand: yargs.CommandModule = {
       const address = `http://localhost:${server.address().port}`
       process.stderr.write(`Development server started on ${address}\n`)
     })
+
+    function getEntrypointFiles() {
+      const filePattern = 'src/pages/**/*.@(t|j)s?(x)'
+      return glob.sync(filePattern).map((subpath) => path.resolve(subpath))
+    }
+
+    function loadEnvironment() {
+      dotenv.config()
+    }
+
+    function getFrontendEnvironment(): NodeJS.ProcessEnv {
+      return pick(process.env, appConfig.frontendEnvironment)
+    }
   }
 }
