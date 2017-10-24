@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Location } from 'history'
 
 import { decorateRouteComponent } from './lib/core/route'
+import { Link as _Link } from './lib/components/Link'
 
 /**
  * Declare a component as a route and associate a path with it.
@@ -41,3 +42,10 @@ export interface RouteProps<Params = {}, Query = {}> {
   /** Values extracted from url query params */
   queryParams: Query
 }
+
+/**
+ * Drop-in replacement for HTML anchor element that makes frontend page transitions
+ * instead of forcing a new page load. The accepted properties and behavior of the Link
+ * element are otherwise identical to the anchor element.
+ */
+export const Link: React.ComponentClass<React.HTMLProps<{}>> = _Link
