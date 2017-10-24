@@ -1,15 +1,20 @@
 import RouteRecognizer from 'route-recognizer'
 import * as React from 'react'
 import { createMemoryHistory, Action, Location, LocationDescriptor, History } from 'history'
+import { RouteProps } from '../../index'
 
 export interface RouteConfig {
   path: string
-  handler: React.ComponentType<any>
+  handler: React.ComponentType<RouteProps>
 }
 
 export type Match
   = undefined
-  | { handler: React.ComponentType<any>, location: Location, params: Params, queryParams: QueryParams }
+  | MatchedRoute
+
+export interface MatchedRoute extends RouteProps<any, any> {
+  handler: React.ComponentType<any>
+}
 
 export class Router {
   static match(location: LocationDescriptor, routes: RouteConfig[], action: Action): Match {
@@ -36,6 +41,8 @@ export class Router {
     }
 
     const match = matches[0]
+
+    /* istanbul ignore next */
     if (!match) {
       return undefined
     }
@@ -43,7 +50,7 @@ export class Router {
     const { handler, params } = match
     return {
       handler: handler as any,
-      params,
+      pathParams: params,
       location: this.history.location,
       queryParams: matches.queryParams || {},
     }
@@ -63,11 +70,7 @@ export class Router {
   }
 }
 
-function stringifyLocation(l: LocationDescriptor) {
-  if (typeof l === 'string') {
-    return l
-  }
-
+function stringifyLocation(l: Location) {
   return (
     l.pathname
     + (l.search || '')
