@@ -31,7 +31,7 @@ gulp.task('test', function () {
 })
 
 gulp.task('typecheck', function () {
-  return gulp.src(TEST_FILES)
+  return gulp.src(SOURCE_FILES)
     .pipe(tsProject())
 })
 
