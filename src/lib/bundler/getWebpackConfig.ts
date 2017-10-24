@@ -12,7 +12,7 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
   const extensions = ['.ts', '.tsx', '.js', '.jsx']
 
   return {
-    devtool: 'eval-source-map',
+    devtool: 'cheap-module-source-map',
 
     resolve: {
       extensions,
