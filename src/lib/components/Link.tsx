@@ -10,11 +10,13 @@ export class Link extends React.PureComponent<React.HTMLProps<{}>> {
       }
     }
 
-    if (!isModifiedClick(e)) {
+    if (!isRegularClick(e)) {
       return
     }
 
-    // e.preventDefault()
+    // We don't have access to the routing API yet as DI isn't implemented.
+    // When we do, prevent the default anchor behaviour and fire off the
+    // transition.
   }
 
   render() {
@@ -26,6 +28,10 @@ export class Link extends React.PureComponent<React.HTMLProps<{}>> {
   }
 }
 
+function isRegularClick(e: React.MouseEvent<{}>) {
+  return (e.button === 0) && !isModifiedClick(e)
+}
+
 function isModifiedClick(e: React.MouseEvent<{}>) {
-  return e.metaKey || e.altKey || e.ctrlKey
+  return Boolean(e.metaKey || e.altKey || e.ctrlKey || e.shiftKey)
 }
