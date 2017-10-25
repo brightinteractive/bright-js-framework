@@ -21,7 +21,7 @@
       "esnext.asynciterable"
     ],
     "typeRoots": [
-      "typings"
+      "./typings"
     ],
     "types": [
       "mocha",
@@ -29,6 +29,11 @@
     ]
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "docs-site",
+    "lib",
+    "cli",
+    "index.js",
+    "*.d.ts"
   ]
 }
