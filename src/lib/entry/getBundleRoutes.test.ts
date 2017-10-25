@@ -5,10 +5,10 @@ import { decorateRouteComponent } from '../core/route'
 
 describe('getBundleRoutes()', () => {
   it('should require entry modules and return array of route configs', () => {
-    class Route extends React.Component {}
+    class Route extends React.Component { }
     decorateRouteComponent('/foo', Route)
 
-    class NonRoute extends React.Component {}
+    class NonRoute extends React.Component { }
 
     const modules = [
       () => ({ a: Route, b: NonRoute }),
