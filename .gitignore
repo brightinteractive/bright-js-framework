@@ -16,3 +16,4 @@ node_modules
 /index.js
 /lib
 /*.d.ts
+/cli

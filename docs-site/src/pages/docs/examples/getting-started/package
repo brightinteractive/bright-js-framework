@@ -1,0 +1,12 @@
+{
+  "name": "my-app",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "bright-js-framework run"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@brightinteractive/bright-js-framework": "^1.0.2",
+    "react": "^16.0.0"
+  }
+}
