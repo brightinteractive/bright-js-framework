@@ -10,13 +10,8 @@ describe('isRouteComponent()', () => {
     expect(isRouteComponent(MyRoute)).to.be.true
   })
 
-<<<<<<< HEAD
   it('should return false for non-decorated component', () => {
-    class MyRoute extends React.Component {}
-=======
-  it('should return true for non-decorated component', () => {
     class MyRoute extends React.Component { }
->>>>>>> 2243fdf... AP-86: Code style
     expect(isRouteComponent(MyRoute)).to.be.false
   })
 })
