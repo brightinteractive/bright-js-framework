@@ -42,7 +42,7 @@ export default () => {
               Pages are picked up from all files under the <code>src/pages</code> directory.
             </p>
             <p>
-              Add a new source file for the containing a route component for the path <code>/</code>.
+              To add our first page, we’ll create a new file containing a route component for the path <code>/</code>.
             </p>
             <CodeFile path="src/pages/index.tsx">
               {require('raw!./examples/getting-started/index.tsx')}
