@@ -40,8 +40,14 @@ export class Router {
       return undefined
     }
 
+    // RouteRecognizer allows a route's path to be split into multiple segments, each with
+    // handlers at different points along the path. https://github.com/tildeio/route-recognizer
+    //
+    // Since we don't split our routes into segments, there will only ever be one handler.
     const match = matches[0]
 
+    // Unclear why the typings for RouteRecognizer suggest that this may be undefined, but it never
+    // appears to actually be undefined (no route match returns undefined for the whole array)
     /* istanbul ignore next */
     if (!match) {
       return undefined
