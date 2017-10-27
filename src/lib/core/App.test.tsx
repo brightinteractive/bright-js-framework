@@ -4,7 +4,7 @@ import { mount } from 'enzyme'
 import { createMemoryHistory } from 'history'
 import { App } from './App'
 
-describe('getBundleRoutes()', () => {
+describe('App', () => {
   it('should render the initially matched route', () => {
     const history = createMemoryHistory()
     history.replace('/')
@@ -28,17 +28,15 @@ describe('getBundleRoutes()', () => {
     expect(app).to.have.text('Hello')
   })
 
-  it('should render null if no matched route', () => {
+  it('should throw if no matched route', () => {
     const history = createMemoryHistory()
     history.replace('/')
 
-    const app = mount(
+    expect(() => mount(
       <App
         history={history}
         routes={[]}
       />
-    )
-
-    expect(app).to.be.empty
+    )).to.throw()
   })
 })

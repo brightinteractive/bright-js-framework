@@ -37,7 +37,7 @@ export class App extends React.PureComponent<AppProps> {
       return <Handler {...route} />
 
     } else {
-      return null
+      throw new Error(`You don't have a page set up to handle 404s. Add a new page with @route('*') to catch them`)
     }
   }
 }
