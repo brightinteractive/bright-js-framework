@@ -6,6 +6,7 @@ import * as express from 'express'
 import * as path from 'path'
 import * as glob from 'glob'
 import * as dotenv from 'dotenv'
+import errorOverlay = require('react-dev-utils/errorOverlayMiddleware')
 import { pick } from 'lodash'
 import { getWebpackConfig } from '../lib/bundler/getWebpackConfig'
 import { renderHtmlWrapper } from '../lib/server/renderHtmlWrapper'
@@ -35,12 +36,14 @@ export const runCommand: yargs.CommandModule = {
     const webpackConfig = getWebpackConfig({
       entrypoints: getEntrypointFiles(),
     })
+    webpack
 
     const bundler = webpack(webpackConfig)
     const app = express()
 
-    app.use(hot(bundler))
+    app.use(hot(bundler, { path: '/_hot' }))
     app.use(devserver(bundler))
+    app.use(errorOverlay())
 
     app.get('*', (req, res) => {
       res.writeHead(200, { 'Content-Type': 'text/html' })
