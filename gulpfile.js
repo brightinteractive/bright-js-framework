@@ -1,7 +1,6 @@
 const gulp = require('gulp')
 const del = require('del')
 const shell = require('gulp-shell')
-const ts = require('gulp-typescript')
 const typedoc = require('gulp-typedoc')
 const mocha = require('gulp-mocha')
 const tslint = require('gulp-tslint')
@@ -16,12 +15,10 @@ const TEST_FILES = ["./src/**/*.test.ts", "./src/**/*.test.tsx"]
 const PUBLIC_SOURCE_FILES = ["./src/api/**/*.ts", "./src/api/**/*.tsx"]
 const PRIVATE_INTERFACE_FILES = ["./src/lib/**/*.d.ts"]
 
-const tsProject = ts.createProject('tsconfig.json')
-
 /** Test / Lint */
 
 gulp.task('lint', function () {
-  return tsProject.src()
+  return gulp.src(SOURCE_FILES)
     .pipe(tslint())
 })
 
@@ -30,16 +27,15 @@ gulp.task('test', function () {
     .pipe(mocha())
 })
 
-gulp.task('typecheck', function () {
-  return gulp.src(TEST_FILES)
-    .pipe(tsProject())
-})
+gulp.task('typecheck', shell.task([
+  'node_modules/.bin/tsc --noemit'
+]))
 
 
 /** Autofixing & formatting */
 
 gulp.task('format', function () {
-  return gulp.src('src/**/*.ts')
+  return gulp.src(SOURCE_FILES)
     .pipe(format({
         baseDir: '.',
         tslint: true,
@@ -49,7 +45,7 @@ gulp.task('format', function () {
 })
 
 gulp.task('lint:fix', function () {
-  return tsProject.src()
+  return gulp.src(SOURCE_FILES)
     .pipe(tslint({ fix: true }))
 })
 
@@ -63,7 +59,7 @@ gulp.task('coverage:clean', function () {
 })
 
 gulp.task('coverage:run', shell.task([
-  'node_modules/.bin/nyc --reporter html --reporter lcov --extension .ts --extension.tsx --include src/lib --exclude src/**/*.test.ts --exclude src/**/*.test.tsx --all node_modules/.bin/mocha'
+  'node_modules/.bin/nyc --reporter html --reporter lcov --extension .ts --extension .tsx --include src/lib --exclude src/**/*.test.ts --exclude src/**/*.test.tsx --all node_modules/.bin/mocha'
 ]))
 
 gulp.task('coverage', gulp.series('coverage:clean', 'coverage:run'))
@@ -109,11 +105,7 @@ gulp.task('build:clean', function () {
   return del([...distFiles, './.build'])
 });
 
-gulp.task('build:transpile', function () {
-  return tsProject.src()
-    .pipe(tsProject())
-    .pipe(gulp.dest('.'))
-})
+gulp.task('build:transpile', shell.task(['node_modules/.bin/tsc --outDir .']))
 
 gulp.task('build:delete-private-interfaces', function () {
   return del(PRIVATE_INTERFACE_FILES);
@@ -137,14 +129,20 @@ gulp.task('build', gulp.series(
 
 /** CI entry */
 
-gulp.task('default', gulp.parallel(
-  'lint',
-  'coverage',
-  'typecheck'
-))
+gulp.task('default', gulp.series([
+  'fix',
+  gulp.parallel(
+    'coverage',
+    'typecheck'
+  )
+]))
 
 gulp.task('ci', gulp.series(
-  'default',
+  gulp.parallel(
+    'lint',
+    'coverage',
+    'typecheck'
+  ),
   'coverage:submit'
 ))
 

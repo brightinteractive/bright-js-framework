@@ -12,7 +12,7 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
   const extensions = ['.ts', '.tsx', '.js', '.jsx']
 
   return {
-    devtool: 'eval-source-map',
+    devtool: 'cheap-module-source-map',
 
     resolve: {
       extensions,
@@ -105,7 +105,10 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
     },
 
     plugins: [
-      new webpack.HotModuleReplacementPlugin(),
+      new webpack.NamedModulesPlugin(),
+      new webpack.HotModuleReplacementPlugin({
+        requestTimeout: 2000
+      }),
       new webpack.NoEmitOnErrorsPlugin(),
     ],
 
@@ -115,11 +118,13 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
     },
 
     entry: [
-      'webpack-hot-middleware/client?reload=true&timeout=2000&overlay=false',
+      require.resolve('react-error-overlay'),
+      require.resolve('../entry/errorDisplay'),
+      'webpack-hot-middleware/client?path=/_hot&reload=true&timeout=2000&overlay=false',
       'core-js/shim',
       'whatwg-fetch',
       entrypointLoader({
-        entry: path.resolve(__dirname, '../entry/client'),
+        entry: require.resolve('../entry/client'),
         topLevelModules: entrypoints
       }),
     ],

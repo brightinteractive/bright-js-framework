@@ -8,13 +8,13 @@ registerLanguage('typescript', typescript)
 registerLanguage('bash', bash)
 
 export const CodeBlock = ({ language = 'typescript', children }) => (
-  <SyntaxHighlighter language={language} style={docco}>
+  <SyntaxHighlighter language={language} style={docco} customStyle={{ marginBottom: 0 }}>
     {React.Children.toArray(children).join('')}
   </SyntaxHighlighter>
 )
 
 export const CodeFile = ({ path, ...props }) => (
-  <div style={{ border: '1px solid darkgrey' }}>
+  <div style={{ border: '1px solid darkgrey', marginBottom: '0.5em' }}>
     <div style={{ fontSize: 12, backgroundColor: 'darkgrey', color: 'white', padding: '0.25em' }}>{path}</div>
     <CodeBlock {...props} />
   </div>

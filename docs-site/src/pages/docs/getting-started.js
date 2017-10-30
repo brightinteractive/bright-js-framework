@@ -42,7 +42,7 @@ export default () => {
               Pages are picked up from all files under the <code>src/pages</code> directory.
             </p>
             <p>
-              Add a new source file for the app.
+              To add our first page, we’ll create a new file containing a route component for the path <code>/</code>.
             </p>
             <CodeFile path="src/pages/index.tsx">
               {require('raw!./examples/getting-started/index.tsx')}
@@ -61,6 +61,27 @@ export default () => {
             </p>
           </li>
         </ol>
+      </Section>
+      <Section title="Routing">
+        <p>
+          As we saw in the previous section, pages are picked up from your app's <code>src/pages</code> directory.
+          bright-js-framework provides a <code>@route</code> decorator, which is used to declare that a component should
+          be used as the top-level component for a page route.
+        </p>
+        <p>
+          Route components can be fully or partially dynamic and extract path params from sections. They also
+          receive a special set of props from the page, providing the location, path params and query params:
+        </p>
+        <CodeFile path="src/pages/index.tsx">
+          {require('raw!./examples/getting-started/routing-in-depth.tsx')}
+        </CodeFile>
+        <p>
+          <code>*</code> can be used as a wildcard component (eg. <code>/onboarding/*</code>). It can also be used to
+          produce a 404 page.
+        </p>
+        <CodeFile path="src/pages/404.tsx">
+          {require('raw!./examples/getting-started/404.tsx')}
+        </CodeFile>
       </Section>
     </div>
   )
