@@ -41,7 +41,7 @@ export const ParameterDoc = (p) => {
   return (
     <dl>
       <dt style={{ fontWeight: 'normal' }}><Prototype><Parameter {...p} /></Prototype></dt>
-      <dd style={{ marginTop: '1em', marginLeft: '2em' }}>{p.comment && <MarkdownView source={p.comment.text} />}</dd>
+      <dd style={{ marginTop: '1em', marginLeft: '2em' }}><Comment comment={p.comment} /></dd>
     </dl>
   )
 }
@@ -53,8 +53,33 @@ export const Type = (p) => {
   if (p.type === 'intrinsic') {
     return <span>{p.name}</span>
   }
+  if (p.type === 'reference') {
+    return (
+      <span>
+        {p.name}<GenericParamList params={p.typeArguments} />
+      </span>
+    )
+  }
+  if (p.type === 'union') {
+    return <Delimited delimiter=" | ">{p.types.map((t, i) => <Type key={i} {...t} />)}</Delimited>
+  }
+  if (p.type === 'typeParameter') {
+    return <span>{p.name}</span>
+  }
 
   return <span>???</span>
+}
+
+export const GenericParamList = ({ params }) => {
+  if (!params || params.length === 0) {
+    return null
+  }
+
+  return (
+    <span>
+      {'<'}<Delimited delimiter=", ">{params.map((p, i)=> <Type key={i} {...p} />)}</Delimited>{'>'}
+    </span>
+  )
 }
 
 /**
@@ -66,4 +91,36 @@ export const Prototype = ({ children }) => {
       {children}
     </pre>
   )
+}
+
+/**
+ * Documentation extracted from a comment field.
+ */
+export const Comment = ({ comment, short, extended }) => {
+  if (!comment) {
+    return null
+  }
+
+  return (
+    <MarkdownView
+      source={
+        (comment.shortText && !extended ? comment.shortText : '')
+        + (comment.text && !short ? '\n\n' + comment.text : '')
+      }
+    />
+  )
+}
+
+export const Delimited = ({ delimiter, children }) => {
+  if (React.Children.count(children) === 0) {
+    return null
+  }
+
+  const [first, ...rest] = React.Children.toArray(children)
+
+    return (
+      <span>
+        {first}{rest.map((c, i) => <span key={i}>{delimiter}{c}</span>)}
+      </span>
+    )
 }

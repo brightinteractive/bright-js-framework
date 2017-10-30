@@ -7,7 +7,7 @@ exports.createPages = ({ graphql, boundActionCreators: { createPage } }) => {
   //
   // See: https://www.gatsbyjs.org/docs/creating-and-modifying-pages/
 
-  const json = require('./docs.json')
+  const json = require('./src/docs')
 
   json.children.forEach((moduleDocJson) => {
     createPage({

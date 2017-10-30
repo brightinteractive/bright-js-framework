@@ -10,9 +10,9 @@ const coveralls = require('gulp-coveralls')
 
 const distFiles = require('./package.json').files
 
-const SOURCE_FILES = ["./src/**/*.ts", "./src/**/*.tsx"]
+const SOURCE_FILES = ["./src/*.ts", "./src/*.tsx"]
 const TEST_FILES = ["./src/**/*.test.ts", "./src/**/*.test.tsx"]
-const PUBLIC_SOURCE_FILES = ["./src/api/**/*.ts", "./src/api/**/*.tsx"]
+const PUBLIC_SOURCE_FILES = ["./src/*.ts", "./src/*.tsx"]
 const PRIVATE_INTERFACE_FILES = ["./src/lib/**/*.d.ts"]
 
 /** Test / Lint */
@@ -79,7 +79,8 @@ gulp.task('site:typedoc', function () {
   return gulp.src(PUBLIC_SOURCE_FILES)
     .pipe(typedoc({
       json: 'docs-site/docs.json',
-      module: 'commonjs'
+      module: 'commonjs',
+      tsconfig: 'tsconfig.json'
     }))
 })
 

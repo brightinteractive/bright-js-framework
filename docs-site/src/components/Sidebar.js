@@ -1,9 +1,10 @@
 import React from 'react'
 import Link from 'gatsby-link'
+import { getModuleName } from '../components/Headers'
 import { startCase, kebabCase, flatMap, last } from 'lodash'
 import { Paper, Menu, MenuItem, Divider } from 'material-ui'
 
-const modules = require('../../docs.json').children
+const modules = require('../docs').children
 
 export default ({ pages }) => {
   return (
@@ -25,7 +26,7 @@ export default ({ pages }) => {
           modules.map(({ id, name }) =>
             <MenuItem key={id}>
               <Link to={`/modules/${kebabCase(name)}`}>
-                {'bright-js-framework/' + JSON.parse(name)}
+                {getModuleName(name)}
               </Link>
             </MenuItem>
           )

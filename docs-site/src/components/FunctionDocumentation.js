@@ -1,7 +1,7 @@
 import React from 'react'
-import MarkdownView from 'react-markdown'
 import { Card, CardHeader, CardText } from 'material-ui'
-import { FunctionSignature, ParameterListDoc, Type } from './api-documentation-components'
+import { Subheader } from './Headers'
+import { Comment, FunctionSignature, ParameterListDoc, Type } from './api-documentation-components'
 
 /**
  * Render documentation for each signature of a free function
@@ -23,10 +23,18 @@ export const FunctionSignatureDoc = (props) => (
   <Card>
     <CardHeader title={<FunctionSignature keyword="function" {...props} />} actAsExpander showExpandableButton />
     <CardText actAsExpander>
-      <MarkdownView source={props.comment.shortText} />
+      <Comment short comment={props.comment} />
     </CardText>
     <CardText expandable>
-      <ParameterListDoc {...props} />
+      <Comment extended comment={props.comment} />
     </CardText>
+    {
+      props.parameters && props.parameters.length > 0 && (
+        <CardText expandable>
+          <Subheader>Parameters</Subheader>
+          <ParameterListDoc {...props} />
+        </CardText>
+      )
+    }
   </Card>
 )
