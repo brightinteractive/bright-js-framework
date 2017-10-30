@@ -8,3 +8,14 @@ export const PageHeader = ({ children }) => (
 export const Subheader = ({ children }) => (
   <h3 style={{ fontWeight: 400, fontSize: '18px', textTransform: 'uppercase' }}>{children}</h3>
 )
+
+export function getModuleName(src) {
+  const slug = JSON.parse(src)
+
+  if (slug === 'index') {
+    return 'bright-js-framework'
+
+  } else {
+    return 'bright-js-framework' + JSON.parse(name).replace(/\/index$/, '')
+  }
+}
