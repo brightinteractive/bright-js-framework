@@ -5,7 +5,7 @@ const typedoc = require('gulp-typedoc')
 const mocha = require('gulp-mocha')
 const tslint = require('gulp-tslint')
 const format = require('gulp-typescript-formatter')
-const pages = require('gulp-gh-pages')
+const pages = require('gh-pages')
 const coveralls = require('gulp-coveralls')
 
 const distFiles = require('./package.json').files
@@ -90,8 +90,9 @@ gulp.task('site:build:watch', shell.task(['npm run develop'], { cwd: './docs-sit
 
 gulp.task('site', gulp.series(['site:typedoc', 'site:build']))
 
-gulp.task('site:ci', gulp.series('site:bootstrap', 'site', function () {
-  return gulp.src('./docs-site/public/**/*').pipe(pages())
+gulp.task('site:ci', gulp.series('site:bootstrap', 'site', function (done) {
+  pages.clean()
+  pages.publish('./docs-site/public', undefined, done)
 }))
 
 gulp.task('site:watch', gulp.series(
