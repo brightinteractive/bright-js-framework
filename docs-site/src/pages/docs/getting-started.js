@@ -11,18 +11,20 @@ export default () => {
         <ol>
           <li>
             <p>
-              Initialize a new npm project.
+              First, make sure you have the bright-js-framework cli installed globally.
             </p>
             <CodeBlock language="bash">
-              $ npm init
+              npm install -g @brightinteractive/bright-js-framework
             </CodeBlock>
           </li>
           <li>
             <p>
-              Install bright-js-framework.
+              Create a new directory for your project and initialize it.
             </p>
             <CodeBlock language="bash">
-              $ npm install @brightinteractive/bright-js-framework
+              mkdir my-project
+              cd my-project
+              bright-js-framework init
             </CodeBlock>
           </li>
           <li>
@@ -31,33 +33,27 @@ export default () => {
               servers, building production asset bundles, etc.
             </p>
             <p>
-              Your app's start script just needs to call through to this:
+              Start up a new development server:
             </p>
-            <CodeFile path="package.json">
-              {require('raw!./examples/getting-started/package')}
-            </CodeFile>
+            <CodeBlock language="bash">
+              bright-js-framework run
+            </CodeBlock>
           </li>
           <li>
             <p>
               Pages are picked up from all files under the <code>src/pages</code> directory.
             </p>
             <p>
-              To add our first page, we’ll create a new file containing a route component for the path <code>/</code>.
+              You'll see that the skeleton project contains a couple of placeholder pages.
             </p>
-            <CodeFile path="src/pages/index.tsx">
+            <CodeFile path="src/pages/IndexPage.tsx">
               {require('raw!./examples/getting-started/index.tsx')}
             </CodeFile>
           </li>
           <li>
-            Start the development server.
-            <CodeBlock language="bash">
-              $ npm start
-            </CodeBlock>
-          </li>
-          <li>
             <p>
               Visit <a href="http://localhost:8000">http://localhost:8000</a> and
-              verify that you can see “Hello, world!” in the console.
+              verify that you can see “Hello, world!” on the page.
             </p>
           </li>
         </ol>
@@ -77,7 +73,7 @@ export default () => {
         </CodeFile>
         <p>
           <code>*</code> can be used as a wildcard component (eg. <code>/onboarding/*</code>). It can also be used to
-          produce a 404 page.
+          produce a 404 page. The skeleton project includes an example of using this.
         </p>
         <CodeFile path="src/pages/404.tsx">
           {require('raw!./examples/getting-started/404.tsx')}

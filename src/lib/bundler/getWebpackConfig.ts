@@ -15,35 +15,25 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
     devtool: 'cheap-module-source-map',
 
     resolve: {
-      extensions,
-      modules: [
-        // Needed to run locally linked version
-        path.resolve(__dirname, '../../node_modules'),
-        'node_modules'
-      ]
+      extensions
     },
 
     resolveLoader: {
-      extensions,
-      modules: [
-        // Needed to run locally linked version
-        path.resolve(__dirname, '../../node_modules'),
-        'node_modules'
-      ]
+      extensions
     },
 
     module: {
       rules: [
         {
           test: /\.json$/,
-          loader: 'json-loader',
+          loader: require.resolve('json-loader'),
         },
         {
           test: /\.tsx?$/,
           use: [
-            'source-map-loader',
+            require.resolve('source-map-loader'),
             {
-              loader: 'ts-loader',
+              loader: require.resolve('ts-loader'),
               options: {
                 transpileOnly: true,
                 compilerOptions: {
@@ -56,9 +46,9 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
         {
           test: /\.scss$/,
           use: [
-            'style-loader',
+            require.resolve('style-loader'),
             {
-              loader: 'css-loader',
+              loader: require.resolve('css-loader'),
               options: {
                 importLoaders: 1,
                 localIdentName: '[local]__[name]',
@@ -67,21 +57,21 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
               },
             },
             {
-              loader: 'postcss-loader',
+              loader: require.resolve('postcss-loader'),
               options: {
                 plugins: () => [
                   autoprefixer(),
                 ],
               },
             },
-            'sass-loader',
+            require.resolve('sass-loader'),
           ],
         },
         {
           test: /\.css$/,
           use: [
-            'style-loader',
-            'css-loader',
+            require.resolve('style-loader'),
+            require.resolve('css-loader'),
             {
               loader: 'postcss-loader',
               options: {
@@ -94,7 +84,7 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
         },
         {
           test: /\.(eot|ttf|woff|woff2|jpg|jpeg|png|svg)$/,
-          loader: 'url-loader',
+          loader: require.resolve('url-loader'),
           options: {
             name: 'img/[hash].[ext]',
             publicPath: '/',

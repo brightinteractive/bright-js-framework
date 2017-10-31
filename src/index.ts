@@ -3,7 +3,6 @@
  */
 
 import * as React from 'react'
-import { Location } from 'history'
 
 import { decorateRouteComponent } from './lib/core/route'
 import { Link as _Link } from './lib/components/Link'
@@ -37,8 +36,8 @@ export function route(path: string): (ComponentClass: React.ComponentClass<Route
 /**
  * Props passed into a component annotated with @route
  *
- * @param Params  Type of route parameters (string => string map)
- * @param Query   Expected types of query params object (string => string map)
+ * @param Params  Types of route parameters
+ * @param Query   Expected types of query params object
  */
 export interface RouteProps<Params extends Record<string, string> = {}, Query extends Record<string, string | undefined> = {}> {
   /** Location of the current matched route */
@@ -49,6 +48,20 @@ export interface RouteProps<Params extends Record<string, string> = {}, Query ex
 
   /** Values extracted from url query params */
   queryParams: Query
+}
+
+/**
+ * Components of parsed page location
+ */
+export interface Location {
+  /** Path extracted from page URL */
+  pathname: string
+
+  /** Query string extracted from page URL */
+  search: string
+
+  /** Hash string extracted from page URL */
+  hash: string
 }
 
 /**
