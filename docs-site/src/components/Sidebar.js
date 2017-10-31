@@ -6,33 +6,42 @@ import { Paper, Menu, MenuItem, Divider } from 'material-ui'
 
 const modules = require('../docs').children
 
-export default ({ pages }) => {
+export default ({ order }) => {
   return (
     <Paper style={{ minWidth: '10em', justifyContent: 'space-between' }} zDepth={2}>
       <Menu desktop>
-        {
-          flatMap(pages, ({ id, path }) =>
-            path.startsWith('/docs') ? [
-              <MenuItem key={id}>
-                <Link to={path}>
-                  {getPageName(path)}
-                </Link>
-              </MenuItem>
-            ] : []
-          )
-        }
+        <LinkItem link="/docs/getting-started">
+          Getting Started
+        </LinkItem>
+        <LinkItem link="/docs/cli-tool">
+          CLI Tool
+        </LinkItem>
+        <LinkItem link="/docs/app-configuration">
+          App Configuration
+        </LinkItem>
+        <LinkItem link="/docs/environmental-variables">
+          Environmental Variables
+        </LinkItem>
         <Divider />
         {
           modules.map(({ id, name }) =>
-            <MenuItem key={id}>
-              <Link to={`/modules/${kebabCase(name)}`}>
-                {getModuleName(name)}
-              </Link>
-            </MenuItem>
+            <LinkItem key={id} link={`/modules/${kebabCase(name)}`}>
+              {getModuleName(name)}
+            </LinkItem>
           )
         }
       </Menu>
     </Paper>
+  )
+}
+
+function LinkItem({ link, children }) {
+  return (
+    <MenuItem>
+      <Link to={link}>
+        {children}
+      </Link>
+    </MenuItem>
   )
 }
 
