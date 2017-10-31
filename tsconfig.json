@@ -25,7 +25,8 @@
     ],
     "types": [
       "mocha",
-      "chai-enzyme"
+      "chai-enzyme",
+      "sinon-chai"
     ]
   },
   "exclude": [

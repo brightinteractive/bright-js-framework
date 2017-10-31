@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { Service, isService, makeService } from './Service'
+import { Service, makeService, isService } from './Service'
 
 describe('Service', () => {
   describe('::isService()', () => {
