@@ -23,7 +23,9 @@ export function handler() {
 function installDependencies() {
   install([
     '@brightinteractive/bright-js-framework',
-    'typescript'
+    'typescript',
+    'react',
+    '@types/react'
   ])
 }
 
