@@ -3,8 +3,6 @@
 import * as path from 'path'
 import * as fs from 'fs'
 import * as yargs from 'yargs'
-import { runCommand } from './run.command'
-import { initCommand } from './init.command'
 
 if (localCliIsRunning()) {
   localCli()
@@ -18,7 +16,7 @@ if (localCliIsRunning()) {
 
 function localCliExists() {
   try {
-    fs.statSync(localCliPath)
+    fs.statSync(localCliPath())
     return true
 
   } catch {
@@ -27,23 +25,27 @@ function localCliExists() {
 }
 
 function localCliIsRunning() {
-  return path.normalize(localCliPath) === path.normalize(__filename)
+  return path.normalize(localCliPath()) === path.normalize(__filename)
 }
 
 function runLocalCli() {
-  require(localCliPath)
+  require(localCliPath())
 }
 
 function localCli() {
   yargs
-  .command(runCommand)
+  .commandDir(path.resolve(__dirname, 'local-commands'))
+  .help()
   .argv
 }
 
 function globalCli() {
   yargs
-  .command(initCommand)
+  .commandDir(path.resolve(__dirname, 'global-commands'))
+  .help()
   .argv
 }
 
-const localCliPath = path.resolve(path.join('node_modules', '@brightinteractive', 'bright-js-framework', 'cli', 'cli.js'))
+function localCliPath() {
+  return path.resolve(path.join('node_modules', '@brightinteractive', 'bright-js-framework', 'cli', 'cli.js'))
+}
