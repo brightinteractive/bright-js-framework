@@ -1,4 +1,5 @@
-import { uniqueId } from "lodash";
+import { uniqueId } from 'lodash'
+import { isController } from './Controller'
 
 const SERVICE_IDENTIFIER = Symbol('isService')
 const SERVICE_UID = Symbol('serviceUid')
@@ -15,18 +16,37 @@ export class Service<State = any> {
 (Service.prototype as any)[SERVICE_IDENTIFIER] = true
 
 /**
- * Mark an existing object as a service
+ * Return a property descriptor that instantiates a service
  */
-export function makeService<T>(x: T): T & Service {
-  (x as any)[SERVICE_IDENTIFIER] = true
-  return x as any
+export function decorateServiceProperty(Constructor: new () => Service) {
+  return (proto: any, key: string): any => {
+    const cacheKey = Symbol(key)
+
+    return {
+      get(this: any) {
+        if (!isController(this) && !isService(this)) {
+          throw new Error([
+            `Services may only be attached to controllers or other services`,
+            `but ${Constructor.name} is being attached to something else.`,
+            `Did you forget to annotate your React Component with @controller?`
+          ].join(' '))
+        }
+
+        if (!this[cacheKey]) {
+          this[cacheKey] = new Constructor()
+        }
+
+        return this[cacheKey]
+      }
+    }
+  }
 }
 
 /**
  * Check if object has been annotated as a service
  */
 export function isService(x: any): x is Service {
-  return Boolean(x[SERVICE_IDENTIFIER])
+  return x instanceof Service
 }
 
 /**

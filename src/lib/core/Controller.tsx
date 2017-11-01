@@ -3,6 +3,8 @@ import * as PropTypes from 'prop-types'
 import { gatherServices, Service, initializeService, getServiceUid } from './Service'
 import { patchMethod, patchProperty } from './util'
 
+const IS_CONTROLLER = Symbol('isController')
+
 export interface Controller<Props extends object = {}, State extends object = {}> extends React.Component<Props, State> {
   context: ControllerContext
 }
@@ -22,22 +24,19 @@ export const CONTROLLER_CONTEXT_TYPES = {
 
 /** Prepare a component class for having services attached to it. */
 export function decorateController(cls: React.ComponentClass): void {
-  declareContextTypes(cls)
+  declareIsController(cls)
   injectControllerBehavior(cls.prototype)
 }
 
 /** Has this component been decorated as a controller? */
-export function isController(x: React.Component): x is Controller {
-  const ctor = x.constructor as React.ComponentClass
-  return Boolean(ctor.contextTypes && INJECTED_DEPENDENCIES_KEY in ctor.contextTypes)
+export function isController(x: React.Component): x is Controller
+export function isController(x: any) {
+  return Boolean(x[IS_CONTROLLER])
 }
 
-/** Apply React context declarations to controller class */
-function declareContextTypes(cls: React.ComponentClass) {
-  cls.contextTypes = {
-    ...cls.contextTypes,
-    ...CONTROLLER_CONTEXT_TYPES
-  }
+/** Attach metadata to class prototype declaring that it is a controller */
+function declareIsController(cls: any) {
+  cls.prototype[IS_CONTROLLER] = true
 }
 
 /** Inject controller behavior into decorated component */
