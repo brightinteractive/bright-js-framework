@@ -4,12 +4,13 @@ import MarkdownView from 'react-markdown'
 /**
  * Render a function or method signature in typescript syntax.
  */
-export const FunctionSignature = ({ keyword, parameters, type, name }) => {
+export const FunctionSignature = ({ keyword, parameters, type, name, decorator }) => {
   return (
     <Prototype>
+      {decorator && '@'}
       {keyword && keyword + ' '}
       <strong>{name}</strong>
-      ({parameters && parameters.map(p => <Parameter key={p.name} {...p}/>)}): {type.name}
+      ({parameters && parameters.map(p => <Parameter key={p.name} {...p}/>)}){!decorator && ': ' + type.name}
     </Prototype>
   )
 }
