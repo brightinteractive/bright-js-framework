@@ -48,6 +48,17 @@ describe('Controller', () => {
 
       expect(service.state).to.eql({ foo: 1 })
     })
+
+    it('should handle case where service does not implement lifecycle methods', () => {
+      const service = new Service()
+      const dom = mount(<TestController services={[service]} />)
+      dom.unmount()
+    })
+
+    it('should handle case where service does not implement lifecycle methods', () => {
+      const service = new Service()
+      mount(<TestController services={[service]} />)
+    })
   })
 })
 

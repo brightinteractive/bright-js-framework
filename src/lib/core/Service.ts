@@ -71,7 +71,7 @@ export function initializeService(service: any) {
     throw new Error(`Attempt to initialize service ${service.constructor.name} twice`)
   }
 
-  service[SERVICE_UID] = uniqueId(service.constructor.name || 'Service')
+  service[SERVICE_UID] = uniqueId(service.constructor.name)
 }
 
 export function getServiceUid(service: Service): string
