@@ -14,7 +14,7 @@ export default () => {
               First, make sure you have the bright-js-framework cli installed globally.
             </p>
             <CodeBlock language="bash">
-              npm install -g @brightinteractive/bright-js-framework
+              {`npm install -g @brightinteractive/bright-js-framework`}
             </CodeBlock>
           </li>
           <li>
@@ -22,9 +22,9 @@ export default () => {
               Create a new directory for your project and initialize it.
             </p>
             <CodeBlock language="bash">
-              mkdir my-project
-              cd my-project
-              bright-js-framework init
+              {`mkdir my-project`}
+              {`cd my-project`}
+              {`bright-js-framework init`}
             </CodeBlock>
           </li>
           <li>
@@ -36,7 +36,7 @@ export default () => {
               Start up a new development server:
             </p>
             <CodeBlock language="bash">
-              bright-js-framework run
+              {`bright-js-framework run`}
             </CodeBlock>
           </li>
           <li>
