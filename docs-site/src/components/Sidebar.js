@@ -13,11 +13,14 @@ export default ({ order }) => {
         <LinkItem link="/docs/getting-started">
           Getting Started
         </LinkItem>
-        <LinkItem link="/docs/cli-tool">
-          CLI Tool
-        </LinkItem>
         <LinkItem link="/docs/app-configuration">
           App Configuration
+        </LinkItem>
+        <LinkItem link="/docs/services-and-controllers">
+          Services and Controllers
+        </LinkItem>
+        <LinkItem link="/docs/cli-tool">
+          CLI Tool
         </LinkItem>
         <LinkItem link="/docs/environmental-variables">
           Environmental Variables
