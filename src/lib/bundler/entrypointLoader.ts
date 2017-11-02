@@ -4,16 +4,14 @@ import { LoaderContext, getOptions } from 'loader-utils'
  * Loads a list of top level modules by inserting a shim module that calls a function exported by
  * an entry module with a list of functions resolving to the top level modules.
  */
-export function entrypointLoader({ entry, topLevelModules }: EntrypointOpts) {
+export function entrypointLoader({ entry, topLevelModules, configFile }: EntrypointOpts) {
   if (topLevelModules.length === 0) {
     throw new Error('No path files specified')
   }
 
   // Webpack loader string identifying this module as the loader with the provided config opts
-  return `${__filename}?topLevelModules[]=${topLevelModules.join('&topLevelModules[]=')}!${entry}`
+  return `${__filename}?topLevelModules[]=${topLevelModules.join('&topLevelModules[]=')}&configFile=${configFile}!${entry}`
 }
-
-export type RequireList = Array<() => any>
 
 export interface EntrypointOpts {
   /**
@@ -26,6 +24,9 @@ export interface EntrypointOpts {
 
   /** Absolute paths to the modules we want to add to the bundle and pass into `entry` */
   topLevelModules: string[]
+
+  /** Path to configuration file containing plugin declarations */
+  configFile: string
 }
 
 /**
@@ -37,10 +38,11 @@ export interface EntrypointOpts {
  * See: https://webpack.js.org/api/loaders/
  */
 export function entrypointLoaderImpl(this: LoaderContext) {
-  const options = getOptions(this)
+  const options: EntrypointOpts = getOptions(this)
   const entry: string = this.resourcePath
   const topLevelModules: string[] = options.topLevelModules
 
+  this.addDependency(options.configFile)
   this.addDependency(entry)
   topLevelModules.forEach((moduleName) => {
     this.addDependency(moduleName)
@@ -48,12 +50,14 @@ export function entrypointLoaderImpl(this: LoaderContext) {
 
   return [
     `var entry = require("${entry}").default;`,
-    `module.exports = entry([${topLevelModules.map(generateRequireFn)}]);`,
+    `var opts = {config: ${generateRequireFn(options.configFile, 'default')}};`,
+    `var modules = [${topLevelModules.map((m) => generateRequireFn(m)).join(',')}];`,
+    `module.exports = entry(modules, opts);`,
   ].join('\n')
 }
 
-function generateRequireFn(moduleName: string) {
-  return `function () { return require("${moduleName}"); }`
+function generateRequireFn(moduleName: string, exportKey?: string) {
+  return `function() { return require("${moduleName}")${exportKey ? `.${exportKey}` : ''}; }`
 }
 
 module.exports = entrypointLoaderImpl
