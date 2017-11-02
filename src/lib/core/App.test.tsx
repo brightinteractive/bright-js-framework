@@ -3,6 +3,7 @@ import { expect } from 'chai'
 import { mount } from 'enzyme'
 import { createMemoryHistory } from 'history'
 import { App } from './App'
+import { ApplicationContext } from './ApplicationContext'
 
 describe('App', () => {
   it('should render the initially matched route', () => {
@@ -22,6 +23,7 @@ describe('App', () => {
             }
           }
         ]}
+        appContext={new ApplicationContext()}
       />
     )
 
@@ -36,6 +38,7 @@ describe('App', () => {
       <App
         history={history}
         routes={[]}
+        appContext={new ApplicationContext()}
       />
     )).to.throw()
   })
