@@ -3,7 +3,10 @@ import { expect } from 'chai'
 import { mount } from 'enzyme'
 import { createMemoryHistory } from 'history'
 import { App } from './App'
+import { Plugin } from './Plugin'
 import { ApplicationContext } from './ApplicationContext'
+import { inject } from './InjectionClient'
+import { decorateController } from './Controller'
 
 describe('App', () => {
   it('should render the initially matched route', () => {
@@ -41,5 +44,38 @@ describe('App', () => {
         appContext={new ApplicationContext()}
       />
     )).to.throw()
+  })
+
+  it('should provide injected dependencies to controllers', () => {
+    const history = createMemoryHistory()
+    history.replace('/')
+
+    class Provider extends Plugin {
+      injectedObjects = {
+        myDependency: () => 1
+      }
+    }
+
+    @decorateController
+    class Consumer extends React.PureComponent<any> {
+      dependency = inject(this, 'myDependency')
+
+      render() {
+        return null
+      }
+    }
+
+    const dom = mount(
+      <App
+        history={history}
+        routes={[
+          { path: '/', handler: Consumer }
+        ]}
+        appContext={new ApplicationContext([Provider])}
+      />
+    )
+
+    const instance = dom.childAt(0).instance() as Consumer
+    expect(instance.dependency).to.eql(1)
   })
 })

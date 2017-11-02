@@ -2,17 +2,14 @@ import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import { gatherServices, Service, initializeService, getServiceUid } from './Service'
 import { patchMethod, patchProperty } from './util'
-import { ApplicationContext } from './ApplicationContext';
+import { ApplicationContext } from './ApplicationContext'
+import { InjectionContext } from './InjectionClient'
 
 const IS_CONTROLLER = Symbol('isController')
 
-export interface Controller<Props extends object = {}, State extends object = {}> extends React.Component<Props, State> {
-  context: ControllerContext
-}
-
-/** Shape of context passed into a controller */
-export interface ControllerContext {
-  '@appContext': ApplicationContext
+export interface Controller<Props extends object = {}, State extends object = {}>
+extends React.Component<Props, State> {
+  context: InjectionContext
 }
 
 /** Field of a controller's context types containing React context type metadata */
