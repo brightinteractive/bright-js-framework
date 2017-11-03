@@ -3,9 +3,9 @@ import { expect } from 'chai'
 import { mount } from 'enzyme'
 import { createMemoryHistory } from 'history'
 import { App } from './App'
-import { Plugin } from './Plugin'
+import { Plugin, exportDependency } from './Plugin'
 import { ApplicationContext } from './ApplicationContext'
-import { inject } from './InjectionClient'
+import { injectDependency } from './InjectionClient'
 import { decorateController } from './Controller'
 
 describe('App', () => {
@@ -51,14 +51,47 @@ describe('App', () => {
     history.replace('/')
 
     class Provider extends Plugin {
-      injectedObjects = {
-        myDependency: () => 1
-      }
+      @exportDependency('myDependency')
+      myDependency = 1
     }
 
     @decorateController
     class Consumer extends React.PureComponent<any> {
-      dependency = inject(this, 'myDependency')
+      @injectDependency('myDependency')
+      dependency: number
+
+      render() {
+        return null
+      }
+    }
+
+    const dom = mount(
+      <App
+        history={history}
+        routes={[
+          { path: '/', handler: Consumer }
+        ]}
+        appContext={new ApplicationContext([Provider])}
+      />
+    )
+
+    const instance = dom.childAt(0).instance() as Consumer
+    expect(instance.dependency).to.eql(1)
+  })
+
+  it('should provide injected dependencies to services', () => {
+    const history = createMemoryHistory()
+    history.replace('/')
+
+    class Provider extends Plugin {
+      @exportDependency('myDependency')
+      myDependency = 1
+    }
+
+    @decorateController
+    class Consumer extends React.PureComponent<any> {
+      @injectDependency('myDependency')
+      dependency: number
 
       render() {
         return null

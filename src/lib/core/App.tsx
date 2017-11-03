@@ -1,13 +1,11 @@
 import * as React from 'react'
 import { History, Location } from 'history'
 import { Router, RouteConfig } from './Router'
-import { CONTROLLER_CONTEXT_TYPES, ControllerContext } from './Controller'
-import { ApplicationContext } from './ApplicationContext';
+import { ContextProviderProps, ContextProvider } from './ContextProvider'
 
-export interface AppProps {
+export interface AppProps extends ContextProviderProps {
   routes: RouteConfig[]
   history: History
-  appContext: ApplicationContext
 }
 
 export interface AppState {
@@ -25,19 +23,11 @@ export type RedirectFunction = (l: Location) => void
 /**
  * Root application container.
  */
-export class App extends React.PureComponent<AppProps> {
-  static childContextTypes: {} = CONTROLLER_CONTEXT_TYPES
-
+export class App extends ContextProvider<AppProps> {
   router = new Router(this.props.routes, this.props.history)
 
   state: AppState = {
     location: this.props.history.location,
-  }
-
-  getChildContext(): ControllerContext {
-    return {
-      '@appContext': this.props.appContext
-    }
   }
 
   render() {

@@ -3,11 +3,18 @@ import { spy } from 'sinon'
 import { mount } from 'enzyme'
 import * as React from 'react'
 import { decorateController, isController } from './Controller'
-import { Service } from './Service'
+import { Service, decorateServiceProperty } from './Service'
 
 describe('Controller', () => {
   describe('isController()', () => {
     it('should return true for components marked as controllers', () => {
+      @decorateController
+      class TestController extends React.Component {
+        render() {
+          return null
+        }
+      }
+
       expect(isController(new TestController({}))).to.be.true
     })
 
@@ -17,71 +24,67 @@ describe('Controller', () => {
   })
 
   context('when mounted into dom', () => {
-    it('should call serviceWillMount() on mount', () => {
-      const service = new SpyService()
-      mount(<TestController services={[service]} />)
+    context('and lifecycle hooks are implemented', () => {
+      function setup() {
+        @decorateController
+        class TestController extends React.Component {
+          @decorateServiceProperty(SpyService)
+          myService: SpyService
 
-      expect(service.serviceWillMount).to.have.been.called
-    })
+          render() {
+            return null
+          }
+        }
 
-    it('should call serviceDidMount() on mount', () => {
-      const service = new SpyService()
-      mount(<TestController services={[service]} />)
+        const dom = mount(<TestController />)
+        const controller = dom.instance() as TestController
 
-      expect(service.serviceDidMount).to.have.been.calledAfter(service.serviceWillMount)
-    })
+        return { dom, service: controller.myService }
+      }
 
-    it('should call serviceDidMount() on unmount', () => {
-      const service = new SpyService()
-      const dom = mount(<TestController services={[service]} />)
-      dom.unmount()
+      it('should call serviceWillMount() on mount', () => {
+        const { service } = setup()
+        expect(service.serviceWillMount).to.have.been.called
+      })
 
-      expect(service.serviceWillUnmount).to.have.been.called
-    })
+      it('should call serviceDidMount() on mount', () => {
+        const { service } = setup()
+        expect(service.serviceDidMount).to.have.been.calledAfter(service.serviceWillMount)
+      })
 
-    it('should support set and get state', () => {
-      const service = new SpyService()
-      const dom = mount(<TestController services={[service]} />)
-      service.setState({ foo: 1 })
+      it('should call serviceDidMount() on unmount', () => {
+        const { dom, service } = setup()
+        dom.unmount()
 
-      dom.update()
+        expect(service.serviceWillUnmount).to.have.been.called
+      })
 
-      expect(service.state).to.eql({ foo: 1 })
+      it('should support set and get state', () => {
+        const { dom, service } = setup()
+
+        service.setState({ foo: 1 })
+        dom.update()
+
+        expect(service.state).to.eql({ foo: 1 })
+      })
     })
 
     it('should handle case where service does not implement lifecycle methods', () => {
-      const service = new Service()
-      const dom = mount(<TestController services={[service]} />)
-      dom.unmount()
-    })
+      @decorateController
+      class TestController extends React.Component {
+        @decorateServiceProperty(Service)
+        myService: Service
 
-    it('should handle case where service does not implement lifecycle methods', () => {
-      const service = new Service()
-      mount(<TestController services={[service]} />)
+        render() {
+          return null
+        }
+      }
+
+      const dom = mount(<TestController />)
+      dom.unmount()
     })
   })
 })
-
-@decorateController
-class TestController extends React.PureComponent<{ services?: Service[] }> {
-  constructor(props: any) {
-    super(props)
-
-    if (this.props.services) {
-      this.props.services.forEach((service, i) => {
-        (this as any)[i] = service
-      })
-    }
-  }
-
-  render() {
-    if (!this.props.children) {
-      return null
-    }
-
-    return React.Children.only(this.props.children)
-  }
-}
 
 class SpyService extends Service<any> {
   serviceWillMount = spy()
