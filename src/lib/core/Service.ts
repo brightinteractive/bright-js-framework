@@ -1,16 +1,23 @@
 import { uniqueId } from 'lodash'
 import { isController } from './Controller'
+import { InjectionClient, InjectionContext } from './InjectionClient'
 
 const SERVICE_IDENTIFIER = Symbol('isService')
 const SERVICE_UID = Symbol('serviceUid')
 
-export class Service<State = any> {
+export class Service<State = any> implements InjectionClient {
+  constructor(context: InjectionContext) {
+    this.context = context
+  }
+
   serviceWillMount?: () => void
   serviceDidMount?: () => void
   serviceWillUnmount?: () => void
 
   readonly state: State
   setState(state: Partial<State>): void {}
+
+  context: InjectionContext
 }
 
 (Service.prototype as any)[SERVICE_IDENTIFIER] = true
@@ -18,11 +25,12 @@ export class Service<State = any> {
 /**
  * Return a property descriptor that instantiates a service
  */
-export function decorateServiceProperty(Constructor: new () => Service) {
+export function decorateServiceProperty(Constructor: typeof Service) {
   return (proto: any, key: string): any => {
     const cacheKey = Symbol(key)
 
     return {
+      enumerable: true,
       get(this: any) {
         if (!isController(this) && !isService(this)) {
           throw new Error([
@@ -33,7 +41,7 @@ export function decorateServiceProperty(Constructor: new () => Service) {
         }
 
         if (!this[cacheKey]) {
-          this[cacheKey] = new Constructor()
+          this[cacheKey] = new Constructor(this.context)
         }
 
         return this[cacheKey]
