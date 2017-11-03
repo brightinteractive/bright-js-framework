@@ -3,7 +3,7 @@ import { getRequiredDependencies } from './InjectionClient'
 
 const EXPORTED_OBJECT_KEYS = Symbol('providedObjectKeys')
 
-export class Plugin extends Service {
+export class PluginConfig extends Service {
 }
 
 export interface DependencyExport {
@@ -11,7 +11,7 @@ export interface DependencyExport {
   propertyKey: string
 }
 
-export type PluginConstructor = typeof Plugin
+export type PluginConstructor = typeof PluginConfig
 export type ContextFactoryMap<T = any> = Record<string, () => T>
 export type ContextValueMap<T = any> = Record<string, T>
 
@@ -19,7 +19,7 @@ export type ContextValueMap<T = any> = Record<string, T>
  * Property decorator used to add an exported dependency declaration to a plugin.
  * Dependency metadata is added to the object's prototype.
  */
-export function exportDependency(id: string): (proto: Plugin, key: string) => any {
+export function exportDependency(id: string): (proto: PluginConfig, key: string) => any {
   return (proto: any, key: string) => {
     proto[EXPORTED_OBJECT_KEYS] = proto[EXPORTED_OBJECT_KEYS] || new Set()
     proto[EXPORTED_OBJECT_KEYS].add({

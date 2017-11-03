@@ -1,4 +1,4 @@
-import { PluginConstructor, ContextValueMap, getPluginCreationOrder, getExportedDependencies } from './Plugin'
+import { PluginConstructor, ContextValueMap, getPluginCreationOrder, getExportedDependencies } from './PluginConfig'
 
 export class ApplicationContext {
   readonly injectedObjects: ContextValueMap = {}

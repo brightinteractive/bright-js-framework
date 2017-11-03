@@ -1,4 +1,4 @@
-import { PluginConstructor } from '../core/Plugin'
+import { PluginConstructor } from '../core/PluginConfig'
 
 export type Entrypoint = (modules: RequireList, opts: EntryOpts) => void
 

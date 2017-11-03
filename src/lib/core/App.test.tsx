@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import { mount } from 'enzyme'
 import { createMemoryHistory } from 'history'
 import { App } from './App'
-import { Plugin, exportDependency } from './Plugin'
+import { PluginConfig, exportDependency } from './PluginConfig'
 import { ApplicationContext } from './ApplicationContext'
 import { injectDependency } from './InjectionClient'
 import { decorateController } from './Controller'
@@ -50,7 +50,7 @@ describe('App', () => {
     const history = createMemoryHistory()
     history.replace('/')
 
-    class Provider extends Plugin {
+    class Provider extends PluginConfig {
       @exportDependency('myDependency')
       myDependency = 1
     }
@@ -83,7 +83,7 @@ describe('App', () => {
     const history = createMemoryHistory()
     history.replace('/')
 
-    class Provider extends Plugin {
+    class Provider extends PluginConfig {
       @exportDependency('myDependency')
       myDependency = 1
     }

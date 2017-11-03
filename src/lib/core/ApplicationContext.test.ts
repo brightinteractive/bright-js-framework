@@ -1,9 +1,9 @@
 import { expect } from 'chai'
-import { Plugin, exportDependency } from './Plugin'
+import { PluginConfig, exportDependency } from './PluginConfig'
 import { ApplicationContext } from './ApplicationContext'
 
 describe('ApplicationContext', () => {
-  class MyPlugin extends Plugin {
+  class MyPlugin extends PluginConfig {
     @exportDependency('myDependency')
     foo = 1
   }

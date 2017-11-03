@@ -4,7 +4,7 @@ import { mount } from 'enzyme'
 import { Service, isService, decorateServiceProperty } from './Service'
 import { decorateController } from './Controller'
 import { ApplicationContext } from './ApplicationContext'
-import { Plugin, exportDependency } from './Plugin'
+import { PluginConfig, exportDependency } from './PluginConfig'
 import { ContextProvider } from './ContextProvider';
 import { injectDependency } from './InjectionClient';
 
@@ -73,7 +73,7 @@ describe('Service', () => {
         }
       }
 
-      class Provider extends Plugin {
+      class Provider extends PluginConfig {
         @exportDependency('myDependency')
         dep = 1
       }
