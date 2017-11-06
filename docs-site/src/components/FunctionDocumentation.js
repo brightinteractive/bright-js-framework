@@ -6,10 +6,10 @@ import { Comment, FunctionSignature, ParameterListDoc, Type } from './api-docume
 /**
  * Render documentation for each signature of a free function
  */
-const FunctionDocumentation = ({ name, signatures, Divider }) => {
+const FunctionDocumentation = ({ name, signatures, Divider, decorator }) => {
   return (
     <div id={`interfaces_${name}`}>
-      {signatures.map((s, i) => <FunctionSignatureDoc key={i} {...s} />)}
+      {signatures.map((s, i) => <FunctionSignatureDoc key={i} decorator={decorator} {...s} />)}
     </div>
   )
 }
@@ -21,7 +21,7 @@ export default FunctionDocumentation
  */
 export const FunctionSignatureDoc = (props) => (
   <Card>
-    <CardHeader title={<FunctionSignature keyword="function" {...props} />} actAsExpander showExpandableButton />
+    <CardHeader title={<FunctionSignature keyword={!props.decorator && "function"} {...props} />} actAsExpander showExpandableButton />
     <CardText actAsExpander>
       <Comment short comment={props.comment} />
     </CardText>

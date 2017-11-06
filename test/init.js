@@ -6,10 +6,14 @@ require('raf').polyfill(global)
 const enzyme = require('enzyme')
 const chai = require('chai')
 const chaiEnzyme = require('chai-enzyme')
+const sinonChai = require('sinon-chai')
 const EnzymeAdapter = require('enzyme-adapter-react-16')
 
 enzyme.configure({
   adapter: new EnzymeAdapter()
 })
 
+console.error = () => {}
+
 chai.use(chaiEnzyme())
+chai.use(sinonChai)

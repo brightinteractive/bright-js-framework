@@ -17,11 +17,12 @@ export default class ModuleDoc extends React.PureComponent {
   classes = this.docs.children.filter(isClass)
   components = this.docs.children.filter(isComponent)
   interfaces = this.docs.children.filter(isInterface({ withComponents: this.components }))
+  decorators = this.docs.children.filter(isDecorator)
 
   propsFor = createGetComponentProps(this.docs.children)
 
   render() {
-    const { docs, functions, classes, interfaces, components } = this
+    const { docs, functions, classes, interfaces, components, decorators } = this
 
     return (
       <div>
@@ -72,7 +73,7 @@ export default class ModuleDoc extends React.PureComponent {
               <Tab label="Classes">
               {
                 classes.map((x, i) =>
-                  <InterfaceDocumentation key={i} kind="classes" {...x} />
+                  <InterfaceDocumentation key={i} kind="classes" {...x} kindString="class" />
                 )
               }
               </Tab>
@@ -89,18 +90,33 @@ export default class ModuleDoc extends React.PureComponent {
               </Tab>
             )
           }
+          {
+            decorators.length > 0 && (
+              <Tab label="Decorators">
+              {
+                decorators.map((x, i) =>
+                  <FunctionDocumentation decorator key={i} {...x} />
+                )
+              }
+              </Tab>
+            )
+          }
         </Tabs>
       </div>
     )
   }
 }
 
-function isClass({ kindString }) {
-  return kindString === 'Class'
+function isClass({ kindString, comment }) {
+  return kindString === 'Class' || isTaggedAsClass(comment)
 }
 
-function isFunction({ kindString }) {
-  return kindString === 'Function'
+function isFunction({ kindString, signatures }) {
+  return kindString === 'Function' && !returnsDecorator(signatures)
+}
+
+function isDecorator({ kindString, signatures }) {
+  return kindString === 'Function' && returnsDecorator(signatures)
 }
 
 function isComponent({ kindString, type }) {
@@ -109,7 +125,7 @@ function isComponent({ kindString, type }) {
 
 function isInterface({ withComponents }) {
   const isComponentProps = createIsComponentProps(withComponents)
-  return (x) => x.kindString === 'Interface' && !isComponentProps(x)
+  return (x) => x.kindString === 'Interface' && !isComponentProps(x) && !isTaggedAsClass(x.comment)
 }
 
 function createIsComponentProps(components) {
@@ -120,4 +136,12 @@ function createIsComponentProps(components) {
 function createGetComponentProps(interfaces) {
   const keyedInterfaces = keyBy(interfaces, 'name')
   return ({ name }) => keyedInterfaces[name + 'Props']
+}
+
+function returnsDecorator(signatures = []) {
+  return signatures.some(sig => sig.type.name === 'ComponentDecorator' || sig.type.name === 'PropertyDecorator')
+}
+
+function isTaggedAsClass(comment = {}) {
+  return comment && comment.tags && comment.tags.some(t => t.tag === 'class')
 }

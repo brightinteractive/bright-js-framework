@@ -5,6 +5,8 @@
 import * as React from 'react'
 
 import { decorateRouteComponent } from './lib/core/route'
+import { decorateController } from './lib/core/Controller'
+import { Service as _Service, decorateServiceProperty } from './lib/core/Service'
 import { Link as _Link } from './lib/components/Link'
 
 /**
@@ -27,7 +29,7 @@ import { Link as _Link } from './lib/components/Link'
  *
  * @param path  Path pattern to serve the route from
  */
-export function route(path: string): (ComponentClass: React.ComponentClass<RouteProps>) => void {
+export function route(path: string): ComponentDecorator<RouteProps> {
   return (ComponentClass) => {
     decorateRouteComponent(path, ComponentClass)
   }
@@ -70,3 +72,70 @@ export interface Location {
  * element are otherwise identical to the anchor element.
  */
 export const Link: React.ComponentClass<React.HTMLProps<{}>> = _Link
+
+/**
+ * Declare that a component is a controller.
+ *
+ * You must annotate a React Component as a controller before attaching services to it.
+ * You do not need to annotate a service before attaching other services to it.
+ */
+export function controller(): ComponentDecorator {
+  return (cls) => decorateController(cls)
+}
+
+/**
+ * Attach a service to a property of a controller or other service.
+ *
+ * You must annotate a React Component as a controller before attaching services to it.
+ * You do not need to annotate a service before attaching other services to it.
+ *
+ * ```
+ *  @controller
+ *  class Foo extends React.Component {
+ *    @service(MyService)
+ *    myService: MyService
+ *  }
+ * ```
+ */
+export function service(constructor: new () => Service): PropertyDecorator {
+  return decorateServiceProperty(constructor)
+}
+
+/**
+ * Base class for creating Services.
+ *
+ * Services are classes that have access to a subset of the React Component API.
+ * They are owned by a parent component, and receive lifecycle events.
+ *
+ * @class
+ */
+export interface Service<State = {}> {
+  /**
+   * Called before a service’s parent controller mounts or before it is statically rendered.
+   *
+   * Corresponds to React’s componentWillMount()
+   */
+  serviceWillMount?: () => void
+
+  /**
+   * Called after a service’s parent controller mounts. Not called when the component is statically rendered.
+   *
+   * Corresponds to React’s componentDidMount()
+   */
+  serviceDidMount?: () => void
+
+  /**
+   * Called before a service’s parent controller unmounts. Not called when the component is statically rendered.
+   *
+   * Corresponds to React’s componentWillUnmount()
+   */
+  serviceWillUnmount?: () => void
+
+  readonly state: State
+  setState(state: Partial<State>): void
+}
+
+export const Service: new <State>() => Service<State> = _Service
+
+export type ComponentDecorator<Props = {}> = (cls: React.ComponentClass<Props>) => void
+export type PropertyDecorator = (proto: any, key: string) => any
