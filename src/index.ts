@@ -92,7 +92,7 @@ export function controller(): ComponentDecorator {
  * You do not need to annotate a service before attaching other services to it.
  *
  * ```
- *  @controller
+ *  @controller()
  *  class Foo extends React.Component {
  *    @service(MyService)
  *    myService: MyService

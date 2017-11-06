@@ -3,7 +3,7 @@ import { controller, service } from '@brightinteractive/bright-js-framework'
 import { TodoListView } from './TodoListView'
 import { ListService } from './ListService'
 
-@controller
+@controller()
 export class TodoList extends React.PureComponent {
   @service(ListService)
   list: ListService

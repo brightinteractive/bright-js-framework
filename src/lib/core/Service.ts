@@ -36,7 +36,7 @@ export function decorateServiceProperty(Constructor: typeof Service) {
           throw new Error([
             `Services may only be attached to controllers or other services`,
             `but ${Constructor.name} is being attached to something else.`,
-            `Did you forget to annotate your React Component with @controller?`
+            `Did you forget to annotate your React Component with @controller()?`
           ].join(' '))
         }
 
