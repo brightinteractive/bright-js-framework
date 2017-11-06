@@ -32,7 +32,7 @@ export default () => {
           {require('raw!./examples/controllers/before.tsx')}
         </CodeFile>
         <p>
-          At the moment, it isn't a huge component, but we can imagine that as requirements evolve (for example, if we start adding persistence, search and other features) it might become unweildy. We might want to use the same update logic in different view contexts, without having to duplicate this logic amongst multiple components.
+          At the moment, it isn't a huge component, but we can imagine that as requirements evolve (for example, if we start adding persistence, search and other features) it might become unwieldy. We might want to use the same update logic in different view contexts, without having to duplicate this logic amongst multiple components.
         </p>
         <p>
           In this example, we will split the list state management concern out into a seperate class, leaving the <code>TodoList</code> as a simple component that wires this up to <code>TodoListView</code>.
