@@ -91,6 +91,10 @@ export function controller(): ComponentDecorator {
  * You must annotate a React Component as a controller before attaching services to it.
  * You do not need to annotate a service before attaching other services to it.
  *
+ * Services are unique to the controller that they are attached to.
+ * This differs from dependencies injected using plugins, which are shared amongst the whole
+ * application.
+ *
  * ```
  *  @controller()
  *  class Foo extends React.Component {
@@ -170,6 +174,9 @@ export function exported(id: string): PropertyDecorator {
 /**
  * Declare that a property of a Controller, Service or PluginContext should be fulfilled
  * using dependency injection.
+ *
+ * Objects injected by plugins are shared between the whole application.
+ * This differes from services, which are unique to each controller.
  *
  * @param id Identifier of the dependency to inject.
  */
