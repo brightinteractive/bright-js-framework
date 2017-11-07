@@ -13,16 +13,20 @@
       "component---src-pages-index-js-5bc6e4a0f3a60cb17b78.js.map"
     ],
     "path---modules-index": [
-      "path---modules-index-10d6991563da3ca2dea9.js",
-      "path---modules-index-10d6991563da3ca2dea9.js.map"
+      "path---modules-index-a6ef36eb74a2a826947e.js",
+      "path---modules-index-a6ef36eb74a2a826947e.js.map"
     ],
     "path---": [
-      "path----dce331b6addd9712e739.js",
-      "path----dce331b6addd9712e739.js.map"
+      "path----e105aa783b8fd5db4950.js",
+      "path----e105aa783b8fd5db4950.js.map"
     ],
     "component---src-pages-docs-cli-tool-js": [
       "component---src-pages-docs-cli-tool-js-ab740667b28c63806db0.js",
       "component---src-pages-docs-cli-tool-js-ab740667b28c63806db0.js.map"
+    ],
+    "component---src-pages-docs-extending-with-plugins-js": [
+      "component---src-pages-docs-extending-with-plugins-js-0d6d27f25d9f7a11bcf2.js",
+      "component---src-pages-docs-extending-with-plugins-js-0d6d27f25d9f7a11bcf2.js.map"
     ],
     "path---docs-getting-started": [
       "path---docs-getting-started-a0e39f21c11f6a62c5ab.js",
@@ -37,16 +41,16 @@
       "component---src-pages-docs-environmental-variables-js-3a4bd8a30085471d530c.js.map"
     ],
     "component---src-layouts-index-js": [
-      "component---src-layouts-index-js-1a591d35c9565a3cf81f.js",
-      "component---src-layouts-index-js-1a591d35c9565a3cf81f.js.map"
+      "component---src-layouts-index-js-5523878d528a1e8e6f4f.js",
+      "component---src-layouts-index-js-5523878d528a1e8e6f4f.js.map"
     ],
     "component---src-templates-module-doc-js": [
       "component---src-templates-module-doc-js-0fbe8cb51f332d16d1a2.js",
       "component---src-templates-module-doc-js-0fbe8cb51f332d16d1a2.js.map"
     ],
     "component---src-pages-docs-services-and-controllers-js": [
-      "component---src-pages-docs-services-and-controllers-js-4839ede3e94513014a6b.js",
-      "component---src-pages-docs-services-and-controllers-js-4839ede3e94513014a6b.js.map"
+      "component---src-pages-docs-services-and-controllers-js-f54f592ef33ac6adc304.js",
+      "component---src-pages-docs-services-and-controllers-js-f54f592ef33ac6adc304.js.map"
     ],
     "path---index": [
       "path---index-a0e39f21c11f6a62c5ab.js",
@@ -64,14 +68,18 @@
       "path---404-html-a0e39f21c11f6a62c5ab.js",
       "path---404-html-a0e39f21c11f6a62c5ab.js.map"
     ],
+    "path---docs-extending-with-plugins": [
+      "path---docs-extending-with-plugins-a0e39f21c11f6a62c5ab.js",
+      "path---docs-extending-with-plugins-a0e39f21c11f6a62c5ab.js.map"
+    ],
     "path---docs-app-configuration": [
       "path---docs-app-configuration-a0e39f21c11f6a62c5ab.js",
       "path---docs-app-configuration-a0e39f21c11f6a62c5ab.js.map"
     ],
     "app": [
-      "app-93f0970e3049e93a25bb.js",
+      "app-f280a663375bf1f4e642.js",
       "build-js-styles.css",
-      "app-93f0970e3049e93a25bb.js.map",
+      "app-f280a663375bf1f4e642.js.map",
       "build-js-styles.css.map"
     ],
     "path---docs-environmental-variables": [
