@@ -100,9 +100,7 @@ export function controller(): ComponentDecorator {
  * ```
  */
 export function service(constructor: typeof Service): PropertyDecorator {
-  // This cast to any is annoying but necessary as we don't want to leak private type information
-  // about the Service class. This API will be covered by integration tests when we write them.
-  return decorateServiceProperty(constructor as any)
+  return decorateServiceProperty(constructor)
 }
 
 /**
@@ -137,6 +135,8 @@ export interface Service<State = {}> {
 
   readonly state: State
   setState(state: Partial<State>): void
+
+  context: ServiceContext
 }
 
 export const Service: new <State>(context: ServiceContext) => Service<State> = _Service
@@ -156,6 +156,8 @@ export interface ServiceContext {
  */
 export interface PluginConfig extends Service {}
 export const PluginConfig = _PluginConfig
+
+export type PluginConstructor<T extends PluginConfig = PluginConfig> = new (context: ServiceContext) => T
 
 /**
  * Declare that a property of a PluginConfig is available for injection into components
