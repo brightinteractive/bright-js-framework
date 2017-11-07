@@ -2,6 +2,7 @@ import React from 'react'
 import { flatMap } from 'lodash'
 import { Card, CardHeader, CardText, CardMedia, Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn } from 'material-ui'
 import { Comment, Prototype, FunctionSignature, ParameterListDoc, Type } from './api-documentation-components'
+import { DocsTable, DocsRow, DocsSection, DocsCell } from './DocsTable'
 
 /**
  * Render documentation for an individual class or interface
@@ -21,76 +22,68 @@ export default ({ kind, kindString, name, children, comment, typeParameter }) =>
         <Comment comment={comment} />
       </CardText>
       <CardMedia expandable style={{ paddingTop: 0 }}>
-        <Table fixedHeader={false} adjustForCheckbox={false} selectable={false}>
-          <TableBody displayRowCheckbox={false}>
-            {
-              typeParameter && typeParameter.length > 0 && (
-                <TableRow>
-                  <TableHeaderColumn colSpan={2}>
-                    Type Parameters
-                  </TableHeaderColumn>
-                </TableRow>
-              )
-            }
-            {
-              typeParameter && typeParameter.map(p =>
-                <TableRow key={p.name}>
-                  <TableRowColumn>
+        <DocsTable>
+          {
+            typeParameter && typeParameter.length > 0 && (
+              <DocsSection span={2}>Type Parameters</DocsSection>
+            )
+          }
+          {
+            typeParameter && typeParameter.length > 0 && (
+              typeParameter.map(p =>
+                <DocsRow key={p.name}>
+                  <DocsCell>
                     <Prototype>{p.name}: <Type {...p.type} /></Prototype>
-                  </TableRowColumn>
-                  <TableRowColumn>
+                  </DocsCell>
+                  <DocsCell multiline>
                     <Comment comment={p.comment} />
-                  </TableRowColumn>
-                </TableRow>
+                  </DocsCell>
+                </DocsRow>
               )
-            }
-            {
-              properties.length > 0 && (
-                <TableRow>
-                  <TableHeaderColumn colSpan={2}>
-                    Properties
-                  </TableHeaderColumn>
-                </TableRow>
+            )
+          }
+          {
+            properties.length > 0 && (
+              <DocsSection span={2}>Properties</DocsSection>
+            )
+          }
+          {
+            properties.map(p =>
+              <DocsRow key={p.name}>
+                <DocsCell>
+                  <Prototype>{p.name}: <Type {...p.type} /></Prototype>
+                </DocsCell>
+                <DocsCell multiline>
+                  <Comment comment={p.comment} />
+                </DocsCell>
+              </DocsRow>
+            )
+          }
+          {
+            methods.length > 0 && (
+            <DocsRow>
+              <TableHeaderColumn colSpan={2}>
+                Methods
+              </TableHeaderColumn>
+            </DocsRow>
+            )
+          }
+          {
+            flatMap(methods, method =>
+              method.signatures.map((signature, i) =>
+                <DocsRow key={method.name + '_' + i}>
+                  <DocsCell>
+                    <FunctionSignature {...signature} />
+                  </DocsCell>
+                  <DocsCell multiline>
+                    <Comment comment={signature.comment} />
+                    <ParameterListDoc key={signature.name} {...signature} />
+                  </DocsCell>
+                </DocsRow>
               )
-            }
-            {
-              properties.map(p =>
-                <TableRow key={p.name}>
-                  <TableRowColumn>
-                    <Prototype>{p.name}: <Type {...p.type} /></Prototype>
-                  </TableRowColumn>
-                  <TableRowColumn>
-                    <Comment comment={p.comment} />
-                  </TableRowColumn>
-                </TableRow>
-              )
-            }
-            {
-              methods.length > 0 && (
-              <TableRow>
-                <TableHeaderColumn colSpan={2}>
-                  Methods
-                </TableHeaderColumn>
-              </TableRow>
-              )
-            }
-            {
-              flatMap(methods, method =>
-                method.signatures.map((signature, i) =>
-                  <TableRow key={method.name + '_' + i}>
-                    <TableRowColumn>
-                      <FunctionSignature {...signature} />
-                    </TableRowColumn>
-                    <TableRowColumn>
-                      <Comment comment={signature.comment} />
-                      <ParameterListDoc key={signature.name} {...signature} />
-                    </TableRowColumn>
-                  </TableRow>
-                )
-              )
-            }
-          </TableBody>
-        </Table>
+            )
+          }
+        </DocsTable>
       </CardMedia>
     </Card>
   )
