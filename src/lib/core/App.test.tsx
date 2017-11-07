@@ -3,10 +3,7 @@ import { expect } from 'chai'
 import { mount } from 'enzyme'
 import { createMemoryHistory } from 'history'
 import { App } from './App'
-import { PluginConfig, exportDependency } from './PluginConfig'
 import { ApplicationContext } from './ApplicationContext'
-import { injectDependency } from './InjectionClient'
-import { decorateController } from './Controller'
 
 describe('App', () => {
   it('should render the initially matched route', () => {
