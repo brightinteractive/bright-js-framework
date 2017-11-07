@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { History, Location } from 'history'
 import { Router, RouteConfig } from './Router'
+import { ContextProviderProps, ContextProvider } from './ContextProvider'
 
-export interface AppProps {
+export interface AppProps extends ContextProviderProps {
   routes: RouteConfig[]
   history: History
 }
@@ -22,7 +23,7 @@ export type RedirectFunction = (l: Location) => void
 /**
  * Root application container.
  */
-export class App extends React.PureComponent<AppProps> {
+export class App extends ContextProvider<AppProps> {
   router = new Router(this.props.routes, this.props.history)
 
   state: AppState = {

@@ -116,6 +116,9 @@ export class IndexPage extends React.PureComponent {
   }
 }
     `)
+  writeSource(['src', 'config.ts'], `
+export default []
+  `)
 }
 
 function writeSource(dest: string[], text: string) {

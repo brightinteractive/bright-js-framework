@@ -81,6 +81,7 @@
     "react-dom": "^16.0.0",
     "react-error-overlay": "^2.0.2",
     "react-syntax-highlighter": "^5.7.1",
+    "redux": "^3.7.2",
     "route-recognizer": "^0.3.3",
     "sass-loader": "^6.0.6",
     "serialize-javascript": "^1.4.0",

@@ -115,7 +115,8 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
       'whatwg-fetch',
       entrypointLoader({
         entry: require.resolve('../entry/client'),
-        topLevelModules: entrypoints
+        topLevelModules: entrypoints,
+        configFile: path.resolve(path.join('src', 'config.ts'))
       }),
     ],
   }

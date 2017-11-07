@@ -5,7 +5,8 @@ describe('entrypointLoader', () => {
   it('should generate shim code to load top level modules using entrypoint', () => {
     const loaderString = entrypointLoader({
       entry: 'myEntrypoint',
-      topLevelModules: ['module1', 'module2']
+      topLevelModules: ['module1', 'module2'],
+      configFile: 'foo.config'
     })
 
     const [loader, resourcePath] = loaderString.split('!')
@@ -19,7 +20,9 @@ describe('entrypointLoader', () => {
 
     expect(result).to.eql([
       `var entry = require("myEntrypoint").default;`,
-      `module.exports = entry([function () { return require("module1"); },function () { return require("module2"); }]);`,
+      `var opts = {config: function() { return require("foo.config").default; }};`,
+      `var modules = [function() { return require("module1"); },function() { return require("module2"); }];`,
+      `module.exports = entry(modules, opts);`,
     ].join('\n'))
   })
 })

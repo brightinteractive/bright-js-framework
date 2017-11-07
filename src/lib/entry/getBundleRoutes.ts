@@ -1,7 +1,7 @@
 import { flatMap } from 'lodash'
 import { isRouteComponent, getRouteComponentPath } from '../core/route'
 import { RouteConfig } from '../core/Router'
-import { RequireList } from '../bundler/entrypointLoader'
+import { RequireList } from '../bundler/Entrypoint'
 
 export function getBundleRoutes(topLevelModules: RequireList): RouteConfig[] {
   return flatMap(topLevelModules, (moduleLoader) => {
