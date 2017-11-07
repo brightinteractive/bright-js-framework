@@ -22,6 +22,9 @@ export default ({ order }) => {
         <LinkItem link="/docs/extending-with-plugins">
           Using Plugins
         </LinkItem>
+        <LinkItem link="/docs/test-support">
+          Test Support
+        </LinkItem>
         <LinkItem link="/docs/cli-tool">
           CLI Tool
         </LinkItem>
