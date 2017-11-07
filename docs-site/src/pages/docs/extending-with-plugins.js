@@ -46,6 +46,10 @@ export default () => {
         <CodeFile path="components/config.ts">
           {require('raw!./examples/plugins/example-usage.tsx')}
         </CodeFile>
+        <p>
+          Objects injected by plugins are shared between the whole application.
+          This differes from services, which are unique to each controller.
+        </p>
       </Section>
       <Section title="Writing Plugins">
           <p>
