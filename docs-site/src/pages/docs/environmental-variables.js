@@ -3,7 +3,6 @@ import Link from 'gatsby-link'
 import { PageHeader, Subheader } from '../../components/Headers'
 import { CodeBlock, CodeFile } from '../../components/CodeBlock'
 import { Section } from '../../components/Section'
-import { OptionsTable, Option } from '../../components/OptionsTable'
 
 export default () => {
   return (

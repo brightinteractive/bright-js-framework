@@ -2,7 +2,7 @@ import * as React from 'react'
 import { PageHeader, Subheader } from '../../components/Headers'
 import { CodeBlock, CodeFile } from '../../components/CodeBlock'
 import { Section } from '../../components/Section'
-import { OptionsTable, Option } from '../../components/OptionsTable'
+import { DocsTable, DocsRow, DocsCell } from '../../components/DocsTable'
 
 export default () => {
   return (
@@ -24,5 +24,24 @@ export default () => {
         </OptionsTable>
       </Section>
     </div>
+  )
+}
+
+export function OptionsTable({ children }) {
+  return (
+    <DocsTable columns={["Name", "Type", "Description", "Default Value"]}>
+      {children}
+    </DocsTable>
+  )
+}
+
+export function Option({ name, type, description, defaultValue }) {
+  return (
+    <DocsRow>
+      <DocsCell>{name}</DocsCell>
+      <DocsCell>{type}</DocsCell>
+      <DocsCell multiline>{description}</DocsCell>
+      <DocsCell multiline>{defaultValue}</DocsCell>
+    </DocsRow>
   )
 }

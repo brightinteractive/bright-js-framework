@@ -16,6 +16,6 @@ export function getModuleName(src) {
     return 'bright-js-framework'
 
   } else {
-    return 'bright-js-framework' + JSON.parse(name).replace(/\/index$/, '')
+    return 'bright-js-framework/' + slug.replace(/\/index$/, '')
   }
 }

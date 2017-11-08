@@ -1,5 +1,5 @@
 import { Service } from './Service'
-import { getRequiredDependencies } from './InjectionClient'
+import { getRequiredDependencies, InjectionContext } from './InjectionClient'
 
 const EXPORTED_OBJECT_KEYS = Symbol('providedObjectKeys')
 
@@ -11,7 +11,7 @@ export interface DependencyExport {
   propertyKey: string
 }
 
-export type PluginConstructor = typeof PluginConfig
+export type PluginConstructor<T extends PluginConfig = PluginConfig> = new (context: InjectionContext) => T
 export type ContextFactoryMap<T = any> = Record<string, () => T>
 export type ContextValueMap<T = any> = Record<string, T>
 
