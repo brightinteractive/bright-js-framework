@@ -38,4 +38,8 @@ export class TestFixture {
 
     return this
   }
+
+  getInstance<T>() {
+    return this.render().childAt(0).instance() as any as T
+  }
 }
