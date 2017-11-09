@@ -143,7 +143,8 @@ gulp.task('ci', gulp.series(
   gulp.parallel(
     'lint',
     'coverage',
-    'typecheck'
+    'typecheck',
+    'site'
   ),
   'coverage:submit'
 ))
