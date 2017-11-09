@@ -5,14 +5,12 @@ import { InjectionClient, InjectionContext } from './InjectionClient'
 const SERVICE_IDENTIFIER = Symbol('isService')
 const SERVICE_UID = Symbol('serviceUid')
 
+export type ServiceConstructor<T extends Service = Service> = new(context: InjectionContext) => T
+
 export class Service<State = any> implements InjectionClient {
   constructor(context: InjectionContext) {
     this.context = context
   }
-
-  serviceWillMount?: () => void
-  serviceDidMount?: () => void
-  serviceWillUnmount?: () => void
 
   readonly state: State
   setState(state: Partial<State>): void {}
@@ -20,12 +18,25 @@ export class Service<State = any> implements InjectionClient {
   context: InjectionContext
 }
 
+/**
+ * Pull optional methods out into interface as Typescript complains
+ * when they are overriden if defined as optional function properties.
+ *
+ * Due to declaration merging, this is presented to the user as a single
+ * class type
+ */
+export interface Service {
+  serviceWillMount?(): void
+  serviceDidMount?(): void
+  serviceWillUnmount?(): void
+}
+
 (Service.prototype as any)[SERVICE_IDENTIFIER] = true
 
 /**
  * Return a property descriptor that instantiates a service
  */
-export function decorateServiceProperty(Constructor: typeof Service) {
+export function decorateServiceProperty<T extends Service>(Constructor: ServiceConstructor<T>) {
   return (proto: any, key: string): any => {
     const cacheKey = Symbol(key)
 
