@@ -1,0 +1,15 @@
+{
+  "name": "bright-js-framework-docs",
+  "private": true,
+  "description": "Examples for bright-js-framework",
+  "version": "1.0.0",
+  "author": "Chris Devereux",
+  "dependencies": {
+    "@brightinteractive/bright-js-framework": "file:../"
+  },
+  "keywords": [
+    "gatsby"
+  ],
+  "license": "MIT",
+  "scripts": {}
+}

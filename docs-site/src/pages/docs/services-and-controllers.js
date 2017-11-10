@@ -28,8 +28,8 @@ export default () => {
         <p>
           Let's imagine a simple todo list component. In this example, we've split the presentational logic out into the <code>TodoListView</code> component, leaving <code>TodoList</code> to manage the state it presents.
         </p>
-        <CodeFile path="./src/components/TodoList/TodoList.tsx">
-          {require('raw!./examples/controllers/before.tsx')}
+        <CodeFile path="src/components/TodoList.before.tsx">
+          {require('raw!../../../../examples/extracting-services-from-controllers/src/components/TodoList.before.tsx')}
         </CodeFile>
         <p>
           At the moment, it isn't a huge component, but we can imagine that as requirements evolve (for example, if we start adding persistence, search and other features) it might become unwieldy. We might want to use the same update logic in different view contexts, without having to duplicate this logic amongst multiple components.
@@ -40,14 +40,14 @@ export default () => {
         <p>
           First, we create a new Service class that contains the state management logic extracted from <code>TodoList</code>:
         </p>
-        <CodeFile path="./src/components/TodoList/ListService.tsx">
-          {require('raw!./examples/controllers/service.tsx')}
+        <CodeFile path="src/services/ListService.tsx">
+          {require('raw!../../../../examples/extracting-services-from-controllers/src/services/ListService.tsx')}
         </CodeFile>
         <p>
           Next, we annotate the controller with the <code>@controller</code> decorator and replace the state management logic with an instance of our new service. Adding the <code>@controller</code> decorator is important, as otherwise the service won’t be connected to the controllers’s state and lifecycle events.
         </p>
-        <CodeFile path="./src/components/TodoList/TodoList.tsx">
-          {require('raw!./examples/controllers/after.tsx')}
+        <CodeFile path="src/components/TodoList.after.tsx">
+          {require('raw!../../../../examples/extracting-services-from-controllers/src/components/TodoList.after.tsx')}
         </CodeFile>
         <p>
           The behaviour of this component is identical to the original one, but its implementation is much simpler. Our <code>ListService</code> class is now able to store state, which acts as if it were state of <code>TodoList</code>. Controllers are re-rendered whenever the state of a constituent service changes.

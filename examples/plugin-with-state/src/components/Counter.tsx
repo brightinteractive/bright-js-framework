@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { controller, select, StateSelection } from '@brightinteractive/bright-js-framework'
 import { CounterActions, counterActions, counterValue } from '../plugins/CounterPlugin'
-import { Button } from './widgets'
 
 @controller()
 export class Counter extends React.PureComponent {
@@ -15,7 +14,7 @@ export class Counter extends React.PureComponent {
     return (
       <div>
         Value: {this.counterValue.value}
-        <Button onClick={this.counter.increment}>Increment</Button>
+        <button onClick={this.counter.increment}>Increment</button>
       </div>
     )
   }

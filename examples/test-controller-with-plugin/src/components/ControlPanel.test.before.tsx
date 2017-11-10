@@ -1,8 +1,7 @@
-import { expect } from 'chai'
 import * as React from 'react'
 import { TestFixture } from '@brightinteractive/bright-js-framework/test-utils'
 import { ControlPanel } from './ControlPanel'
-import EventManagerPlugin from '../plugins/EventManager'
+import EventManagerPlugin from '../plugins/EventManagerPlugin'
 
 describe('ControlPanel', () => {
   it('posts message when button is clicked', (done) => {
@@ -13,7 +12,7 @@ describe('ControlPanel', () => {
       )
     })
 
-    fixture.stub(EventManagerPlugin, (plugin) => {
+    fixture.stub(EventManagerPlugin, (plugin: EventManagerPlugin) => {
       plugin.eventManager.registerHandler('request-open-pod-bay-doors', () => {
         done()
       })

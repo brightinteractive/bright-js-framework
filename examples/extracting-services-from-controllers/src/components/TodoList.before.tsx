@@ -1,11 +1,16 @@
-import { Service } from '@brightinteractive/bright-js-framework'
+import * as React from 'react'
+import { TodoListView } from './TodoListView'
 
-export interface ListServiceState {
+export interface TodoListProps {
+
+}
+
+export interface TodoListState {
   items: string[]
 }
 
-export class ListService extends Service<ListServiceState> {
-  state = { items: [] }
+export class TodoList extends React.PureComponent<TodoListProps, TodoListState> {
+  state: TodoListState = { items: [] }
 
   handleAdd = (item: string) => {
     this.setState({
@@ -29,5 +34,16 @@ export class ListService extends Service<ListServiceState> {
     this.setState({
       items: this.state.items
     })
+  }
+
+  render() {
+    return (
+      <TodoListView
+        items={this.state.items}
+        onAdd={this.handleAdd}
+        onEdit={this.handleEdit}
+        onDelete={this.handleDelete}
+      />
+    )
   }
 }

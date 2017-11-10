@@ -14,6 +14,7 @@ node_modules
 
 # Dist files
 /index.js
+/test-utils.js
 /lib
 /*.d.ts
 /cli

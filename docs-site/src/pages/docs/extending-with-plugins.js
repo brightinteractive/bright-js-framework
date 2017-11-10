@@ -38,7 +38,7 @@ export default () => {
           Plugins are configured in a special file at the root of your application's source, <code>src/config.ts</code>. Let’s look at a hypothetical plugin called <code>EventManager</code> that allows components to post and subscribe to events. We would install the plugin by adding it to the default export of our config file.
         </p>
         <CodeFile path="src/config.ts">
-          {require('raw!./examples/plugins/example-config.ts')}
+          {require('raw!../../../../examples/plugin-with-injection/src/config.ts')}
         </CodeFile>
         <p>
           Some plugins provide an API to controllers. Others may have application-wide effects that do not require any usage. Consult the documentation for the specific plugin for further usage instructions.
@@ -51,8 +51,8 @@ export default () => {
         <p>
           Plugins that allow dependencies to be injected into components will typically provide a decorator to inject the dependency and an interface for the dependency as an API. A controller that uses a hypothetical <code>EventManager</code> plugin to dispatch events might use it as follows:
         </p>
-        <CodeFile path="components/config.ts">
-          {require('raw!./examples/plugins/injection-using.tsx')}
+        <CodeFile path="src/components/ControlPanel.tsx">
+          {require('raw!../../../../examples/plugin-with-injection/src/components/ControlPanel.tsx')}
         </CodeFile>
         <p>
           It is important to understand the difference between injected objects and services. Although the APIs are similar, they serve very different purposes. Objects injected by plugins are shared across the whole application. This differs from services, which are unique to each controller. So for an event system, which requires all clients to share a single underlying object, we would use a plugin to provide the event manager. For a form-binding helper, which is a piece of extracted controller logic, we would use a service.
@@ -62,8 +62,8 @@ export default () => {
           This is done by extending the <code>PluginConfig</code> class, and utilising the
           <code>@exportDependency</code> decorator.
         </p>
-        <CodeFile path="./src/plugins/EventManager.ts">
-          {require('raw!./examples/plugins/injection-writing.ts')}
+        <CodeFile path="src/plugins/EventManagerPlugin.ts">
+          {require('raw!../../../../examples/plugin-with-injection/src/plugins/EventManagerPlugin.ts')}
         </CodeFile>
         <p>
           In this code block we have created an extremely simple event manager plugin. The event manager itself is
@@ -99,14 +99,14 @@ export default () => {
         <p>
           In Bright-js-framework, each reducer function manages a discrete part of the application state identified by a key. Reducers are defined as static methods on plugins, decorated with <code>@state()</code>.
         </p>
-        <CodeFile path="./src/plugins/Counter.ts">
-          {require('raw!./examples/plugins/state-writing.ts')}
+        <CodeFile path="src/plugins/CounterPlugin.ts">
+          {require('raw!../../../../examples/plugin-with-state/src/plugins/CounterPlugin.ts')}
         </CodeFile>
         <p>
           A component developer would then use this API as follows:
         </p>
-        <CodeFile path="./src/plugins/Counter.ts">
-          {require('raw!./examples/plugins/state-using.tsx')}
+        <CodeFile path="src/components/Counter.tsx">
+          {require('raw!../../../../examples/plugin-with-state/src/components/Counter.tsx')}
         </CodeFile>
       </Section>
     </div>

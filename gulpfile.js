@@ -69,39 +69,6 @@ gulp.task('coverage:submit', function () {
 })
 
 
-/**
- * Site generator
- */
-
-gulp.task('site:bootstrap', shell.task(['npm install'], { cwd: './docs-site' }))
-
-gulp.task('site:typedoc', function () {
-  return gulp.src(PUBLIC_SOURCE_FILES)
-    .pipe(typedoc({
-      json: 'docs-site/docs.json',
-      module: 'commonjs',
-      tsconfig: 'tsconfig.json',
-      ignoreCompilerErrors: true
-    }))
-})
-
-gulp.task('site:build', shell.task(['npm run build'], { cwd: './docs-site' }))
-
-gulp.task('site:build:watch', shell.task(['npm run develop'], { cwd: './docs-site' }))
-
-gulp.task('site', gulp.series(['site:bootstrap', 'site:typedoc', 'site:build']))
-
-gulp.task('site:ci', gulp.series('site', function (done) {
-  pages.clean()
-  pages.publish('./docs-site/public', undefined, done)
-}))
-
-gulp.task('site:watch', gulp.series(
-  'site:typedoc',
-  gulp.parallel('site:build:watch'),
-))
-
-
 /** Build */
 
 gulp.task('build:clean', function () {
@@ -127,6 +94,45 @@ gulp.task('build', gulp.series(
   'build:clean',
   'build:transpile',
   'build:delete-private-interfaces'
+))
+
+
+/**
+ * Site generator
+ */
+
+gulp.task('site:bootstrap', gulp.series(
+  'build',
+  gulp.parallel(
+    shell.task(['npm install'], { cwd: './examples' }),
+    shell.task(['npm install'], { cwd: './docs-site' })
+  )
+))
+
+gulp.task('site:typedoc', function () {
+  return gulp.src(PUBLIC_SOURCE_FILES)
+    .pipe(typedoc({
+      json: 'docs-site/docs.json',
+      module: 'commonjs',
+      tsconfig: 'tsconfig.json',
+      ignoreCompilerErrors: true
+    }))
+})
+
+gulp.task('site:build', shell.task(['npm run build'], { cwd: './docs-site' }))
+
+gulp.task('site:build:watch', shell.task(['npm run develop'], { cwd: './docs-site' }))
+
+gulp.task('site', gulp.series(['site:bootstrap', 'site:typedoc', 'site:build']))
+
+gulp.task('site:ci', gulp.series('site', function (done) {
+  pages.clean()
+  pages.publish('./docs-site/public', undefined, done)
+}))
+
+gulp.task('site:watch', gulp.series(
+  'site:typedoc',
+  gulp.parallel('site:build:watch'),
 ))
 
 

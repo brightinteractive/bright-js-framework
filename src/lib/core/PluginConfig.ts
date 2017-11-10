@@ -3,7 +3,7 @@ import { getRequiredDependencies, InjectionContext } from './InjectionClient'
 
 const EXPORTED_OBJECT_KEYS = Symbol('providedObjectKeys')
 
-export class PluginConfig extends Service {
+export class PluginConfig<T = {}> extends Service<T> {
 }
 
 export interface DependencyExport {

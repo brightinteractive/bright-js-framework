@@ -1,4 +1,4 @@
-import { inject, state, exported, PluginConfig, Action } from '@brightinteractive/bright-js-framework'
+import { inject, state, exported, dispatcher, Dispatcher, PluginConfig, Action, SelectFn } from '@brightinteractive/bright-js-framework'
 
 const COUNTER_ACTIONS = 'counterActions'
 const COUNTER_STATE = 'counter'
@@ -36,4 +36,4 @@ export default class CounterPlugin extends PluginConfig<CounterState> {
 export const counterActions = inject(COUNTER_ACTIONS)
 
 // Exported API to bind a selected state value into a service or controller
-export const counterValue = select((state) => state[COUNTER_STATE])
+export const counterValue: SelectFn<number> = (appState) => appState[COUNTER_STATE]

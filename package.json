@@ -111,6 +111,7 @@
   "files": [
     "server.js",
     "index.js",
+    "test-utils.js",
     "*.d.ts",
     "lib",
     "api",

@@ -15,14 +15,14 @@ export default () => {
         <p>
           Let’s take a look at the ControlPanel component that we built previously:
         </p>
-        <CodeFile path="/src/components/ControlPanel.tsx">
-          {require('raw!./examples/plugins/injection-using.tsx')}
+        <CodeFile path="src/components/ControlPanel.tsx">
+          {require('raw!../../../../examples/test-controller-with-plugin/src/components/ControlPanel.tsx')}
         </CodeFile>
         <p>
           As a slightly contrived example of a test, let’s imagine that we want to verify that when the button is clicked, it dispatches the appropriate event.
         </p>
-        <CodeFile path="/src/components/ControlPanel.test.tsx">
-          {require('raw!./examples/test-support/before.tsx')}
+        <CodeFile path="src/components/ControlPanel.test.before.tsx">
+          {require('raw!../../../../examples/test-controller-with-plugin/src/components/ControlPanel.test.before.tsx')}
         </CodeFile>
         <p>
           This test will throw an exception. The ControlPanel component is expecting to receive the EventManager instance from a plugin, but we haven't provided this plugin to the test case.
@@ -30,8 +30,8 @@ export default () => {
         <p>
           Bright-js-framework provides the TestFixture class to help with this. Let’s rewrite this test case using the TestFixture class to provide an EventManager to the test:
         </p>
-        <CodeFile path="/src/components/ControlPanel.test.tsx">
-          {require('raw!./examples/test-support/after.tsx')}
+        <CodeFile path="src/components/ControlPanel.test.tsx">
+          {require('raw!../../../../examples/test-controller-with-plugin/src/components/ControlPanel.test.tsx')}
         </CodeFile>
       </Section>
     </div>

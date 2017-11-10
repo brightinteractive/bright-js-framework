@@ -162,7 +162,7 @@ export interface ServiceContext {
  *
  * @class
  */
-export interface PluginConfig extends Service { }
+export interface PluginConfig<T = {}> extends Service<T> { }
 export const PluginConfig = _PluginConfig
 
 export type PluginConstructor<T extends PluginConfig = PluginConfig> = new (context: ServiceContext) => T
