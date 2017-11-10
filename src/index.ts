@@ -106,7 +106,7 @@ export function controller(): ComponentDecorator {
  *  }
  * ```
  */
-export function service(constructor: typeof Service): PropertyDecorator {
+export function service(constructor: ServiceConstructor): PropertyDecorator {
   return decorateServiceProperty(constructor)
 }
 
@@ -146,6 +146,7 @@ export interface Service<State = {}> {
   context: ServiceContext
 }
 
+export type ServiceConstructor<State = {}> = new (context: ServiceContext) => Service<State>
 export const Service: new <State>(context: ServiceContext) => Service<State> = _Service
 
 /** Opaque object passed into service constructors */
