@@ -28,8 +28,12 @@ gulp.task('test', function () {
 })
 
 gulp.task('typecheck', shell.task([
-  'node_modules/.bin/tsc --noemit'
+  'node_modules/.bin/tsc --noemit',
 ]))
+
+gulp.task('typecheck-examples', shell.task([
+  '../node_modules/.bin/tsc --noemit',
+], { cwd: 'examples' }))
 
 
 /** Autofixing & formatting */
@@ -96,18 +100,9 @@ gulp.task('build', gulp.series(
   'build:delete-private-interfaces'
 ))
 
-
 /**
  * Site generator
  */
-
-gulp.task('site:bootstrap', gulp.series(
-  'build',
-  gulp.parallel(
-    shell.task(['npm install'], { cwd: './examples' }),
-    shell.task(['npm install'], { cwd: './docs-site' })
-  )
-))
 
 gulp.task('site:typedoc', function () {
   return gulp.src(PUBLIC_SOURCE_FILES)
@@ -123,7 +118,7 @@ gulp.task('site:build', shell.task(['npm run build'], { cwd: './docs-site' }))
 
 gulp.task('site:build:watch', shell.task(['npm run develop'], { cwd: './docs-site' }))
 
-gulp.task('site', gulp.series(['site:bootstrap', 'site:typedoc', 'site:build']))
+gulp.task('site', gulp.series(['site:typedoc', 'site:build']))
 
 gulp.task('site:ci', gulp.series('site', function (done) {
   pages.clean()
@@ -135,23 +130,41 @@ gulp.task('site:watch', gulp.series(
   gulp.parallel('site:build:watch'),
 ))
 
+/** Bootstrapping */
+
+gulp.task('bootstrap:site', shell.task(['npm install'], { cwd: './docs-site' }))
+
+gulp.task('bootstrap:examples', gulp.series(
+  'build',
+  shell.task(['npm install'], { cwd: './examples' })
+))
+
+gulp.task('bootstrap', gulp.parallel(
+  'bootstrap:site',
+  'bootstrap:examples'
+))
 
 /** CI entry */
 
 gulp.task('default', gulp.series([
+  'bootstrap',
   'fix',
-  gulp.parallel(
-    'coverage',
-    'typecheck'
-  )
-]))
-
-gulp.task('ci', gulp.series(
   gulp.parallel(
     'lint',
     'coverage',
     'typecheck',
-    'site'
+    'typecheck-examples'
+  )
+]))
+
+gulp.task('ci', gulp.series(
+  'bootstrap',
+  gulp.parallel(
+    'lint',
+    'coverage',
+    'typecheck',
+    'site',
+    'typecheck-examples'
   ),
   'coverage:submit'
 ))
