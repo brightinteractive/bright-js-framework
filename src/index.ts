@@ -10,9 +10,9 @@ import { Service as _Service, decorateServiceProperty } from './lib/core/Service
 import { Link as _Link } from './lib/components/Link'
 import { PluginConfig as _PluginConfig, exportDependency } from './lib/core/PluginConfig'
 import { injectDependency } from './lib/core/InjectionClient'
-import { declareReducer } from './lib/core/declareReducer';
-import { injectDispatch } from './lib/plugins/StorePlugin/StorePlugin';
-import { createSelectService } from './lib/plugins/StorePlugin/SelectService';
+import { injectDispatch } from './lib/plugins/StorePlugin/StorePlugin'
+import { createSelectService } from './lib/plugins/StorePlugin/SelectService'
+import { declareReducer } from './lib/core/declareReducer'
 
 /**
  * Declare a component as a route and associate a path with it.
@@ -204,6 +204,14 @@ export interface Action {
  */
 export interface SelectFn<T> {
   (state: any): T
+}
+
+/**
+ * Service created by the @select decorator containing current value of
+ * an application state subscription.
+ */
+export interface StateSelection<T> {
+  value: T
 }
 
 /** Dispatcher function injected by the @dispatcher() decorator */

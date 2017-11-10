@@ -88,9 +88,9 @@ gulp.task('site:build', shell.task(['npm run build'], { cwd: './docs-site' }))
 
 gulp.task('site:build:watch', shell.task(['npm run develop'], { cwd: './docs-site' }))
 
-gulp.task('site', gulp.series(['site:typedoc', 'site:build']))
+gulp.task('site', gulp.series(['site:bootstrap', 'site:typedoc', 'site:build']))
 
-gulp.task('site:ci', gulp.series('site:bootstrap', 'site', function (done) {
+gulp.task('site:ci', gulp.series('site', function (done) {
   pages.clean()
   pages.publish('./docs-site/public', undefined, done)
 }))
