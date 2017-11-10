@@ -4,29 +4,37 @@
       "path---docs-cli-tool-a0e39f21c11f6a62c5ab.js",
       "path---docs-cli-tool-a0e39f21c11f6a62c5ab.js.map"
     ],
+    "path---docs-test-support": [
+      "path---docs-test-support-a0e39f21c11f6a62c5ab.js",
+      "path---docs-test-support-a0e39f21c11f6a62c5ab.js.map"
+    ],
     "path---docs-services-and-controllers": [
       "path---docs-services-and-controllers-a0e39f21c11f6a62c5ab.js",
       "path---docs-services-and-controllers-a0e39f21c11f6a62c5ab.js.map"
+    ],
+    "path---modules-test-utils": [
+      "path---modules-test-utils-a902c6f39be9347b6749.js",
+      "path---modules-test-utils-a902c6f39be9347b6749.js.map"
     ],
     "component---src-pages-index-js": [
       "component---src-pages-index-js-5bc6e4a0f3a60cb17b78.js",
       "component---src-pages-index-js-5bc6e4a0f3a60cb17b78.js.map"
     ],
     "path---modules-index": [
-      "path---modules-index-a6ef36eb74a2a826947e.js",
-      "path---modules-index-a6ef36eb74a2a826947e.js.map"
+      "path---modules-index-6dea3d0695177dbf5b7e.js",
+      "path---modules-index-6dea3d0695177dbf5b7e.js.map"
     ],
     "path---": [
-      "path----e105aa783b8fd5db4950.js",
-      "path----e105aa783b8fd5db4950.js.map"
+      "path----ab588215fa4398e3ded4.js",
+      "path----ab588215fa4398e3ded4.js.map"
     ],
     "component---src-pages-docs-cli-tool-js": [
-      "component---src-pages-docs-cli-tool-js-ab740667b28c63806db0.js",
-      "component---src-pages-docs-cli-tool-js-ab740667b28c63806db0.js.map"
+      "component---src-pages-docs-cli-tool-js-49b49646dbabbf77e822.js",
+      "component---src-pages-docs-cli-tool-js-49b49646dbabbf77e822.js.map"
     ],
     "component---src-pages-docs-extending-with-plugins-js": [
-      "component---src-pages-docs-extending-with-plugins-js-0d6d27f25d9f7a11bcf2.js",
-      "component---src-pages-docs-extending-with-plugins-js-0d6d27f25d9f7a11bcf2.js.map"
+      "component---src-pages-docs-extending-with-plugins-js-43b0984abd902bb3bf79.js",
+      "component---src-pages-docs-extending-with-plugins-js-43b0984abd902bb3bf79.js.map"
     ],
     "path---docs-getting-started": [
       "path---docs-getting-started-a0e39f21c11f6a62c5ab.js",
@@ -37,16 +45,20 @@
       "component---src-pages-docs-getting-started-js-74c378bb0d82ed4869e7.js.map"
     ],
     "component---src-pages-docs-environmental-variables-js": [
-      "component---src-pages-docs-environmental-variables-js-3a4bd8a30085471d530c.js",
-      "component---src-pages-docs-environmental-variables-js-3a4bd8a30085471d530c.js.map"
+      "component---src-pages-docs-environmental-variables-js-3c9ac4237dadfa3f57ec.js",
+      "component---src-pages-docs-environmental-variables-js-3c9ac4237dadfa3f57ec.js.map"
     ],
     "component---src-layouts-index-js": [
-      "component---src-layouts-index-js-5523878d528a1e8e6f4f.js",
-      "component---src-layouts-index-js-5523878d528a1e8e6f4f.js.map"
+      "component---src-layouts-index-js-919aa588c7db922523d3.js",
+      "component---src-layouts-index-js-919aa588c7db922523d3.js.map"
     ],
     "component---src-templates-module-doc-js": [
-      "component---src-templates-module-doc-js-0fbe8cb51f332d16d1a2.js",
-      "component---src-templates-module-doc-js-0fbe8cb51f332d16d1a2.js.map"
+      "component---src-templates-module-doc-js-36fcc0c19a73ff7e5bd5.js",
+      "component---src-templates-module-doc-js-36fcc0c19a73ff7e5bd5.js.map"
+    ],
+    "component---src-pages-docs-test-support-js": [
+      "component---src-pages-docs-test-support-js-6953ca0804a658ee3c66.js",
+      "component---src-pages-docs-test-support-js-6953ca0804a658ee3c66.js.map"
     ],
     "component---src-pages-docs-services-and-controllers-js": [
       "component---src-pages-docs-services-and-controllers-js-f54f592ef33ac6adc304.js",
@@ -61,8 +73,8 @@
       "component---src-pages-404-js-4503918ea3a16cfcdb75.js.map"
     ],
     "commons": [
-      "commons-8c46b1cf8dd3e57a03a9.js",
-      "commons-8c46b1cf8dd3e57a03a9.js.map"
+      "commons-0f3440863dec3b4b8957.js",
+      "commons-0f3440863dec3b4b8957.js.map"
     ],
     "path---404-html": [
       "path---404-html-a0e39f21c11f6a62c5ab.js",
@@ -77,9 +89,9 @@
       "path---docs-app-configuration-a0e39f21c11f6a62c5ab.js.map"
     ],
     "app": [
-      "app-f280a663375bf1f4e642.js",
+      "app-fdde022035e45c607fd5.js",
       "build-js-styles.css",
-      "app-f280a663375bf1f4e642.js.map",
+      "app-fdde022035e45c607fd5.js.map",
       "build-js-styles.css.map"
     ],
     "path---docs-environmental-variables": [
@@ -91,8 +103,8 @@
       "path---404-a0e39f21c11f6a62c5ab.js.map"
     ],
     "component---src-pages-docs-app-configuration-js": [
-      "component---src-pages-docs-app-configuration-js-d4c3dc628bdc49117698.js",
-      "component---src-pages-docs-app-configuration-js-d4c3dc628bdc49117698.js.map"
+      "component---src-pages-docs-app-configuration-js-d1626f873906838ce1d6.js",
+      "component---src-pages-docs-app-configuration-js-d1626f873906838ce1d6.js.map"
     ]
   }
 }
