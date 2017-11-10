@@ -80,7 +80,8 @@ gulp.task('site:typedoc', function () {
     .pipe(typedoc({
       json: 'docs-site/docs.json',
       module: 'commonjs',
-      tsconfig: 'tsconfig.json'
+      tsconfig: 'tsconfig.json',
+      ignoreCompilerErrors: true
     }))
 })
 
