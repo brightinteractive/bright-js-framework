@@ -65,4 +65,13 @@ describe('TestFixture', () => {
 
     expect(fixture.render()).to.have.text('value=5')
   })
+
+  it('exposes store', () => {
+    const fixture = new TestFixture({
+      plugins: [TestPlugin],
+      markup: <PluginConsumer />
+    })
+
+    expect(fixture.store.dispatch).to.be.a('function')
+  })
 })

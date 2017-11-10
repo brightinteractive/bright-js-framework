@@ -10,6 +10,9 @@ import { Service as _Service, decorateServiceProperty } from './lib/core/Service
 import { Link as _Link } from './lib/components/Link'
 import { PluginConfig as _PluginConfig, exportDependency } from './lib/core/PluginConfig'
 import { injectDependency } from './lib/core/InjectionClient'
+import { injectDispatch } from './lib/plugins/StorePlugin/StorePlugin'
+import { createSelectService } from './lib/plugins/StorePlugin/SelectService'
+import { declareReducer } from './lib/core/declareReducer'
 
 /**
  * Declare a component as a route and associate a path with it.
@@ -184,6 +187,89 @@ export function exported(id: string): PropertyDecorator {
  */
 export function inject(id: string): PropertyDecorator {
   return injectDependency(id)
+}
+
+/**
+ * Object describing a mutation to the application datastore.
+ */
+export interface Action {
+  type: string
+  [key: string]: any | undefined
+}
+
+/**
+ * Function describing how to select data from the application datastore.
+ *
+ * Passed to the @select() decorator
+ */
+export interface SelectFn<T> {
+  (state: any): T
+}
+
+/**
+ * Service created by the @select decorator containing current value of
+ * an application state subscription.
+ */
+export interface StateSelection<T> {
+  value: T
+}
+
+/** Dispatcher function injected by the @dispatcher() decorator */
+export interface Dispatcher {
+  (action: Action): void
+}
+
+/**
+ * Declare how to manage state changes for an aspect of application state.
+ *
+ * State changes are managed using reducer functions, which take the previous state
+ * of part of the application store and an action describing a mutation, then return
+ * the next state of the store.
+ *
+ * State reducers are defined by decorating a static method of a plugin with a `@state()` decorator.
+ *
+ * ```
+ *  class CounterPlugin extends PluginConfig {
+ *    @state()
+ *    static update(state: number = 0, action: Action) {
+ *      if (action.type === 'counter:increment') {
+ *        return state + 1
+ *      }
+ *
+ *      return state
+ *    }
+ *  }
+ * ```
+ *
+ * @param key Key of the application’s store to manage using the decorated function
+ */
+export function state(key: string): PropertyDecorator {
+  return declareReducer(key)
+}
+
+/**
+ * Injects a StateSelector into the component
+ *
+ * ```
+ *  class Counter extends React.PureComponent {
+ *    @select(Counter.getValue)
+ *    counter: StateSelector<number>
+ *
+ *    render() {
+ *      return <div>{this.counter.value}</div>
+ *    }
+ *  }
+ * ```
+ */
+export function select<T>(selectFn: SelectFn<T>): PropertyDecorator {
+  return createSelectService(selectFn)
+}
+
+/**
+ * Injects the application’s action dispatcher into a controller or service
+ */
+export function dispatcher(): PropertyDecorator {
+  return injectDispatch
 }
 
 export type ComponentDecorator<Props = {}> = (cls: React.ComponentClass<Props>) => void

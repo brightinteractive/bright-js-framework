@@ -25,11 +25,11 @@ export interface TestFixture {
   /**
    * Stub all plugins of a particular type
    *
-   * @param ctor    Type of the plugins to stub
-   * @param stubFn  Customizer function. It receives an instance of the plugin, which can be
-   *                used to customize its behavior.
+   * @param constructor Type of the plugins to stub
+   * @param stubFn      Customizer function. It receives an instance of the plugin, which can be
+   *                    used to customize its behavior.
    */
-  stub<T extends PluginConfig>(ctor: PluginConstructor<T>, stubFn: (fn: T) => void): TestFixture
+  stub<T extends PluginConfig>(constructor: PluginConstructor<T>, stubFn: (fn: T) => void): TestFixture
 }
 
 export const TestFixture: new (props: TestFixtureProps) => TestFixture = _TestFixture

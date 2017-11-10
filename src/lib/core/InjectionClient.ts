@@ -11,7 +11,7 @@ export interface InjectionContext {
   '@appContext': ApplicationContext
 }
 
-export function injectDependency(id: string): (proto: InjectionClient, key: string) => any
+export function injectDependency(id: string): InjectionDecorator
 export function injectDependency(id: string) {
   return (proto: any) => {
     proto[INJECTED_OBJECT_KEYS] = proto[INJECTED_OBJECT_KEYS] || new Set()
@@ -25,7 +25,9 @@ export function injectDependency(id: string) {
   }
 }
 
-export function getRequiredDependencies(ctor: new (...props: any[]) => InjectionClient): Set<string>
-export function getRequiredDependencies(ctor: any) {
-  return ctor.prototype[INJECTED_OBJECT_KEYS] || new Set()
+export function getRequiredDependencies(constructor: new (...props: any[]) => InjectionClient): Set<string>
+export function getRequiredDependencies(constructor: any) {
+  return constructor.prototype[INJECTED_OBJECT_KEYS] || new Set()
 }
+
+export type InjectionDecorator = (proto: InjectionClient, key: string) => any

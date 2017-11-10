@@ -4,6 +4,7 @@ import { mount } from 'enzyme'
 import * as React from 'react'
 import { decorateController, isController } from './Controller'
 import { Service, decorateServiceProperty } from './Service'
+import { InjectionContext } from './InjectionClient'
 
 describe('Controller', () => {
   describe('isController()', () => {
@@ -49,7 +50,7 @@ describe('Controller', () => {
 
       it('should call serviceDidMount() on mount', () => {
         const { service } = setup()
-        expect(service.serviceDidMount).to.have.been.calledAfter(service.serviceWillMount)
+        expect(service.serviceDidMount).to.have.been.calledAfter(service.serviceWillMount as any)
       })
 
       it('should call serviceDidMount() on unmount', () => {
@@ -87,7 +88,10 @@ describe('Controller', () => {
 })
 
 class SpyService extends Service<any> {
-  serviceWillMount = spy()
-  serviceDidMount = spy()
-  serviceWillUnmount = spy()
+  constructor(ctx: InjectionContext) {
+    super(ctx)
+    this.serviceWillMount = spy()
+    this.serviceDidMount = spy()
+    this.serviceWillUnmount = spy()
+  }
 }

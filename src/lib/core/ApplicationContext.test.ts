@@ -12,4 +12,9 @@ describe('ApplicationContext', () => {
     const ctx = new ApplicationContext([MyPlugin])
     expect(ctx.injectedObjects.myDependency).to.eql(1)
   })
+
+  it('should return store', () => {
+    const ctx = new ApplicationContext([MyPlugin])
+    expect(ctx.store.dispatch).to.be.a('function')
+  })
 })

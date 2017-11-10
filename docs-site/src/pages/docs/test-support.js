@@ -16,7 +16,7 @@ export default () => {
           Let’s take a look at the ControlPanel component that we built previously:
         </p>
         <CodeFile path="/src/components/ControlPanel.tsx">
-          {require('raw!./examples/plugins/example-usage.tsx')}
+          {require('raw!./examples/plugins/injection-using.tsx')}
         </CodeFile>
         <p>
           As a slightly contrived example of a test, let’s imagine that we want to verify that when the button is clicked, it dispatches the appropriate event.

@@ -4,6 +4,7 @@ import { mount, ReactWrapper } from 'enzyme'
 import { PluginConstructor, PluginConfig } from '../core/PluginConfig'
 import { ApplicationContext } from '../core/ApplicationContext'
 import { ContextProvider } from '../core/ContextProvider'
+import { Store } from 'redux';
 
 export interface TestFixtureProps {
   plugins?: PluginConstructor[]
@@ -32,10 +33,18 @@ export class TestFixture {
     return this.reactWrapper.update()
   }
 
-  stub<T extends PluginConfig>(ctor: PluginConstructor<T>, stubFn: (fn: T) => void) {
-    const matches = filter(this.appContext.plugins, (x) => x instanceof ctor)
+  stub<T extends PluginConfig>(constructor: PluginConstructor<T>, stubFn: (fn: T) => void) {
+    const matches = filter(this.appContext.plugins, (x) => x instanceof constructor) as T[]
     matches.forEach(stubFn)
 
     return this
+  }
+
+  getInstance<T>() {
+    return this.render().childAt(0).instance() as any as T
+  }
+
+  get store(): Store<any> {
+    return this.appContext.store
   }
 }

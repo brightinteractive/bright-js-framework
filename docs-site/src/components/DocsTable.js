@@ -9,7 +9,7 @@ export function DocsTable({ columns, children }) {
           <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
             <TableRow>
               {
-                columns.map((col) => <TableHeaderColumn colSpan={span} key={col}>{col}</TableHeaderColumn>)
+                columns.map((col) => <TableHeaderColumn key={col}>{col}</TableHeaderColumn>)
               }
             </TableRow>
           </TableHeader>

@@ -4,7 +4,7 @@ import { createBrowserHistory } from 'history'
 import { App } from '../core/App'
 import { RequireList, EntryOpts } from '../bundler/Entrypoint'
 import { getBundleRoutes } from './getBundleRoutes'
-import { ApplicationContext } from '../core/ApplicationContext';
+import { ApplicationContext } from '../core/ApplicationContext'
 
 // Configuration passed from server in ‘magic’ variable
 declare const ___process_env_config: NodeJS.ProcessEnv

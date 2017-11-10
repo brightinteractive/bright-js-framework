@@ -7,9 +7,9 @@ import { DocsTable, DocsRow, DocsSection, DocsCell } from './DocsTable'
 /**
  * Render documentation for an individual class or interface
  */
-export default ({ kind, kindString, name, children, comment, typeParameter }) => {
-  const properties = children.filter(x => x.kindString === 'Property')
-  const methods = children.filter(x => x.kindString === 'Method')
+export default function InterfaceDocumentation({ kind, kindString, name, children, comment, typeParameter }) {
+  const properties = toArray(children).filter(x => x.kindString === 'Property')
+  const methods = toArray(children).filter(x => x.kindString === 'Method')
 
   return (
     <Card id={`interfaces_${name}`}>
@@ -61,11 +61,11 @@ export default ({ kind, kindString, name, children, comment, typeParameter }) =>
           }
           {
             methods.length > 0 && (
-            <DocsRow>
-              <TableHeaderColumn colSpan={2}>
-                Methods
-              </TableHeaderColumn>
-            </DocsRow>
+              <DocsRow>
+                <TableHeaderColumn colSpan={2}>
+                  Methods
+                </TableHeaderColumn>
+              </DocsRow>
             )
           }
           {
@@ -102,4 +102,16 @@ function InterfaceDecl({ kindString, name, typeParameter }) {
       }
     </span>
   )
+}
+
+function toArray(x) {
+  if (Array.isArray(x)) {
+    return x
+  }
+
+  if (typeof x === 'undefined') {
+    return []
+  }
+
+  return [x]
 }
