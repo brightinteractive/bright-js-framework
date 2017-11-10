@@ -34,7 +34,7 @@ import { declareReducer } from './lib/core/declareReducer'
  *
  * @param path  Path pattern to serve the route from
  */
-export function route(path: string): ComponentDecorator<RouteProps> {
+export function route(path: string): ComponentDecorator<RouteProps<any, any>> {
   return (ComponentClass) => {
     decorateRouteComponent(path, ComponentClass)
   }
@@ -46,7 +46,7 @@ export function route(path: string): ComponentDecorator<RouteProps> {
  * @param Params  Types of route parameters
  * @param Query   Expected types of query params object
  */
-export interface RouteProps<Params extends Record<string, string> = {}, Query extends Record<string, string | undefined> = {}> {
+export interface RouteProps<Params = {}, Query = {}> {
   /** Location of the current matched route */
   location: Location
 
