@@ -32,9 +32,9 @@ export function exportDependency(id: string): (proto: PluginConfig, key: string)
 /**
  * Get dependency metadata provided by exportDependency.
  */
-export function getExportedDependencies(ctor: PluginConstructor): Set<DependencyExport>
-export function getExportedDependencies(ctor: any): Set<DependencyExport> {
-  return ctor.prototype[EXPORTED_OBJECT_KEYS] || new Set()
+export function getExportedDependencies(constructor: PluginConstructor): Set<DependencyExport>
+export function getExportedDependencies(constructor: any): Set<DependencyExport> {
+  return constructor.prototype[EXPORTED_OBJECT_KEYS] || new Set()
 }
 
 /**

@@ -33,8 +33,8 @@ export class TestFixture {
     return this.reactWrapper.update()
   }
 
-  stub<T extends PluginConfig>(ctor: PluginConstructor<T>, stubFn: (fn: T) => void) {
-    const matches = filter(this.appContext.plugins, (x) => x instanceof ctor) as T[]
+  stub<T extends PluginConfig>(constructor: PluginConstructor<T>, stubFn: (fn: T) => void) {
+    const matches = filter(this.appContext.plugins, (x) => x instanceof constructor) as T[]
     matches.forEach(stubFn)
 
     return this
