@@ -13,6 +13,9 @@ export default ({ order }) => {
         <LinkItem link="/docs/getting-started">
           Getting Started
         </LinkItem>
+        <LinkItem link="/docs/interacting-with-the-browser">
+          Interacting with the Browser
+        </LinkItem>
         <LinkItem link="/docs/app-configuration">
           App Configuration
         </LinkItem>
