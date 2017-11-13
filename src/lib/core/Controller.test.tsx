@@ -1,10 +1,9 @@
 import { expect } from 'chai'
-import { spy } from 'sinon'
 import { mount } from 'enzyme'
 import * as React from 'react'
 import { decorateController, isController } from './Controller'
 import { Service, decorateServiceProperty } from './Service'
-import { InjectionContext } from './InjectionClient'
+import { SpyService } from './mocks/SpyService'
 
 describe('Controller', () => {
   describe('isController()', () => {
@@ -86,12 +85,3 @@ describe('Controller', () => {
     })
   })
 })
-
-class SpyService extends Service<any> {
-  constructor(ctx: InjectionContext) {
-    super(ctx)
-    this.serviceWillMount = spy()
-    this.serviceDidMount = spy()
-    this.serviceWillUnmount = spy()
-  }
-}

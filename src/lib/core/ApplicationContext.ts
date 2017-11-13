@@ -13,6 +13,15 @@ export class ApplicationContext {
     return getStoreFromContext(this.appContext)
   }
 
+  findPluginOfType<T>(type: new (...args: any[]) => T): T {
+    const match = this.plugins.find((plugin) => plugin instanceof type)
+    if (!match) {
+      throw new Error(`No plugin of type ${type} installed`)
+    }
+
+    return match as any
+  }
+
   constructor(pluginConstructors: PluginConstructor[] = []) {
     this.appContext = {
       '@appContext': this
