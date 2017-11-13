@@ -4,6 +4,7 @@ import { mount } from 'enzyme'
 import { createMemoryHistory } from 'history'
 import { App } from './App'
 import { ApplicationContext } from './ApplicationContext'
+import { RouteProps } from '../../index'
 
 describe('App', () => {
   it('should render the initially matched route', () => {
@@ -16,7 +17,7 @@ describe('App', () => {
         routes={[
           {
             path: '/',
-            handler: class Handler extends React.Component<any> {
+            handler: class Handler extends React.Component<RouteProps> {
               render() {
                 return <div>Hello</div>
               }
