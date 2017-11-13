@@ -216,8 +216,8 @@ export interface StateSelection<T> {
 }
 
 /** Dispatcher function injected by the @dispatcher() decorator */
-export interface Dispatcher {
-  (action: Action): void
+export interface Dispatcher<A extends Action = Action> {
+  (action: A): void
 }
 
 /**
