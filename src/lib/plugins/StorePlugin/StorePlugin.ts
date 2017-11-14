@@ -8,6 +8,8 @@ const STORE = 'store'
 const DISPATCH = 'dispatch'
 declare const __REDUX_DEVTOOLS_EXTENSION__: (() => GenericStoreEnhancer) | undefined
 
+export type Selector<T> = (x: any) => T
+
 /**
  * Owns and provides access to the application's redux store.
  */

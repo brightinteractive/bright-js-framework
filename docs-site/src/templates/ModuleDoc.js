@@ -6,6 +6,7 @@ import { PageHeader, Section, getModuleName } from '../components/Headers'
 import FunctionDocumentation from '../components/FunctionDocumentation'
 import InterfaceDocumentation from '../components/InterfaceDocumentation'
 import ComponentDocumentation from '../components/ComponentDocumentation'
+import SelectorDocumentation from '../components/SelectorDocumentation'
 
 /**
  * Template for a module documentation page
@@ -18,11 +19,12 @@ export default class ModuleDoc extends React.PureComponent {
   components = this.docs.children.filter(isComponent)
   interfaces = this.docs.children.filter(isInterface({ withComponents: this.components }))
   decorators = this.docs.children.filter(isDecorator)
+  selectors = this.docs.children.filter(isSelector)
 
   propsFor = createGetComponentProps(this.docs.children)
 
   render() {
-    const { docs, functions, classes, interfaces, components, decorators } = this
+    const { docs, functions, classes, interfaces, components, decorators, selectors } = this
 
     return (
       <div>
@@ -101,6 +103,17 @@ export default class ModuleDoc extends React.PureComponent {
               </Tab>
             )
           }
+          {
+            selectors.length > 0 && (
+              <Tab label="selectors">
+              {
+                selectors.map((x, i) =>
+                  <SelectorDocumentation key={i} {...x} />
+                )
+              }
+              </Tab>
+            )
+          }
         </Tabs>
       </div>
     )
@@ -108,11 +121,15 @@ export default class ModuleDoc extends React.PureComponent {
 }
 
 function isClass({ kindString, comment }) {
-  return kindString === 'Class' || isTaggedAsClass(comment)
+  return kindString === 'Class' || isTaggedAs('class')(comment)
 }
 
 function isFunction({ kindString, signatures }) {
   return kindString === 'Function' && !returnsDecorator(signatures)
+}
+
+function isSelector({ kindString, type }) {
+  return kindString === 'Variable' && type && type.name === 'SelectFn'
 }
 
 function isDecorator({ kindString, signatures }) {
@@ -125,7 +142,7 @@ function isComponent({ kindString, type }) {
 
 function isInterface({ withComponents }) {
   const isComponentProps = createIsComponentProps(withComponents)
-  return (x) => x.kindString === 'Interface' && !isComponentProps(x) && !isTaggedAsClass(x.comment)
+  return (x) => x.kindString === 'Interface' && !isComponentProps(x) && !isTaggedAs('class')(x.comment)
 }
 
 function createIsComponentProps(components) {
@@ -142,6 +159,6 @@ function returnsDecorator(signatures = []) {
   return signatures.some(sig => sig.type.name === 'ComponentDecorator' || sig.type.name === 'PropertyDecorator')
 }
 
-function isTaggedAsClass(comment = {}) {
-  return comment && comment.tags && comment.tags.some(t => t.tag === 'class')
+function isTaggedAs(tag) {
+  return (comment = {}) => comment && comment.tags && comment.tags.some(t => t.tag === tag)
 }

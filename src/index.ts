@@ -11,8 +11,10 @@ import { Link as _Link } from './lib/components/Link'
 import { PluginConfig as _PluginConfig, exportDependency } from './lib/core/PluginConfig'
 import { injectDependency } from './lib/core/InjectionClient'
 import { injectDispatch } from './lib/plugins/StorePlugin/StorePlugin'
+import { BrowserActions as _BrowserActions } from './lib/plugins/BrowserPlugin/BrowserActions'
 import { createSelectService } from './lib/plugins/StorePlugin/SelectService'
 import { declareReducer } from './lib/core/declareReducer'
+import { locationSelect } from './lib/plugins/BrowserPlugin/BrowserPlugin'
 
 /**
  * Declare a component as a route and associate a path with it.
@@ -216,8 +218,8 @@ export interface StateSelection<T> {
 }
 
 /** Dispatcher function injected by the @dispatcher() decorator */
-export interface Dispatcher {
-  (action: Action): void
+export interface Dispatcher<A extends Action = Action> {
+  (action: A): void
 }
 
 /**
@@ -272,6 +274,32 @@ export function select<T>(selectFn: SelectFn<T>): PropertyDecorator {
 export function dispatcher(): PropertyDecorator {
   return injectDispatch
 }
+
+/**
+ * Service for performing actions on the browser. Works across all environments.
+ *
+ * @class
+ */
+export interface BrowserActions {
+  /** Navigate to *location*, pushing a new entry onto the history stack */
+  pushLocation(location: string | Partial<Location>): void
+
+  /** Navigate to *location*, without pushing a new entry onto the history stack */
+  replaceLocation(location: string | Partial<Location>): void
+
+  /** Equivalent to the browser back button */
+  goBack(): void
+
+  /** Equivalent to the browser forward button */
+  goForward(): void
+}
+
+export const BrowserActions: ServiceConstructor<BrowserActions> = _BrowserActions
+
+/**
+ * Select the current page location
+ */
+export const location: SelectFn<Location> = locationSelect
 
 export type ComponentDecorator<Props = {}> = (cls: React.ComponentClass<Props>) => void
 export type PropertyDecorator = (proto: any, key: string) => any

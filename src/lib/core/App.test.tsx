@@ -4,6 +4,7 @@ import { mount } from 'enzyme'
 import { createMemoryHistory } from 'history'
 import { App } from './App'
 import { ApplicationContext } from './ApplicationContext'
+import { RouteProps } from '../../index'
 
 describe('App', () => {
   it('should render the initially matched route', () => {
@@ -16,7 +17,7 @@ describe('App', () => {
         routes={[
           {
             path: '/',
-            handler: class Handler extends React.Component<any> {
+            handler: class Handler extends React.Component<RouteProps> {
               render() {
                 return <div>Hello</div>
               }
@@ -41,5 +42,38 @@ describe('App', () => {
         appContext={new ApplicationContext()}
       />
     )).to.throw()
+  })
+
+  it('should transition routes', () => {
+    const history = createMemoryHistory()
+    history.replace('/1')
+
+    const app = mount(
+      <App
+        history={history}
+        routes={[
+          {
+            path: '/1',
+            handler: class Handler extends React.Component<RouteProps> {
+              render() {
+                return <div>1</div>
+              }
+            }
+          },
+          {
+            path: '/2',
+            handler: class Handler extends React.Component<RouteProps> {
+              render() {
+                return <div>2</div>
+              }
+            }
+          }
+        ]}
+        appContext={new ApplicationContext()}
+      />
+    )
+
+    history.replace('/2')
+    expect(app).to.have.text('2')
   })
 })

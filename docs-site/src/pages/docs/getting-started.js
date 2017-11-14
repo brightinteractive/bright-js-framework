@@ -79,6 +79,19 @@ export default () => {
           {require('raw!../../../../examples/getting-started/src/pages/404.tsx')}
         </CodeFile>
       </Section>
+      <Section title="Navigating to other pages">
+        <p>
+          It is important not to use the HTML <code>{'<a />'}</code> element to navigate to other pages on the site.
+          Using this element will perform a full page load, which will be slow, won’t use any animations that you have designed,
+          and will loose any client-side state.
+        </p>
+        <p>
+          Instead, use Bright-js-framework’s <code>{'<Link />'}</code> element, which is a drop-in replacement for {'<a />'} that functions correctly.
+        </p>
+        <CodeFile path="src/pages/LinksPage.tsx">
+          {require('raw!../../../../examples/getting-started/src/pages/LinksPage.tsx')}
+        </CodeFile>
+      </Section>
     </div>
   )
 }

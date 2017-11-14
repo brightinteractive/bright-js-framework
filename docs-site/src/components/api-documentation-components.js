@@ -51,6 +51,9 @@ export const ParameterDoc = (p) => {
  * Render a type in typescript syntax.
  */
 export const Type = (p) => {
+  if (!p.type) {
+    return <span>any</span>
+  }
   if (p.type === 'intrinsic') {
     return <span>{p.name}</span>
   }

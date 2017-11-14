@@ -5,6 +5,7 @@ import { App } from '../core/App'
 import { RequireList, EntryOpts } from '../bundler/Entrypoint'
 import { getBundleRoutes } from './getBundleRoutes'
 import { ApplicationContext } from '../core/ApplicationContext'
+import { createBrowserPlugin } from '../plugins/BrowserPlugin/BrowserPlugin';
 
 // Configuration passed from server in ‘magic’ variable
 declare const ___process_env_config: NodeJS.ProcessEnv
@@ -15,6 +16,8 @@ declare const ___process_env_config: NodeJS.ProcessEnv
  * Performs initial client app setup and launches the app.
  */
 export default function clientEntry(topLevelModules: RequireList, opts: EntryOpts) {
+  const history = createBrowserHistory()
+
   restoreProcessEnv()
   renderApplication()
 
@@ -26,7 +29,13 @@ export default function clientEntry(topLevelModules: RequireList, opts: EntryOpt
   /** Construct plugin instances specified in config file */
   function getAppContext() {
     const pluginConfigs = opts.config() || []
-    return new ApplicationContext(pluginConfigs)
+
+    return new ApplicationContext([
+      ...pluginConfigs,
+      createBrowserPlugin({
+        history
+      })
+    ])
   }
 
   /** Start the application and render into DOM  */
@@ -34,7 +43,7 @@ export default function clientEntry(topLevelModules: RequireList, opts: EntryOpt
     ReactDOM.render(
       <App
         routes={getBundleRoutes(topLevelModules)}
-        history={createBrowserHistory()}
+        history={history}
         appContext={getAppContext()}
       />,
       document.getElementById('app')

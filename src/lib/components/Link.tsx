@@ -1,6 +1,13 @@
 import * as React from 'react'
+import { decorateServiceProperty } from '../core/Service'
+import { decorateController } from '../core/Controller'
+import { BrowserActions } from '../plugins/BrowserPlugin/BrowserActions'
 
+@decorateController
 export class Link extends React.PureComponent<React.HTMLProps<{}>> {
+  @decorateServiceProperty(BrowserActions)
+  actions: BrowserActions
+
   handleClick: React.MouseEventHandler<{}> = (e) => {
     if (this.props.onClick) {
       this.props.onClick(e)
@@ -14,9 +21,12 @@ export class Link extends React.PureComponent<React.HTMLProps<{}>> {
       return
     }
 
-    // We don't have access to the routing API yet as DI isn't implemented.
-    // When we do, prevent the default anchor behaviour and fire off the
-    // transition.
+    if (!this.props.href) {
+      return
+    }
+
+    e.preventDefault()
+    this.actions.pushLocation(this.props.href)
   }
 
   render() {
