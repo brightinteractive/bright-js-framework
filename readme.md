@@ -18,7 +18,7 @@ Development guide
 
 Prerequisites
 --
-Node 8 or higher.
+Node 8.3+ or higher.
 
 This repo uses gulp as a task runner. Which is *so* 2015, but it fits the range of build tasks this library needs quite well. You will need to install the gulp cli in order to run the build commands:
 
