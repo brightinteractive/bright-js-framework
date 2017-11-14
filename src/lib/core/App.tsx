@@ -24,18 +24,31 @@ export type RedirectFunction = (l: Location) => void
  * Root application container.
  */
 export class App extends ContextProvider<AppProps> {
-  router = new Router(this.props.routes, this.props.history)
+  router = new Router(this.props.routes)
+  unsubscribeHistory: () => void
 
   state: AppState = {
     location: this.props.history.location,
   }
 
-  render() {
-    const { route } = this.router
+  handlePageTransition: History.LocationListener = (location) => {
+    this.setState({ location })
+  }
 
-    if (route) {
-      const Handler = route.handler
-      return <Handler {...route} />
+  componentDidMount() {
+    this.unsubscribeHistory = this.props.history.listen(this.handlePageTransition)
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeHistory()
+  }
+
+  render() {
+    const match = this.router.match(this.state.location)
+
+    if (match) {
+      const Handler = match.handler
+      return <Handler {...match} />
 
     } else {
       throw new Error(`You don't have a page set up to handle 404s. Add a new page with @route('*') to catch them`)

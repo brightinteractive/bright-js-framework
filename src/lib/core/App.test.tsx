@@ -43,4 +43,37 @@ describe('App', () => {
       />
     )).to.throw()
   })
+
+  it('should transition routes', () => {
+    const history = createMemoryHistory()
+    history.replace('/1')
+
+    const app = mount(
+      <App
+        history={history}
+        routes={[
+          {
+            path: '/1',
+            handler: class Handler extends React.Component<RouteProps> {
+              render() {
+                return <div>1</div>
+              }
+            }
+          },
+          {
+            path: '/2',
+            handler: class Handler extends React.Component<RouteProps> {
+              render() {
+                return <div>2</div>
+              }
+            }
+          }
+        ]}
+        appContext={new ApplicationContext()}
+      />
+    )
+
+    history.replace('/2')
+    expect(app).to.have.text('2')
+  })
 })

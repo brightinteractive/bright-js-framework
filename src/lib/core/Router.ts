@@ -1,6 +1,6 @@
 import RouteRecognizer from 'route-recognizer'
 import * as React from 'react'
-import { createMemoryHistory, Action, Location, LocationDescriptor, History } from 'history'
+import { Location } from 'history'
 import { RouteProps } from '../../index'
 
 export interface RouteConfig {
@@ -17,25 +17,17 @@ export interface MatchedRoute extends RouteProps<any, any> {
 }
 
 export class Router {
-  static match(location: LocationDescriptor, routes: RouteConfig[], action: Action): Match {
-    const router = new Router(routes, createMemoryHistory())
-    router.set(location, action)
-    return router.route
-  }
-
   private recognizer = createRecognizer()
-  private history: History
 
-  constructor(routes: RouteConfig[], history: History) {
+  constructor(routes: RouteConfig[]) {
     routes.forEach((route) => {
       this.recognizer.add([route])
     })
-
-    this.history = history
   }
 
-  get route(): Match {
-    const matches = this.recognizer.recognize(this.path)
+  match(location: Location): Match {
+    const path = stringifyLocation(location)
+    const matches = this.recognizer.recognize(path)
     if (!matches) {
       return undefined
     }
@@ -57,21 +49,8 @@ export class Router {
     return {
       handler: handler as any,
       pathParams: params,
-      location: this.history.location,
+      location,
       queryParams: matches.queryParams || {},
-    }
-  }
-
-  get path() {
-    return stringifyLocation(this.history.location)
-  }
-
-  set(path: LocationDescriptor, action: Action) {
-    if (action === 'PUSH') {
-      this.history.push(path as any)
-
-    } else if (action === 'POP') {
-      this.history.replace(path as any)
     }
   }
 }
