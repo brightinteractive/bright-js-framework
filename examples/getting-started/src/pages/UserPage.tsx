@@ -5,8 +5,9 @@ export interface UserPageParams {
   name: string
 }
 
-@route('/users/:id')
-@controller()
+@route('/users/:name')
 export class UserPage extends React.PureComponent<RouteProps<UserPageParams>> {
-
+  render() {
+    return <div>Hello, {this.props.pathParams.name}!</div>
+  }
 }

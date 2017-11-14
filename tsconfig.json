@@ -34,6 +34,7 @@
     "docs-site",
     "lib",
     "cli",
+    "examples",
     "index.js",
     "*.d.ts"
   ]

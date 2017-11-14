@@ -10,7 +10,8 @@
     "gatsby-plugin-react-helmet": "^1.0.5",
     "lodash": "^4.17.4",
     "material-ui": "^0.19.4",
-    "react-markdown": "^2.5.0"
+    "react-markdown": "^2.5.0",
+    "@brightinteractive/bright-js-framework": "file:../"
   },
   "keywords": [
     "gatsby"

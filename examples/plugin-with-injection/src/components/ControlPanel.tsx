@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { controller } from '@brightinteractive/bright-js-framework'
-import { eventManager, EventManager } from '../plugins/EventManager'
-import { Button } from './widgets'
+import { eventManager, EventManager } from '../plugins/EventManagerPlugin'
 
 @controller()
 export class ControlPanel extends React.PureComponent {
@@ -22,7 +21,7 @@ export class ControlPanel extends React.PureComponent {
     return (
       <div>
         <h3>Pod Bay doors:</h3>
-        <Button onClick={this.handleOpenClick}>Open</Button>
+        <button onClick={this.handleOpenClick}>Open</button>
       </div>
     )
   }

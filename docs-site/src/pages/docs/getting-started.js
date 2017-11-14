@@ -47,7 +47,7 @@ export default () => {
               You'll see that the skeleton project contains a couple of placeholder pages.
             </p>
             <CodeFile path="src/pages/IndexPage.tsx">
-              {require('raw!./examples/getting-started/index.tsx')}
+              {require('raw!../../../../examples/getting-started/src/pages/IndexPage.tsx')}
             </CodeFile>
           </li>
           <li>
@@ -68,15 +68,15 @@ export default () => {
           Route components can be fully or partially dynamic and extract path params from sections. They also
           receive a special set of props from the page, providing the location, path params and query params:
         </p>
-        <CodeFile path="src/pages/index.tsx">
-          {require('raw!./examples/getting-started/routing-in-depth.tsx')}
+        <CodeFile path="src/pages/UserPage.tsx">
+          {require('raw!../../../../examples/getting-started/src/pages/UserPage.tsx')}
         </CodeFile>
         <p>
           <code>*</code> can be used as a wildcard component (eg. <code>/onboarding/*</code>). It can also be used to
           produce a 404 page. The skeleton project includes an example of using this.
         </p>
         <CodeFile path="src/pages/404.tsx">
-          {require('raw!./examples/getting-started/404.tsx')}
+          {require('raw!../../../../examples/getting-started/src/pages/404.tsx')}
         </CodeFile>
       </Section>
     </div>

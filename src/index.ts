@@ -34,7 +34,7 @@ import { declareReducer } from './lib/core/declareReducer'
  *
  * @param path  Path pattern to serve the route from
  */
-export function route(path: string): ComponentDecorator<RouteProps> {
+export function route(path: string): ComponentDecorator<RouteProps<any, any>> {
   return (ComponentClass) => {
     decorateRouteComponent(path, ComponentClass)
   }
@@ -46,7 +46,7 @@ export function route(path: string): ComponentDecorator<RouteProps> {
  * @param Params  Types of route parameters
  * @param Query   Expected types of query params object
  */
-export interface RouteProps<Params extends Record<string, string> = {}, Query extends Record<string, string | undefined> = {}> {
+export interface RouteProps<Params = {}, Query = {}> {
   /** Location of the current matched route */
   location: Location
 
@@ -106,7 +106,7 @@ export function controller(): ComponentDecorator {
  *  }
  * ```
  */
-export function service(constructor: typeof Service): PropertyDecorator {
+export function service(constructor: ServiceConstructor): PropertyDecorator {
   return decorateServiceProperty(constructor)
 }
 
@@ -146,6 +146,7 @@ export interface Service<State = {}> {
   context: ServiceContext
 }
 
+export type ServiceConstructor<State = {}> = new (context: ServiceContext) => Service<State>
 export const Service: new <State>(context: ServiceContext) => Service<State> = _Service
 
 /** Opaque object passed into service constructors */
@@ -161,7 +162,7 @@ export interface ServiceContext {
  *
  * @class
  */
-export interface PluginConfig extends Service { }
+export interface PluginConfig<T = {}> extends Service<T> { }
 export const PluginConfig = _PluginConfig
 
 export type PluginConstructor<T extends PluginConfig = PluginConfig> = new (context: ServiceContext) => T

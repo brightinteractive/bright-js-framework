@@ -1,4 +1,3 @@
-import { expect } from 'chai'
 import * as React from 'react'
 import { mount } from 'enzyme'
 import { ControlPanel } from './ControlPanel'
