@@ -87,17 +87,7 @@ To replace with the latest version after merging to master:
 Release workflow
 ---
 
-Patch releases are auto-deployed on merge to  master. To prepare a pull request for a new major or minor version, run:
-
-```
-npm version premajor
-```
-
-or:
-
-```
-npm version preminor
-```
+Releases are auto-deployed on merge to master if the version in package.json has incremented.
 
 
 Documentation
