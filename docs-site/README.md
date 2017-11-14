@@ -8,7 +8,7 @@ Pull requests must include documentation for new or updated APIs. This may consi
 To work on the documentation site, you'll first need to install its development dependencies:
 
 ```
-gulp site:bootstrap
+gulp bootstrap
 ```
 
 After this, you can run the project site in development mode using:
