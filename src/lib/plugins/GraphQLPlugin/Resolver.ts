@@ -1,15 +1,40 @@
-const RESOLVER_TYPENAME_KEY = Symbol('ResolverType')
+import { InjectionContext, InjectionClient } from '../../../core/InjectionClient'
 
-export function decorateResolver(typeName: string, constructor: new() => any): void
-export function decorateResolver(typeName: string, constructor: any) {
-  constructor[RESOLVER_TYPENAME_KEY] = typeName
+const RESOLVER_TYPENAME_KEY = Symbol('ResolverType')
+const RESOLVER_PROPERTIES_KEY = Symbol('ResolverProps')
+
+export class Resolver extends InjectionClient {
+  readonly id: string
+
+  constructor(context: InjectionContext, id: string) {
+    super(context)
+    this.id = id
+  }
 }
 
-export function isResolver(constructor: new() => any) {
+export type ResolverConstructor = new(context: InjectionContext) => Resolver
+
+export function decorateTypeResolver(typeName: string): (constructor: ResolverConstructor) => void {
+  return (constructor: any) => {
+    constructor[RESOLVER_TYPENAME_KEY] = typeName
+  }
+}
+
+export function isTypeResolver(constructor: any) {
   return Boolean(getResolverTypename(constructor))
 }
 
-export function getResolverTypename(constructor: new() => any): string
 export function getResolverTypename(constructor: any) {
   return constructor[RESOLVER_TYPENAME_KEY]
+}
+
+export function decorateResolverProperty(prototype: Resolver, key: string): void
+export function decorateResolverProperty(prototype: any, key: string) {
+  prototype[RESOLVER_PROPERTIES_KEY] = prototype[RESOLVER_PROPERTIES_KEY] || new Set()
+  prototype[RESOLVER_PROPERTIES_KEY].add(key)
+}
+
+export function getResolverProperties(constructor: ResolverConstructor): Set<string>
+export function getResolverProperties(constructor: any) {
+  return constructor.prototype[RESOLVER_PROPERTIES_KEY] || new Set()
 }
