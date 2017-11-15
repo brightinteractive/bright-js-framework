@@ -2,8 +2,12 @@ import { ApplicationContext } from './ApplicationContext'
 
 const INJECTED_OBJECT_KEYS = Symbol('injectedObjectKeys')
 
-export interface InjectionClient {
+export class InjectionClient {
   context: InjectionContext
+
+  constructor(context: InjectionContext) {
+    this.context = context
+  }
 }
 
 /** Shape of context passed into a controller */
