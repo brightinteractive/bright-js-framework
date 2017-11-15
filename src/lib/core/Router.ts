@@ -12,7 +12,7 @@ export type Match
   = undefined
   | MatchedRoute
 
-export interface MatchedRoute extends RouteProps<any, any> {
+export interface MatchedRoute extends RouteProps<string, string> {
   handler: React.ComponentType<any>
 }
 
@@ -48,7 +48,7 @@ export class Router {
     const { handler, params } = match
     return {
       handler: handler as any,
-      pathParams: params,
+      pathParams: params as Record<string, string>,
       location,
       queryParams: matches.queryParams || {},
     }

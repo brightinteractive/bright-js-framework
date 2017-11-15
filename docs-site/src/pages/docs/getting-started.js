@@ -23,7 +23,9 @@ export default () => {
             </p>
             <CodeBlock language="bash">
               {`mkdir my-project`}
+              {`\n`}
               {`cd my-project`}
+              {`\n`}
               {`bright-js-framework init`}
             </CodeBlock>
           </li>

@@ -10,7 +10,7 @@ export default () => {
       <PageHeader>App Configuration</PageHeader>
       <Section alwaysExpanded title=".bright-js-framework">
         <p>
-          The <code>.bright-js-framework</code> file is a JSON file optionaly placed at your project root,
+          The <code>.bright-js-framework</code> file is a JSON file optionally placed at your project root,
           which contains the application's main configuration.
         </p>
         <Subheader>Options</Subheader>

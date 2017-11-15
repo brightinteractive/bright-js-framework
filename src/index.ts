@@ -48,15 +48,15 @@ export function route(path: string): ComponentDecorator<RouteProps<any, any>> {
  * @param Params  Types of route parameters
  * @param Query   Expected types of query params object
  */
-export interface RouteProps<Params = {}, Query = {}> {
+export interface RouteProps<ParamKeys extends string = never, QueryKeys extends string = never> {
   /** Location of the current matched route */
   location: Location
 
   /** Values extracted from path components */
-  pathParams: Params
+  pathParams: Record<ParamKeys, string>
 
   /** Values extracted from url query params */
-  queryParams: Query
+  queryParams: Record<QueryKeys, string>
 }
 
 /**
