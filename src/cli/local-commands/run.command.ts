@@ -10,6 +10,8 @@ import { pick } from 'lodash'
 import { getWebpackConfig } from '../../lib/bundler/getWebpackConfig'
 import { renderHtmlWrapper } from '../../lib/server/renderHtmlWrapper'
 import { getConfig } from '../getConfig'
+import { loadPlugins } from '../getPlugins';
+import { getRequestHandlers } from '../../lib/core/PluginConfig';
 
 export interface RunCommandOpts {
   entry: string
@@ -36,6 +38,11 @@ export function handler({ port }: RunCommandOpts) {
 
   const bundler = webpack(webpackConfig)
   const app = express()
+
+  const plugins = loadPlugins()
+  getRequestHandlers(plugins).forEach((pluginHandler) => {
+    app.use(pluginHandler)
+  })
 
   app.use(hot(bundler, { path: '/_hot' }))
   app.use(devserver(bundler))
