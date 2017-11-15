@@ -10,7 +10,7 @@ describe('ApplicationContext', () => {
 
   it('should return injected objects', () => {
     const ctx = new ApplicationContext([MyPlugin])
-    expect(ctx.injectedObjects.myDependency).to.eql(1)
+    expect(ctx.getInjectedObject('myDependency')).to.eql(1)
   })
 
   it('should return store', () => {

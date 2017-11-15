@@ -4,22 +4,13 @@ import { InjectionContext } from './InjectionClient'
 import { PluginConstructor, ContextValueMap, getPluginCreationOrder, getExportedDependencies, PluginConfig } from './PluginConfig'
 
 export class ApplicationContext {
-  readonly injectedObjects: ContextValueMap = {}
   readonly plugins: PluginConfig[] = []
 
+  private injectedObjects: ContextValueMap = new Map()
   private appContext: InjectionContext
 
   get store(): Store<any> {
     return getStoreFromContext(this.appContext)
-  }
-
-  findPluginOfType<T>(type: new (...args: any[]) => T): T {
-    const match = this.plugins.find((plugin) => plugin instanceof type)
-    if (!match) {
-      throw new Error(`No plugin of type ${type} installed`)
-    }
-
-    return match as any
   }
 
   constructor(pluginConstructors: PluginConstructor[] = []) {
@@ -38,12 +29,29 @@ export class ApplicationContext {
     orderedConstructors.forEach((constructor) => this.constructPlugin(constructor))
   }
 
+  findPluginOfType<T>(type: new (...args: any[]) => T): T {
+    const match = this.plugins.find((plugin) => plugin instanceof type)
+    if (!match) {
+      throw new Error(`No plugin of type ${type} installed`)
+    }
+
+    return match as any
+  }
+
+  getInjectedObject(key: {}) {
+    return this.injectedObjects.get(key)
+  }
+
+  injectObject(key: {}, value: {}) {
+    this.injectedObjects.set(key, value)
+  }
+
   private constructPlugin(PluginType: PluginConstructor) {
     const instance = new PluginType(this.appContext)
     this.plugins.push(instance)
 
     getExportedDependencies(PluginType).forEach(({ dependencyId, propertyKey }) => {
-      this.injectedObjects[dependencyId] = (instance as any)[propertyKey]
+      this.injectedObjects.set(dependencyId, (instance as any)[propertyKey])
     })
   }
 }
