@@ -6,7 +6,7 @@ import { CodeBlock, CodeFile } from '../../components/CodeBlock'
 export default () => {
   return (
     <div>
-      <PageHeader>Controllers and Services</PageHeader>
+      <PageHeader>Services and Controllers</PageHeader>
       <Section title="Introduction">
         <p>
           In React, we are used to thinking about applicaitons as a tree of components.
