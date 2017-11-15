@@ -12,7 +12,7 @@ export class Resolver extends InjectionClient {
   }
 }
 
-export type ResolverConstructor = new(context: InjectionContext) => Resolver
+export type ResolverConstructor = new(context: InjectionContext, id: string) => Resolver
 
 export function decorateTypeResolver(typeName: string): (constructor: ResolverConstructor) => void {
   return (constructor: any) => {

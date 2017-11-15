@@ -30,7 +30,7 @@ export interface FetchUrl {
 export interface RequestOpts {
   url: string | FetchUrl
   body?: any
-  headers?: {}
+  headers?: Record<string, string>
   responseType?: ResponseType
   bodyType?: BodyType
 }
@@ -96,7 +96,7 @@ export class HttpClient extends InjectionClient {
       method,
       body: bodyType.convert(body),
       headers: {
-        ...headers,
+        ...(headers || {}),
         ...bodyType.headers,
         ...responseType.headers
       }
