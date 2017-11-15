@@ -26,7 +26,8 @@
     "types": [
       "mocha",
       "chai-enzyme",
-      "sinon-chai"
+      "sinon-chai",
+      "chai-as-promised"
     ]
   },
   "exclude": [
