@@ -23,7 +23,7 @@ export function injectDependency(id: string) {
 
     return {
       get(this: InjectionClient) {
-        return this.context['@appContext'].injectedObjects[id]
+        return this.context['@appContext'].getInjectedObject(id)
       }
     }
   }

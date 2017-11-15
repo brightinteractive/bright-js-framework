@@ -1,7 +1,11 @@
+import { flatMap } from 'lodash'
+import { isUndefined } from 'util'
+import { RequestHandler } from 'express'
 import { Service } from './Service'
 import { getRequiredDependencies, InjectionContext } from './InjectionClient'
 
 const EXPORTED_OBJECT_KEYS = Symbol('providedObjectKeys')
+const REQUEST_HANDLERS = Symbol('requestHandlerKeys')
 
 export class PluginConfig<T = {}> extends Service<T> {
 }
@@ -13,7 +17,7 @@ export interface DependencyExport {
 
 export type PluginConstructor<T extends PluginConfig = PluginConfig> = new (context: InjectionContext) => T
 export type ContextFactoryMap<T = any> = Record<string, () => T>
-export type ContextValueMap<T = any> = Record<string, T>
+export type ContextValueMap<T = any> = Map<{}, T>
 
 /**
  * Property decorator used to add an exported dependency declaration to a plugin.
@@ -35,6 +39,53 @@ export function exportDependency(id: string): (proto: PluginConfig, key: string)
 export function getExportedDependencies(constructor: PluginConstructor): Set<DependencyExport>
 export function getExportedDependencies(constructor: any): Set<DependencyExport> {
   return constructor.prototype[EXPORTED_OBJECT_KEYS] || new Set()
+}
+
+export interface RequestHandlerOpts {
+  method?: string
+  middleware?: RequestHandler[]
+}
+
+export interface RequestHandlerConfig {
+  path?: string
+  method?: string
+  handlers: RequestHandler[]
+}
+
+/**
+ * Property decorator used to add a request handler to a plugin.
+ */
+export function decorateRequestHandler(path?: string, opts: RequestHandlerOpts = {}) {
+  return (constructor: any, key: string) => {
+    if (isUndefined(constructor[REQUEST_HANDLERS])) {
+      return
+    }
+
+    constructor[REQUEST_HANDLERS] = constructor[REQUEST_HANDLERS] || []
+    constructor[REQUEST_HANDLERS].push({
+      method: opts.method,
+      path,
+      handlers: [
+        ...(opts.middleware || []),
+        constructor[key]
+      ]
+    })
+  }
+}
+
+/**
+ * Get get request handlers provided by a list of plugins.
+ */
+export function getRequestHandlers(constructors: PluginConstructor[]): RequestHandlerConfig[] {
+  return flatMap(constructors, getPluginRequestHandlers)
+}
+
+/**
+ * Get get request handlers provided by a plugin.
+ */
+function getPluginRequestHandlers(constructor: PluginConstructor): RequestHandlerConfig[]
+function getPluginRequestHandlers(constructor: any): RequestHandlerConfig[] {
+  return constructor[REQUEST_HANDLERS] || []
 }
 
 /**

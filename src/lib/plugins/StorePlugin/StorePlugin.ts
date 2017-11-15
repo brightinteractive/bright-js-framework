@@ -34,7 +34,7 @@ export function createStorePlugin(otherPlugins: PluginConstructor[]): PluginCons
 
 /** Get store from app context */
 export function getStoreFromContext(ctx: InjectionContext): Store<any> {
-  return ctx['@appContext'].injectedObjects[STORE]
+  return ctx['@appContext'].getInjectedObject(STORE)
 }
 
 /**
