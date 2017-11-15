@@ -26,7 +26,7 @@ export default () => {
       </Section>
       <Section title="Extracting logic from Controllers">
         <p>
-            Let's imagine a simple todo list component. In this example, we've split the presentational logic out into the <code>TodoListView</code> component, leaving <code>TodoList</code> to manage the state it presents.
+            Let's imagine a simple todo list component. In this example, we've split the presentational logic out into the <code>TodoListView</code> component, leaving <code>TodoList</code> to manage the state it presents.  We've excluded the <code>TodoListView</code> source code for brevity (there's nothing special about it), but it can be viewed in the <a href ="https://github.com/brightinteractive/bright-js-framework/tree/master/examples/extracting-services-from-controllers/src/components">examples folder on Github</a>.
         </p>
         <CodeFile path="src/components/TodoList.before.tsx">
           {require('raw!../../../../examples/extracting-services-from-controllers/src/components/TodoList.before.tsx')}
