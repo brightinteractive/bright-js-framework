@@ -59,3 +59,7 @@ export interface IdentityConnector<T> extends Connector {
 export interface IdentityConnectorConstructor<T> {
   new(context: InjectionContext): IdentityConnector<T>
 }
+
+export interface ConnectorConstructor {
+  new(context: InjectionContext): Connector
+}
