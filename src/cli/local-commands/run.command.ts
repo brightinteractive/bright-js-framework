@@ -40,8 +40,17 @@ export function handler({ port }: RunCommandOpts) {
   const app = express()
 
   const plugins = loadPlugins()
-  getRequestHandlers(plugins).forEach((pluginHandler) => {
-    app.use(pluginHandler)
+  getRequestHandlers(plugins).forEach((opts) => {
+    if (opts.method) {
+      if (!opts.path) {
+        throw new Error(`${opts.method} request handler must have a path associated`)
+      }
+
+      app[opts.method](opts.path, ...opts.handlers)
+
+    } else {
+      app.use(opts.path || '/', ...opts.handlers)
+    }
   })
 
   app.use(hot(bundler, { path: '/_hot' }))

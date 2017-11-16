@@ -48,7 +48,7 @@ export interface RequestHandlerOpts {
 
 export interface RequestHandlerConfig {
   path?: string
-  method?: string
+  method?: 'get' | 'put' | 'post' | 'patch' | 'delete'
   handlers: RequestHandler[]
 }
 
@@ -56,6 +56,10 @@ export interface RequestHandlerConfig {
  * Property decorator used to add a request handler to a plugin.
  */
 export function decorateRequestHandler(path?: string, opts: RequestHandlerOpts = {}) {
+  if (opts.method && !path) {
+    throw new Error(`Invalid plugin configuration. ${opts.method} request handlers must provide a path.`)
+  }
+
   return (constructor: any, key: string) => {
     if (isUndefined(constructor[REQUEST_HANDLERS])) {
       return
