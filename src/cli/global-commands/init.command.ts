@@ -93,10 +93,10 @@ function writePlaceholderPages() {
 
   writeSource(['src', 'pages', '404.tsx'], `
 import * as React from 'react'
-import { route } from '@brightinteractive/bright-js-framework'
+import { RouteProps, route } from '@brightinteractive/bright-js-framework'
 
 @route('*')
-export class Error404 extends React.PureComponent {
+export class Error404 extends React.PureComponent<RouteProps> {
   render() {
     return (
       <h1>NOT FOUND</h1>
@@ -106,10 +106,10 @@ export class Error404 extends React.PureComponent {
   `)
   writeSource(['src', 'pages', 'IndexPage.tsx'], `
 import * as React from 'react'
-import { route } from '@brightinteractive/bright-js-framework'
+import { RouteProps, route } from '@brightinteractive/bright-js-framework'
 
 @route('/')
-export class IndexPage extends React.PureComponent {
+export class IndexPage extends React.PureComponent<RouteProps> {
   render() {
     return (
       <h1>Hello, world!</h1>
