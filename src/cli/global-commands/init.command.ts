@@ -39,7 +39,8 @@ function writeConfigs() {
     version: '1.0.0',
     description: '',
     scripts: {
-      start: 'bright-js-framework run'
+      start: 'bright-js-framework run',
+      typecheck: 'tsc --noemit'
     },
     author: '',
     dependencies: {
