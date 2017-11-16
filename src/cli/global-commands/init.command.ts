@@ -82,7 +82,7 @@ function writeConfigs() {
 }
 
 function install(dependencies: string[]) {
-  execSync(`npm install ${dependencies.join(' ')}`, {
+  execSync(`npm install ${dependencies.join(' ')} --save`, {
     stdio: []
   })
 }
