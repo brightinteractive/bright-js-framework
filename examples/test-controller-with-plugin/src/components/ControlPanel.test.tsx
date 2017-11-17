@@ -1,10 +1,23 @@
 import * as React from 'react'
-import { mount } from 'enzyme'
+import { TestFixture } from '@brightinteractive/bright-js-framework/test-utils'
 import { ControlPanel } from './ControlPanel'
+import EventManagerPlugin from '../plugins/EventManagerPlugin'
 
 describe('ControlPanel', () => {
-  it('posts message when button is clicked', () => {
-    const dom = mount(<ControlPanel />)
-    dom.closest('button').simulate('click')
+  it('posts message when button is clicked', (done) => {
+    const fixture = new TestFixture({
+      plugins: [EventManagerPlugin],
+      markup: (
+        <ControlPanel />
+      )
+    })
+
+    fixture.stub(EventManagerPlugin, (plugin: EventManagerPlugin) => {
+      plugin.eventManager.registerHandler('request-open-pod-bay-doors', () => {
+        done()
+      })
+    })
+
+    fixture.render().closest('button').simulate('click')
   })
 })

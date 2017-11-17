@@ -19,7 +19,7 @@ export interface RunCommandOpts {
 export const command = 'run'
 export const builder = {
   port: {
-    alias: 'port',
+    alias: 'p',
     type: 'number',
     description: 'Port to start server on',
     default: Number(process.env.PORT || 8000),
