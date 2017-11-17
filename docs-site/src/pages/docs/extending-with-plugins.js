@@ -17,7 +17,7 @@ export default () => {
         </p>
         <ul>
           <li>
-            When integrating an authentication provider, we might need to retreive and validate an auth token when the application loads for the first time, before we decide what page to render.
+            When integrating an authentication provider, we might need to retrieve and validate an auth token when the application loads for the first time, before we decide what page to render.
           </li>
           <li>
             When integrating a data store such as Redux, we would need to keep a single store instance at the root of applications and allow our services and controllers access to the store.
