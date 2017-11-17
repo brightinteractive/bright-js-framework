@@ -1,6 +1,6 @@
-import { forEach } from 'lodash'
+import 'isomorphic-fetch'
+import { forEach, toPairs } from 'lodash'
 import * as qs from 'querystring'
-import fetch, { RequestInfo, RequestInit, Response } from 'node-fetch'
 import { InjectionContext, InjectionClient } from '../../../core/InjectionClient'
 
 export class HttpError implements Error {
@@ -95,11 +95,11 @@ export class HttpClient extends InjectionClient {
     const res = await this.fetch(formatUrl(opts.url), {
       method,
       body: bodyType.convert(body),
-      headers: {
+      headers: toPairs({
         ...(headers || {}),
         ...bodyType.headers,
         ...responseType.headers
-      }
+      })
     })
 
     if (!res.ok) {
