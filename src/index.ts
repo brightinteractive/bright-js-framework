@@ -188,8 +188,8 @@ export function exported(id: string): PropertyDecorator {
  *
  * @param id Identifier of the dependency to inject.
  */
-export function inject(id: string): PropertyDecorator {
-  return injectDependency(id)
+export function inject(key: {}): PropertyDecorator {
+  return injectDependency(key)
 }
 
 /**
