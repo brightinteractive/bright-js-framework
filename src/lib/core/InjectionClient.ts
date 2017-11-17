@@ -15,8 +15,7 @@ export interface InjectionContext {
   '@appContext': ApplicationContext
 }
 
-export function injectDependency(id: string): InjectionDecorator
-export function injectDependency(id: string) {
+export function injectDependency(id: {}): PropertyDecorator {
   return (proto: any) => {
     proto[INJECTED_OBJECT_KEYS] = proto[INJECTED_OBJECT_KEYS] || new Set()
     proto[INJECTED_OBJECT_KEYS].add(id)

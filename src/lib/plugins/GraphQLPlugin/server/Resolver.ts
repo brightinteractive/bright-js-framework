@@ -14,7 +14,7 @@ export class Resolver extends InjectionClient {
 
 export type ResolverConstructor = new(context: InjectionContext, id: string) => Resolver
 
-export function decorateTypeResolver(typeName: string): (constructor: ResolverConstructor) => void {
+export function decorateTypeResolver(typeName: string): ClassDecorator {
   return (constructor: any) => {
     constructor[RESOLVER_TYPENAME_KEY] = typeName
   }
@@ -28,8 +28,7 @@ export function getResolverTypename(constructor: any) {
   return constructor[RESOLVER_TYPENAME_KEY]
 }
 
-export function decorateResolverProperty(prototype: Resolver, key: string): void
-export function decorateResolverProperty(prototype: any, key: string) {
+export function decorateResolverProperty(prototype: any, key: string | symbol) {
   prototype[RESOLVER_PROPERTIES_KEY] = prototype[RESOLVER_PROPERTIES_KEY] || new Set()
   prototype[RESOLVER_PROPERTIES_KEY].add(key)
 }

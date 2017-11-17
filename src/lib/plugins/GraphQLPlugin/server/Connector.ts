@@ -31,7 +31,7 @@ export class Connector extends InjectionClient {
         return this.loader.load(id)
       }
 
-      getKey<Key extends keyof T>(id: string, key: Key): Promise<T[Key] | undefined> {
+      getProperty<Key extends keyof T>(id: string, key: Key): Promise<T[Key] | undefined> {
         return this.getOne(id).then((res) => res && res[key])
       }
 
@@ -44,14 +44,26 @@ export class Connector extends InjectionClient {
   }
 }
 
-export abstract class IdentityConfig<T> extends InjectionClient {
-  abstract getMany(ids: string[]): Promise<Record<string, T>>
+export class IdentityConfig<T> extends InjectionClient {
+  constructor(context: InjectionContext) {
+    super(context)
+
+    if (process.env.NODE_ENV !== 'production') {
+      if (this.getMany === IdentityConfig.prototype.getMany) {
+        throw new Error(`${this.constructor.name} must override getMany()`)
+      }
+    }
+  }
+
+  getMany(ids: string[]): Promise<Record<string, T>> {
+    throw new Error(`${this.constructor.name} must override getMany()`)
+  }
 }
 
 export type IdentityConfigConstructor<T> = new(context: InjectionContext) => IdentityConfig<T>
 
 export interface IdentityConnector<T> extends Connector {
-  getKey<Key extends keyof T>(id: string, key: Key): Promise<T[Key] | undefined>
+  getProperty<Key extends keyof T>(id: string, key: Key): Promise<T[Key] | undefined>
   getOne(id: string): Promise<T | undefined>
   getMany(ids: string[]): Promise<Array<T | undefined>>
 }

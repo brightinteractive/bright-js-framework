@@ -18,12 +18,12 @@ describe('Connector', () => {
 
   describe('getKey', () => {
     it('should return value', async () => {
-      const result = await testConnector({ a: { field: 1 } }).getKey('a', 'field')
+      const result = await testConnector({ a: { field: 1 } }).getProperty('a', 'field')
       expect(result).to.eql(1)
     })
 
     it('should return undefined when not found', async () => {
-      const result = await testConnector({ a: { field: 1 } }).getKey('b', 'field')
+      const result = await testConnector({ a: { field: 1 } }).getProperty('b', 'field')
       expect(result).to.be.undefined
     })
   })
