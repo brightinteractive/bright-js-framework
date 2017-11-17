@@ -33,12 +33,17 @@ export interface Service {
 
 (Service.prototype as any)[SERVICE_IDENTIFIER] = true
 
+const SERVICES = Symbol('services')
+
 /**
  * Return a property descriptor that instantiates a service
  */
 export function decorateServiceProperty<T extends Service>(Constructor: ServiceConstructor<T>) {
   return (proto: any, key: string): any => {
     const cacheKey = Symbol(key)
+
+    proto[SERVICES] = proto[SERVICES] || []
+    proto[SERVICES].push(key)
 
     return {
       enumerable: true,
@@ -72,14 +77,16 @@ export function isService(x: any): x is Service {
  * Recurse through a tree of objects and return all services in the tree
  */
 export function gatherServices(parent: any): Service[] {
-  const services = []
+  const services: Service[] = []
 
-  for (const key in parent) {
+  const serviceKeys = parent[SERVICES] || []
+
+  serviceKeys.forEach((key: string) => {
     if (parent[key] && isService(parent[key])) {
       services.push(parent[key])
       services.push(...gatherServices(parent[key]))
     }
-  }
+  })
 
   return services
 }
