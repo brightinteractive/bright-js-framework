@@ -167,7 +167,7 @@ function mockFetch(status: number, body: any) {
 }
 
 function hasHeader(name: string, value: string) {
-  return match.has('headers', match.has(name, value))
+  return match.has('headers', match((values: string[][]) => values.some(([n, v]) => n === name && v === value), `with ${name}=${value}`))
 }
 
 function hasMethod(name: HttpMethod) {
