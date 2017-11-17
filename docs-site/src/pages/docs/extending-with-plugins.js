@@ -60,18 +60,18 @@ export default () => {
         <p>
           Writing a plugin entails creating a plugin configuration to export the dependencies the plugin provides.
           This is done by extending the <code>PluginConfig</code> class, and utilising the
-          <code>@exportDependency</code> decorator.
+          <code>@exported</code> decorator.
         </p>
         <CodeFile path="src/plugins/EventManagerPlugin.ts">
           {require('raw!../../../../examples/plugin-with-injection/src/plugins/EventManagerPlugin.ts')}
         </CodeFile>
         <p>
           In this code block we have created an extremely simple event manager plugin. The event manager itself is
-          just an object; what's special here is the use of the <code>@exportDependency</code> decorator to allow
+          just an object; what's special here is the use of the <code>@exported</code> decorator to allow
           the <code>EventManager</code> to be injected into controllers and services.
         </p>
         <p>
-          The <code>@exportDependency</code> decorator takes one parameter: a string key. This registers the value
+          The <code>@exported</code> decorator takes one parameter: a string key. This registers the value
           of the decorated property as an available dependency with the given key. Any controllers or services can
           request this dependency by providing the same key to the <code>@inject</code> decorator.
         </p>
