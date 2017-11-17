@@ -30,6 +30,10 @@ export class GraphQLServer implements GraphQLServerProps {
     this.connectors = this.loadConnectors()
   }
 
+  /**
+   * Return an apollo-server request config function that sets up the context and resolvers
+   * for handling an incoming GraphQL request.
+   */
   get requestConfig() {
     const { schema, connectors } = this
     if (!schema) {
@@ -53,6 +57,10 @@ export class GraphQLServer implements GraphQLServerProps {
     }
   }
 
+  /**
+   * Find all GraphQL schemas in the current project, generate an executable schema for each
+   * of them, then merge the schemas together to produce the application schema.
+   */
   private createSchema(): GraphQLSchema | undefined {
     const schemaFiles = this.findSchemas()
     const sourceSchemas = flatMap(schemaFiles, (file) => {
@@ -69,6 +77,10 @@ export class GraphQLServer implements GraphQLServerProps {
     })
   }
 
+  /**
+   * Given a path to a GraphQL schema, create an executable GraphQL schema by combining it
+   * with Resolvers exported from source files in the same directory (or child directories).
+   */
   private createSchemaModule(schemaPath: string): GraphQLSchema | undefined {
     const resolverTypes = this.loadResolversForSchema(schemaPath)
     if (resolverTypes.length === 0) {
@@ -83,6 +95,11 @@ export class GraphQLServer implements GraphQLServerProps {
     })
   }
 
+  /**
+   * Given a list of Resolver classes, return a map of shape `{ type: { property: resolverFn } }`
+   * suitable for generating an executable GraphQL schema for each type and property declared
+   * using the Resolver decorator API.
+   */
   private createFieldResolversForTypes(resolverTypes: ResolverConstructor[]): Record<string, Record<string, GraphQLFieldResolver<string, any>>> {
     return fromPairs(resolverTypes.map((ResolverClass) => {
       const resolveFnMap = fromPairs(Array.from(getResolverProperties(ResolverClass)).map((key) => [key, this.createFieldResolver(ResolverClass, key)]))
@@ -91,6 +108,10 @@ export class GraphQLServer implements GraphQLServerProps {
     }))
   }
 
+  /**
+   * Given a Resolver class and a property name, return a GraphQL field resolver function that
+   * resolves the property identified by `propertyName`
+   */
   private createFieldResolver(ResolverClass: ResolverConstructor, propertyName: string): GraphQLFieldResolver<string, any> {
     return (id, params, context) => {
       const resolver = new ResolverClass(context, id) as any
@@ -98,10 +119,15 @@ export class GraphQLServer implements GraphQLServerProps {
     }
   }
 
+  /** Looks up schema files from conventional location */
   private findSchemas() {
     return this.glob('src/graphql/resolvers/**/*.graphql')
   }
 
+  /**
+   * For a given schema filepath, extract all Resolver classes associated with a type from
+   * typescript files in the same directory (or any subdirectories)
+   */
   private loadResolversForSchema(schemaPath: string) {
     const modulePaths = this.glob(`${path.dirname(schemaPath)}/**/*.ts`)
     const modules = modulePaths.map((modulePath) => this.loadModule(modulePath))
@@ -109,6 +135,10 @@ export class GraphQLServer implements GraphQLServerProps {
     return flatMap(modules, (moduleExports) => filter(moduleExports, isTypeResolver)) as ResolverConstructor[]
   }
 
+  /**
+   * For a given schema filepath, extract all Connector classes from typescript files in the
+   * same directory (or any subdirectories)
+   */
   private loadConnectors() {
     const modulePaths = this.glob('src/graphql/connectors/**/*.ts')
     const modules = modulePaths.map((modulePath) => this.loadModule(modulePath))
