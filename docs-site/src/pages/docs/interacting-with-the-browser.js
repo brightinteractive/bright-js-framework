@@ -24,7 +24,7 @@ export default () => {
         <p>
           Bright-js-framework includes a number of state selectors that return information about browser state. You can use them like any other state selector.
         </p>
-        <CodeFile path="src/pages/IndexPage.tsx">
+        <CodeFile path="src/pages/LocationDisplay.tsx">
           {require('raw!../../../../examples/interacting-with-the-browser/src/components/LocationDisplay.tsx')}
         </CodeFile>
         <p>
