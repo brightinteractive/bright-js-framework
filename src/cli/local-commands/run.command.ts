@@ -54,7 +54,7 @@ export function handler({ port }: RunCommandOpts) {
   })
 
   app.use(hot(bundler, { path: '/_hot' }))
-  app.use(devserver(bundler))
+  app.get('*', devserver(bundler))
   app.use(errorOverlay())
 
   app.get('*', (req, res) => {
