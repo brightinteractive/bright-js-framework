@@ -13,7 +13,7 @@ export default () => {
           Bright-js-framework allows your application to declare data dependencies on components using GraphQL queries.
         </p>
         <p>
-          Unless are writing yout app against an existing GraphQL API, you will probably need to write one.
+          Unless are writing your app against an existing GraphQL API, you will probably need to write one.
           Fortunately, bright-js-framework makes it extremely easy to write and host a GraphQL backend.
         </p>
         <p>

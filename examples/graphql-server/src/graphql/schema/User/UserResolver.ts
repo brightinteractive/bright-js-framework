@@ -6,16 +6,16 @@ import { UserAccountConnector } from '../../connectors/UserAccountConnector'
 @queries()
 export class UserQueryResolver extends Resolver {
   @inject(UserMetadataConnector)
-  account: UserMetadataConnector
+  metadata: UserMetadataConnector
 
   @resolve()
-  getUser(id: string) {
-    return id
+  getUser(props: { id: string }) {
+    return props.id
   }
 
   @resolve()
   searchUser(props: { name: string }) {
-    return this.account.findByName(props.name)
+    return this.metadata.findByName(props.name)
   }
 }
 
