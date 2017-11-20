@@ -1,6 +1,6 @@
 {
   "name": "@brightinteractive/bright-js-framework",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "React at the speed of ⚡️",
   "devDependencies": {
     "@types/autoprefixer": "^6.7.3",
