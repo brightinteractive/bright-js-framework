@@ -36,10 +36,12 @@ export class App extends ContextProvider<AppProps> {
   }
 
   componentDidMount() {
+    super.componentDidMount()
     this.unsubscribeHistory = this.props.history.listen(this.handlePageTransition)
   }
 
   componentWillUnmount() {
+    super.componentWillUnmount()
     this.unsubscribeHistory()
   }
 
