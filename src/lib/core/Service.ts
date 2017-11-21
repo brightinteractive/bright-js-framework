@@ -28,6 +28,8 @@ export class Service<State = any> implements InjectionClient {
 export interface Service {
   serviceWillMount?(): void
   serviceDidMount?(): void
+  serviceWillLoad?(): void | Promise<void>
+  serviceDidLoad?(): void | Promise<void>
   serviceWillUnmount?(): void
 }
 
@@ -76,7 +78,8 @@ export function isService(x: any): x is Service {
 /**
  * Recurse through a tree of objects and return all services in the tree
  */
-export function gatherServices(parent: any): Service[] {
+export function gatherServices(parent: any, opts: { recursive?: boolean } = {}): Service[] {
+  const { recursive = true } = opts
   const services: Service[] = []
 
   const serviceKeys = parent[SERVICES] || []
@@ -84,7 +87,10 @@ export function gatherServices(parent: any): Service[] {
   serviceKeys.forEach((key: string) => {
     if (parent[key] && isService(parent[key])) {
       services.push(parent[key])
-      services.push(...gatherServices(parent[key]))
+
+      if (recursive) {
+        services.push(...gatherServices(parent[key]))
+      }
     }
   })
 
