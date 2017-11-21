@@ -184,7 +184,7 @@ export function exported(id: string): PropertyDecorator {
  * using dependency injection.
  *
  * Objects injected by plugins are shared between the whole application.
- * This differes from services, which are unique to each controller.
+ * This differs from services, which are unique to each controller.
  *
  * @param id Identifier of the dependency to inject.
  */
