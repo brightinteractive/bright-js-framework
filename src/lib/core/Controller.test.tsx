@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { mount } from 'enzyme'
 import * as React from 'react'
 import { decorateController, isController } from './Controller'
-import { Service, decorateServiceProperty } from './Service'
+import { Service, decorateServiceProperty, ServiceConstructor } from './Service'
 import { SpyService } from './mocks/SpyService'
 
 describe('Controller', () => {
@@ -25,11 +25,11 @@ describe('Controller', () => {
 
   context('when mounted into dom', () => {
     context('and lifecycle hooks are implemented', () => {
-      function setup() {
+      function setup(serviceConstructor: ServiceConstructor<Service> = SpyService) {
         @decorateController
         class TestController extends React.Component {
-          @decorateServiceProperty(SpyService)
-          myService: SpyService
+          @decorateServiceProperty(serviceConstructor)
+          myService: Service
 
           render() {
             return null
@@ -64,6 +64,16 @@ describe('Controller', () => {
 
         service.setState({ foo: 1 })
         dom.update()
+
+        expect(service.state).to.eql({ foo: 1 })
+      })
+
+      it('should support services having initial state', () => {
+        class SpyServiceWithInitialState extends SpyService {
+          state = { foo: 1 }
+        }
+
+        const { service } = setup(SpyServiceWithInitialState)
 
         expect(service.state).to.eql({ foo: 1 })
       })
