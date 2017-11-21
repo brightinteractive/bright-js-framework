@@ -1,7 +1,6 @@
 import React from 'react'
 import Link from 'gatsby-link'
-import { PageHeader, Subheader } from '../../components/Headers'
-import { CodeBlock, CodeFile } from '../../components/CodeBlock'
+import { PageHeader } from '../../components/Headers'
 import { Section } from '../../components/Section'
 
 export default () => {
@@ -11,7 +10,8 @@ export default () => {
       <Section alwaysExpanded title=".env file">
         <p>
           Adding a <code>.env</code> file to your project root allows you to specify environmental variables
-          for use in development mode.
+          for use in development mode.  These environment variables can be accessed as if running in a Node environment,
+          i.e. <code>process.env.EXAMPLE_ENVIRONMENT_VARIABLE_NAME</code>.
         </p>
         <p>
           These variables are not compiled into the javascript bundle. They are returned by the server
