@@ -1,31 +1,13 @@
 #!/usr/bin/env node
 
 import * as path from 'path'
-import * as fs from 'fs'
 import * as yargs from 'yargs'
 
-if (localCliIsRunning()) {
-  localCli()
-
-} else if (localCliExists()) {
+try {
   runLocalCli()
-
-} else {
+  localCli()
+} catch {
   globalCli()
-}
-
-function localCliExists() {
-  try {
-    fs.statSync(localCliPath())
-    return true
-
-  } catch {
-    return false
-  }
-}
-
-function localCliIsRunning() {
-  return path.normalize(localCliPath()) === path.normalize(__filename)
 }
 
 function runLocalCli() {

@@ -11,7 +11,7 @@ const server = new GraphQLServer({
   readFile: (filepath) => fs.readFileSync(filepath, 'utf8'),
   resolvePath: path.resolve,
   glob: glob.sync,
-  loadModule: require
+  loadModule: module.require
 })
 
 const serverMiddleware = [

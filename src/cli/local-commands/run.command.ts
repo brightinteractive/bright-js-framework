@@ -1,6 +1,7 @@
 import * as webpack from 'webpack'
 import * as devserver from 'webpack-dev-middleware'
 import * as hot from 'webpack-hot-middleware'
+import hotServer  = require('webpack-hot-server-middleware')
 import * as express from 'express'
 import * as path from 'path'
 import * as glob from 'glob'
@@ -10,8 +11,7 @@ import { pick } from 'lodash'
 import { getWebpackConfig } from '../../lib/bundler/getWebpackConfig'
 import { renderHtmlWrapper } from '../../lib/server/renderHtmlWrapper'
 import { getConfig } from '../getConfig'
-import { loadPlugins } from '../getPlugins';
-import { getRequestHandlers } from '../../lib/core/PluginConfig';
+import { Compiler } from 'webpack'
 
 export interface RunCommandOpts {
   entry: string
@@ -39,22 +39,10 @@ export function handler({ port }: RunCommandOpts) {
   const bundler = webpack(webpackConfig)
   const app = express()
 
-  const plugins = loadPlugins()
-  getRequestHandlers(plugins).forEach((opts) => {
-    if (opts.method) {
-      if (!opts.path) {
-        throw new Error(`${opts.method} request handler must have a path associated`)
-      }
-
-      app[opts.method](opts.path, ...opts.handlers)
-
-    } else {
-      app.use(opts.path || '/', ...opts.handlers)
-    }
-  })
-
-  app.use(hot(bundler, { path: '/_hot' }))
+  const clientBundler = (bundler as any).compilers.find((compiler: Compiler) => compiler.name === 'client')
+  app.use(hot(clientBundler, { path: '/_hot' }))
   app.get('*', devserver(bundler))
+  app.use(hotServer(bundler))
   app.use(errorOverlay())
 
   app.get('*', (req, res) => {

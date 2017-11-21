@@ -1,6 +1,7 @@
 import * as autoprefixer from 'autoprefixer'
 import * as path from 'path'
 import * as webpack from 'webpack'
+import nodeExternals  = require('webpack-node-externals')
 import { entrypointLoader } from './entrypointLoader'
 
 export interface WebpackConfigOpts {
@@ -8,19 +9,12 @@ export interface WebpackConfigOpts {
   entrypoints: string[]
 }
 
-export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Configuration {
+export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Configuration[] {
   const extensions = ['.ts', '.tsx', '.js', '.jsx']
+  const serverExtensions = extensions.map((extension) => `.server${extension}`)
 
-  return {
+  const sharedConfig: Partial<webpack.Configuration> = {
     devtool: 'cheap-module-source-map',
-
-    resolve: {
-      extensions
-    },
-
-    resolveLoader: {
-      extensions
-    },
 
     module: {
       rules: [
@@ -101,23 +95,70 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
       }),
       new webpack.NoEmitOnErrorsPlugin(),
     ],
+  }
 
-    output: {
-      path: path.join(__dirname, 'build'),
-      filename: 'bundle.js',
+  return [
+    {
+      ...sharedConfig,
+
+      name: 'client',
+
+      resolve: {
+        extensions
+      },
+
+      resolveLoader: {
+        extensions
+      },
+
+      output: {
+        path: path.join(__dirname, 'build'),
+        filename: 'bundle.js',
+      },
+
+      entry: [
+        require.resolve('react-error-overlay'),
+        require.resolve('../entry/errorDisplay'),
+        'webpack-hot-middleware/client?path=/_hot&reload=true&timeout=2000&overlay=false',
+        'core-js/shim',
+        'whatwg-fetch',
+        entrypointLoader({
+          entry: require.resolve('../entry/client'),
+          topLevelModules: entrypoints,
+          configFile: path.resolve(path.join('src', 'config.ts'))
+        }),
+      ],
     },
+    {
+      ...sharedConfig,
 
-    entry: [
-      require.resolve('react-error-overlay'),
-      require.resolve('../entry/errorDisplay'),
-      'webpack-hot-middleware/client?path=/_hot&reload=true&timeout=2000&overlay=false',
-      'core-js/shim',
-      'whatwg-fetch',
-      entrypointLoader({
-        entry: require.resolve('../entry/client'),
+      name: 'server',
+
+      target: 'node',
+
+      externals: [nodeExternals({
+        whitelist: ['@brightinteractive/bright-js-framework', '@brightinteractive/bright-js-framework/plugins/graphql']
+      })],
+
+      resolve: {
+        extensions: [...serverExtensions, ...extensions]
+      },
+
+      resolveLoader: {
+        extensions: [...serverExtensions, ...extensions]
+      },
+
+      output: {
+        path: path.join(__dirname, 'build'),
+        filename: 'server.js',
+        libraryTarget: 'commonjs2',
+      },
+
+      entry: entrypointLoader({
+        entry: require.resolve('../entry/server'),
         topLevelModules: entrypoints,
         configFile: path.resolve(path.join('src', 'config.ts'))
       }),
-    ],
-  }
+    }
+  ]
 }
