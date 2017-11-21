@@ -6,7 +6,7 @@ import { LoaderContext, getOptions } from 'loader-utils'
  */
 export function entrypointLoader({ entry, topLevelModules, configFile }: EntrypointOpts) {
   if (topLevelModules.length === 0) {
-    throw new Error('No path files specified')
+    return `${__filename}?configFile=${configFile}!${entry}`
   }
 
   // Webpack loader string identifying this module as the loader with the provided config opts
@@ -40,7 +40,7 @@ export interface EntrypointOpts {
 export function entrypointLoaderImpl(this: LoaderContext) {
   const options: EntrypointOpts = getOptions(this)
   const entry: string = this.resourcePath
-  const topLevelModules: string[] = options.topLevelModules
+  const topLevelModules: string[] = options.topLevelModules || []
 
   this.addDependency(options.configFile)
   this.addDependency(entry)

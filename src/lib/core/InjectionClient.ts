@@ -1,6 +1,6 @@
 import { ApplicationContext } from './ApplicationContext'
 
-const INJECTED_OBJECT_KEYS = Symbol('injectedObjectKeys')
+const INJECTED_OBJECT_KEYS = '__luminant__injectedObjectKeys'
 
 export class InjectionClient {
   context: InjectionContext

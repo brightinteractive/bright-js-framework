@@ -2,8 +2,8 @@ import { uniqueId } from 'lodash'
 import { isController } from './Controller'
 import { InjectionClient, InjectionContext } from './InjectionClient'
 
-const SERVICE_IDENTIFIER = Symbol('isService')
-const SERVICE_UID = Symbol('serviceUid')
+const SERVICE_IDENTIFIER = '__luminant__isService'
+const SERVICE_UID = '__luminant__serviceUid'
 
 export type ServiceConstructor<T extends Service = Service> = new(context: InjectionContext) => T
 
@@ -33,7 +33,7 @@ export interface Service {
 
 (Service.prototype as any)[SERVICE_IDENTIFIER] = true
 
-const SERVICES = Symbol('services')
+const SERVICES = '__luminant__services'
 
 /**
  * Return a property descriptor that instantiates a service

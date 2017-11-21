@@ -1,7 +1,7 @@
 import { InjectionContext, InjectionClient } from '../../../core/InjectionClient'
 
-const RESOLVER_TYPENAME_KEY = Symbol('ResolverType')
-const RESOLVER_PROPERTIES_KEY = Symbol('ResolverProps')
+const RESOLVER_TYPENAME_KEY = '__luminant__ResolverType'
+const RESOLVER_PROPERTIES_KEY = '__luminant__ResolverProps'
 
 export class Resolver extends InjectionClient {
   readonly id: string
