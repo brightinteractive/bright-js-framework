@@ -1,5 +1,4 @@
 import { flatMap } from 'lodash'
-import { isUndefined } from 'util'
 import { RequestHandler } from 'express'
 import { Service } from './Service'
 import { getRequiredDependencies, InjectionContext } from './InjectionClient'
@@ -42,7 +41,7 @@ export function getExportedDependencies(constructor: any): Set<DependencyExport>
 }
 
 export interface RequestHandlerOpts {
-  method?: string
+  method?: 'GET' | 'PUT' | 'POST' | 'PATCH' | 'DELETE'
   middleware?: RequestHandler[]
 }
 
@@ -61,13 +60,9 @@ export function decorateRequestHandler(path?: string, opts: RequestHandlerOpts =
   }
 
   return (constructor: any, key: string) => {
-    if (isUndefined(constructor[REQUEST_HANDLERS])) {
-      return
-    }
-
     constructor[REQUEST_HANDLERS] = constructor[REQUEST_HANDLERS] || []
     constructor[REQUEST_HANDLERS].push({
-      method: opts.method,
+      method: opts.method && opts.method.toLowerCase(),
       path,
       handlers: [
         ...(opts.middleware || []),
