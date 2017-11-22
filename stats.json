@@ -4,6 +4,10 @@
       "path---docs-cli-tool-a0e39f21c11f6a62c5ab.js",
       "path---docs-cli-tool-a0e39f21c11f6a62c5ab.js.map"
     ],
+    "path---modules-plugins-graphql-http": [
+      "path---modules-plugins-graphql-http-e3ff1ad68ccb2bc59ea2.js",
+      "path---modules-plugins-graphql-http-e3ff1ad68ccb2bc59ea2.js.map"
+    ],
     "path---docs-test-support": [
       "path---docs-test-support-a0e39f21c11f6a62c5ab.js",
       "path---docs-test-support-a0e39f21c11f6a62c5ab.js.map"
@@ -13,20 +17,20 @@
       "path---docs-services-and-controllers-a0e39f21c11f6a62c5ab.js.map"
     ],
     "path---modules-test-utils": [
-      "path---modules-test-utils-fe3a7c0f92d0b7b64c83.js",
-      "path---modules-test-utils-fe3a7c0f92d0b7b64c83.js.map"
+      "path---modules-test-utils-801ed328b650fd965a3f.js",
+      "path---modules-test-utils-801ed328b650fd965a3f.js.map"
     ],
     "component---src-pages-index-js": [
       "component---src-pages-index-js-5bc6e4a0f3a60cb17b78.js",
       "component---src-pages-index-js-5bc6e4a0f3a60cb17b78.js.map"
     ],
     "path---modules-index": [
-      "path---modules-index-8460dd913ff1b1ba3611.js",
-      "path---modules-index-8460dd913ff1b1ba3611.js.map"
+      "path---modules-index-609cd0e59d4362d1e3f4.js",
+      "path---modules-index-609cd0e59d4362d1e3f4.js.map"
     ],
     "path---": [
-      "path----2bacaea0204e732c18bc.js",
-      "path----2bacaea0204e732c18bc.js.map"
+      "path----d26b077e5568739805d8.js",
+      "path----d26b077e5568739805d8.js.map"
     ],
     "component---src-pages-docs-cli-tool-js": [
       "component---src-pages-docs-cli-tool-js-49b49646dbabbf77e822.js",
@@ -49,8 +53,8 @@
       "component---src-pages-docs-environmental-variables-js-1c669895bcf6b78ac5ef.js.map"
     ],
     "component---src-layouts-index-js": [
-      "component---src-layouts-index-js-7ae98f8de92e9dac2bd7.js",
-      "component---src-layouts-index-js-7ae98f8de92e9dac2bd7.js.map"
+      "component---src-layouts-index-js-1c114dd3665658354975.js",
+      "component---src-layouts-index-js-1c114dd3665658354975.js.map"
     ],
     "component---src-templates-module-doc-js": [
       "component---src-templates-module-doc-js-be95be3e4e80e4cdcfdc.js",
@@ -67,6 +71,14 @@
     "path---index": [
       "path---index-a0e39f21c11f6a62c5ab.js",
       "path---index-a0e39f21c11f6a62c5ab.js.map"
+    ],
+    "path---docs-writing-graphql-apis": [
+      "path---docs-writing-graphql-apis-a0e39f21c11f6a62c5ab.js",
+      "path---docs-writing-graphql-apis-a0e39f21c11f6a62c5ab.js.map"
+    ],
+    "path---modules-plugins-graphql-server": [
+      "path---modules-plugins-graphql-server-aef10b68b7fb0ad07d02.js",
+      "path---modules-plugins-graphql-server-aef10b68b7fb0ad07d02.js.map"
     ],
     "component---src-pages-404-js": [
       "component---src-pages-404-js-4503918ea3a16cfcdb75.js",
@@ -88,19 +100,27 @@
       "path---docs-interacting-with-the-browser-a0e39f21c11f6a62c5ab.js",
       "path---docs-interacting-with-the-browser-a0e39f21c11f6a62c5ab.js.map"
     ],
+    "path---modules-plugins-graphql-index": [
+      "path---modules-plugins-graphql-index-7b2c359a6d0ebc6b108c.js",
+      "path---modules-plugins-graphql-index-7b2c359a6d0ebc6b108c.js.map"
+    ],
     "path---docs-app-configuration": [
       "path---docs-app-configuration-a0e39f21c11f6a62c5ab.js",
       "path---docs-app-configuration-a0e39f21c11f6a62c5ab.js.map"
     ],
     "app": [
-      "app-ffc553500fa8f65421d3.js",
+      "app-9d7547a4e10926e0eed7.js",
       "build-js-styles.css",
-      "app-ffc553500fa8f65421d3.js.map",
+      "app-9d7547a4e10926e0eed7.js.map",
       "build-js-styles.css.map"
     ],
     "path---docs-environmental-variables": [
       "path---docs-environmental-variables-a0e39f21c11f6a62c5ab.js",
       "path---docs-environmental-variables-a0e39f21c11f6a62c5ab.js.map"
+    ],
+    "component---src-pages-docs-writing-graphql-apis-js": [
+      "component---src-pages-docs-writing-graphql-apis-js-b4fb8a4e1f62c9338b02.js",
+      "component---src-pages-docs-writing-graphql-apis-js-b4fb8a4e1f62c9338b02.js.map"
     ],
     "path---404": [
       "path---404-a0e39f21c11f6a62c5ab.js",
