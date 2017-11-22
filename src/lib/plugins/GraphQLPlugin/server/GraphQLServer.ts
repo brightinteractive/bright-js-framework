@@ -121,7 +121,7 @@ export class GraphQLServer implements GraphQLServerProps {
 
   /** Looks up schema files from conventional location */
   private findSchemas() {
-    return this.glob('src/graphql/resolvers/**/*.graphql')
+    return this.glob('src/graphql/schema/**/*.graphql')
   }
 
   /**
@@ -130,7 +130,7 @@ export class GraphQLServer implements GraphQLServerProps {
    */
   private loadResolversForSchema(schemaPath: string) {
     const modulePaths = this.glob(`${path.dirname(schemaPath)}/**/*.ts`)
-    const modules = modulePaths.map((modulePath) => this.loadModule(modulePath))
+    const modules = modulePaths.map((modulePath) => this.loadModule(this.resolvePath(modulePath)))
 
     return flatMap(modules, (moduleExports) => filter(moduleExports, isTypeResolver)) as ResolverConstructor[]
   }
@@ -141,7 +141,7 @@ export class GraphQLServer implements GraphQLServerProps {
    */
   private loadConnectors() {
     const modulePaths = this.glob('src/graphql/connectors/**/*.ts')
-    const modules = modulePaths.map((modulePath) => this.loadModule(modulePath))
+    const modules = modulePaths.map((modulePath) => this.loadModule(this.resolvePath(modulePath)))
 
     return flatMap(modules, (moduleExports) => filter(moduleExports, (moduleExport: any) => moduleExport.prototype instanceof Connector)) as ConnectorConstructor[]
   }

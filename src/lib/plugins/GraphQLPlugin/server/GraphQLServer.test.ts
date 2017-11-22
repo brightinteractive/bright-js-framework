@@ -12,11 +12,11 @@ describe('GraphQLServer', () => {
   it('should create resolvers for all the modules with a schema', () => {
     const server = testServer({
       modules: {
-        'src/graphql/resolvers/User/UserResolver.ts': UserResolverModule,
-        'src/graphql/resolvers/Organisation/OrganisationResolver.ts': OrganisationResolverModule,
+        '/app/src/graphql/schema/User/UserResolver.ts': UserResolverModule,
+        '/app/src/graphql/schema/Organisation/OrganisationResolver.ts': OrganisationResolverModule,
       },
       schemas: {
-        'src/graphql/resolvers/User/User.graphql': UserSchema,
+        '/app/src/graphql/schema/User/User.graphql': UserSchema,
       }
     })
 
@@ -27,13 +27,13 @@ describe('GraphQLServer', () => {
   it('should ignore files with no exported resolvers', () => {
     const server = testServer({
       modules: {
-        'src/graphql/resolvers/User/UserResolver.ts': UserResolverModule,
-        'src/graphql/resolvers/User/UserResolverUtils.ts': () => {
+        '/app/src/graphql/schema/User/UserResolver.ts': UserResolverModule,
+        '/app/src/graphql/schema/User/UserResolverUtils.ts': () => {
           return { a: {}, b: {} }
         },
       },
       schemas: {
-        'src/graphql/resolvers/User/User.graphql': UserSchema,
+        '/app/src/graphql/schema/User/User.graphql': UserSchema,
       }
     })
 
@@ -43,11 +43,11 @@ describe('GraphQLServer', () => {
   it('should ignore schema modules with no exported resolvers', () => {
     const server = testServer({
       modules: {
-        'src/graphql/resolvers/Organisation/OrganisationResolver.ts': OrganisationResolverModule,
+        '/app/src/graphql/schema/Organisation/OrganisationResolver.ts': OrganisationResolverModule,
       },
       schemas: {
-        'src/graphql/resolvers/User/User.graphql': UserSchema,
-        'src/graphql/resolvers/Organisation/Organisation.graphql': OrganisationSchema,
+        '/app/src/graphql/schema/User/User.graphql': UserSchema,
+        '/app/src/graphql/schema/Organisation/Organisation.graphql': OrganisationSchema,
       }
     })
 
@@ -66,7 +66,7 @@ describe('GraphQLServer', () => {
   it('should load connectors', () => {
     const server = testServer({
       modules: {
-        'src/graphql/connectors/MyConnector.ts': ConnectorModule,
+        '/app/src/graphql/connectors/MyConnector.ts': ConnectorModule,
       },
       schemas: {}
     })
@@ -80,12 +80,12 @@ describe('GraphQLServer', () => {
   it('should merge schemas together', () => {
     const server = testServer({
       modules: {
-        'src/graphql/resolvers/User/UserResolver.ts': UserResolverModule,
-        'src/graphql/resolvers/Organisation/OrganisationResolver.ts': OrganisationResolverModule,
+        '/app/src/graphql/schema/User/UserResolver.ts': UserResolverModule,
+        '/app/src/graphql/schema/Organisation/OrganisationResolver.ts': OrganisationResolverModule,
       },
       schemas: {
-        'src/graphql/resolvers/User/User.graphql': UserSchema,
-        'src/graphql/resolvers/Organisation/Organisation.graphql': OrganisationSchema,
+        '/app/src/graphql/schema/User/User.graphql': UserSchema,
+        '/app/src/graphql/schema/Organisation/Organisation.graphql': OrganisationSchema,
       }
     })
 
@@ -98,7 +98,7 @@ describe('GraphQLServer', () => {
   it('should return an choose an aribitrary resolver on conflict between resolvers', async () => {
     const server = testServer({
       modules: {
-        'src/graphql/resolvers/Test/test.ts': () => {
+        '/app/src/graphql/schema/Test/test.ts': () => {
           @decorateTypeResolver('Query')
           class QueryResolver extends Resolver {
             @decorateResolverProperty
@@ -109,7 +109,7 @@ describe('GraphQLServer', () => {
 
           return { QueryResolver }
         },
-        'src/graphql/resolvers/Test/test1.ts':  () => {
+        '/app/src/graphql/schema/Test/test1.ts':  () => {
           @decorateTypeResolver('Query')
           class QueryResolver extends Resolver {
             @decorateResolverProperty
@@ -122,7 +122,7 @@ describe('GraphQLServer', () => {
         },
       },
       schemas: {
-        'src/graphql/resolvers/Test/test.graphql': `
+        '/app/src/graphql/schema/Test/test.graphql': `
           type Query {
             something: String!
           }
@@ -146,11 +146,11 @@ describe('GraphQLServer', () => {
     it('should add connectors to context', () => {
       const server = testServer({
         modules: {
-          'src/graphql/resolvers/User/UserResolver.ts': UserResolverModule,
-          'src/graphql/connectors/MyConnector.ts': ConnectorModule,
+          '/app/src/graphql/schema/User/UserResolver.ts': UserResolverModule,
+          '/app/src/graphql/connectors/MyConnector.ts': ConnectorModule,
         },
         schemas: {
-          'src/graphql/resolvers/User/User.graphql': UserSchema
+          '/app/src/graphql/schema/User/User.graphql': UserSchema
         }
       })
 
@@ -246,12 +246,21 @@ const OrganisationSchema = `
 function testServer(opts: { modules: Record<string, () => any>, schemas: Record<string, string> } ) {
   const sourceFiles = [...Object.keys(opts.modules), ...Object.keys(opts.schemas)]
 
+  const resolve = (path: string) => {
+    if (path.startsWith('/')) {
+      return path
+    }
+
+    return '/app/' + path.replace(/^\.\//, '')
+  }
+
   return new GraphQLServer({
     resolvePath: (path) => {
-      if (!opts.modules[path]) {
-        throw new Error(`Not found: ${path}`)
+      const resolvedPath = resolve(path)
+      if (!opts.modules[resolvedPath]) {
+        throw new Error(`Could not resolve ${path}. Not found: ${resolvedPath}`)
       }
-      return opts.modules[path]
+      return resolvedPath
     },
     loadModule: (path) => {
       if (!opts.modules[path]) {
@@ -260,13 +269,20 @@ function testServer(opts: { modules: Record<string, () => any>, schemas: Record<
       return opts.modules[path]()
     },
     readFile: (path) => {
-      if (!opts.schemas[path]) {
+      const contents = opts.schemas[path] || opts.schemas[resolve(path)]
+      if (!contents) {
         throw new Error(`Not found: ${path}`)
       }
-      return opts.schemas[path]
+      return contents
     },
     glob: (pattern) => {
-      return sourceFiles.filter(minimatch.filter(pattern))
+      const relativePatternMatches = sourceFiles.filter(minimatch.filter(pattern))
+      const absolutePatternMatches = sourceFiles.filter(minimatch.filter(resolve(pattern)))
+
+      return [
+        ...relativePatternMatches,
+        ...absolutePatternMatches
+      ]
     }
   })
 }
