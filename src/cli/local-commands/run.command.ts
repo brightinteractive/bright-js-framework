@@ -1,6 +1,7 @@
 import * as webpack from 'webpack'
 import * as devserver from 'webpack-dev-middleware'
 import * as hot from 'webpack-hot-middleware'
+import hotServer  = require('webpack-hot-server-middleware')
 import * as express from 'express'
 import * as path from 'path'
 import * as glob from 'glob'
@@ -10,6 +11,7 @@ import { pick } from 'lodash'
 import { getWebpackConfig } from '../../lib/bundler/getWebpackConfig'
 import { renderHtmlWrapper } from '../../lib/server/renderHtmlWrapper'
 import { getConfig } from '../getConfig'
+import { Compiler } from 'webpack'
 
 export interface RunCommandOpts {
   entry: string
@@ -37,8 +39,10 @@ export function handler({ port }: RunCommandOpts) {
   const bundler = webpack(webpackConfig)
   const app = express()
 
-  app.use(hot(bundler, { path: '/_hot' }))
-  app.use(devserver(bundler))
+  const clientBundler = (bundler as any).compilers.find((compiler: Compiler) => compiler.name === 'client')
+  app.use(hot(clientBundler, { path: '/_hot' }))
+  app.get('*', devserver(bundler, { noInfo: true, publicPath: '/' }))
+  app.use(hotServer(bundler, { serverRendererOptions: { nodeRequire: require } }))
   app.use(errorOverlay())
 
   app.get('*', (req, res) => {

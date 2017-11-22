@@ -1,4 +1,4 @@
-const ROUTE_PATTERN_KEY = Symbol('isRoute')
+const ROUTE_PATTERN_KEY = '__luminant__isRoute'
 
 export function decorateRouteComponent(pattern: string, component: any) {
   component[ROUTE_PATTERN_KEY] = pattern

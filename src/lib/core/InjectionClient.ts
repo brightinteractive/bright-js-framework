@@ -1,9 +1,13 @@
 import { ApplicationContext } from './ApplicationContext'
 
-const INJECTED_OBJECT_KEYS = Symbol('injectedObjectKeys')
+const INJECTED_OBJECT_KEYS = '__luminant__injectedObjectKeys'
 
-export interface InjectionClient {
+export class InjectionClient {
   context: InjectionContext
+
+  constructor(context: InjectionContext) {
+    this.context = context
+  }
 }
 
 /** Shape of context passed into a controller */
@@ -11,15 +15,14 @@ export interface InjectionContext {
   '@appContext': ApplicationContext
 }
 
-export function injectDependency(id: string): InjectionDecorator
-export function injectDependency(id: string) {
+export function injectDependency(id: {}): PropertyDecorator {
   return (proto: any) => {
     proto[INJECTED_OBJECT_KEYS] = proto[INJECTED_OBJECT_KEYS] || new Set()
     proto[INJECTED_OBJECT_KEYS].add(id)
 
     return {
       get(this: InjectionClient) {
-        return this.context['@appContext'].injectedObjects[id]
+        return this.context['@appContext'].getInjectedObject(id)
       }
     }
   }

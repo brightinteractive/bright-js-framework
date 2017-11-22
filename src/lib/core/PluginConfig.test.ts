@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { PluginConfig, exportDependency, getPluginCreationOrder } from './PluginConfig'
+import { PluginConfig, exportDependency, getPluginCreationOrder, decorateRequestHandler, getRequestHandlers } from './PluginConfig'
 import { injectDependency } from './InjectionClient'
 
 describe('Plugin', () => {
@@ -53,6 +53,46 @@ describe('Plugin', () => {
       }
 
       expect(() => getPluginCreationOrder([A])).to.throw()
+    })
+  })
+
+  describe('decorateRequestHandler', () => {
+    const aMiddleware = () => {}
+
+    it('should throw on invalid route', () => {
+      expect(() => {
+        decorateRequestHandler(undefined, { method: 'GET' })
+      }).to.throw
+    })
+
+    it('should add route handler to request handlers', () => {
+      class MyPlugin extends PluginConfig {
+        @decorateRequestHandler('/foo', { method: 'GET', middleware: [aMiddleware] })
+        static myRequestHandler() { }
+      }
+
+      expect(getRequestHandlers([MyPlugin])).to.eql([
+        {
+          path: '/foo',
+          method: 'get',
+          handlers: [aMiddleware, MyPlugin.myRequestHandler]
+        }
+      ])
+    })
+
+    it('should add middlewares to request handler list', () => {
+      class MyPlugin extends PluginConfig {
+        @decorateRequestHandler()
+        static myRequestHandler() { }
+      }
+
+      expect(getRequestHandlers([MyPlugin])).to.eql([
+        {
+          handlers: [MyPlugin.myRequestHandler],
+          method: undefined,
+          path: undefined
+        }
+      ])
     })
   })
 })

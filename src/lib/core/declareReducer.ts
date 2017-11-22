@@ -2,7 +2,7 @@ import { Reducer } from 'redux'
 import { flatMap } from 'lodash'
 import { PluginConstructor } from './PluginConfig'
 
-const DECLARED_REDUCER_KEYS = Symbol('declaredReducerKeys')
+const DECLARED_REDUCER_KEYS = '__luminant__declaredReducerKeys'
 
 /** Decorate a static function of a plugin as a reducer */
 export function declareReducer(id: string): ReducerDecorator

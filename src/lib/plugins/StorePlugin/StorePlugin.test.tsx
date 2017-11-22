@@ -7,7 +7,7 @@ import { decorateController } from '../../core/Controller'
 import * as React from 'react'
 import { createSelectService, StateSelector } from './SelectService'
 import { Dispatch } from 'redux'
-import { injectDispatch } from './StorePlugin'
+import { injectDispatch, createStorePlugin } from './StorePlugin'
 
 describe('StorePlugin', () => {
   class CounterPlugin extends PluginConfig {
@@ -69,5 +69,9 @@ describe('StorePlugin', () => {
     fixture.render().unmount()
 
     expect(unsubscribe).to.have.been.calledOnce
+  })
+
+  it('should not create a store if no reducers are installed', () => {
+    expect((createStorePlugin([]) as any).store).to.be.undefined
   })
 })

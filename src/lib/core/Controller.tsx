@@ -5,7 +5,7 @@ import { patchMethod, patchProperty } from './util'
 import { ApplicationContext } from './ApplicationContext'
 import { InjectionContext } from './InjectionClient'
 
-const IS_CONTROLLER = Symbol('isController')
+const IS_CONTROLLER = '__luminant__isController'
 
 export interface Controller<Props extends object = {}, State extends object = {}>
 extends React.Component<Props, State> {
