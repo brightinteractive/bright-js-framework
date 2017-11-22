@@ -82,6 +82,8 @@ function injectControllerBehavior(proto: React.Component) {
 /** Override service’s state methods to store state in controller */
 function bindState(controller: React.Component, services: Service[]) {
   services.forEach((service) => {
+    controller.setState({[getServiceUid(service)]: service.state})
+
     patchProperty(service, 'state', function(this: Service) {
       return getState(getServiceUid(this))
     })
