@@ -7,6 +7,7 @@ import { GraphQLServer } from './GraphQLServer'
 import { Resolver, decorateTypeResolver, decorateResolverProperty } from './Resolver'
 import { Connector, IdentityConfig } from './Connector'
 import { ApplicationContext } from '../../../core/ApplicationContext'
+import { HttpClient } from './HttpClient';
 
 describe('GraphQLServer', () => {
   it('should create resolvers for all the modules with a schema', () => {
@@ -156,6 +157,21 @@ describe('GraphQLServer', () => {
 
       const appContext = server.requestConfig!().context['@appContext'] as ApplicationContext
       expect(appContext.getInjectedObject(ConnectorModule().BasicConnector)).to.be.instanceOf(ConnectorModule().BasicConnector)
+    })
+
+    it('should add http client to context', () => {
+      const server = testServer({
+        modules: {
+          '/app/src/graphql/schema/User/UserResolver.ts': UserResolverModule,
+          '/app/src/graphql/connectors/MyConnector.ts': ConnectorModule,
+        },
+        schemas: {
+          '/app/src/graphql/schema/User/User.graphql': UserSchema
+        }
+      })
+
+      const appContext = server.requestConfig!().context['@appContext'] as ApplicationContext
+      expect(appContext.getInjectedObject(HttpClient)).to.be.instanceOf(HttpClient)
     })
 
     it('should be undefined when no schemas defined', () => {

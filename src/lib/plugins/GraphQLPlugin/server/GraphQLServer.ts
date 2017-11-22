@@ -6,6 +6,7 @@ import { GraphQLOptions } from 'apollo-server-core'
 import { ApplicationContext } from '../../../core/ApplicationContext'
 import { getResolverTypename, getResolverProperties, ResolverConstructor, isTypeResolver } from './Resolver'
 import { ConnectorConstructor, Connector } from './Connector'
+import { HttpClient } from './HttpClient';
 
 export interface GraphQLServerProps {
   loadModule: (moduleName: string) => any
@@ -46,6 +47,7 @@ export class GraphQLServer implements GraphQLServerProps {
         '@appContext': appContext
       }
 
+      appContext.injectObject(HttpClient, new HttpClient({ context }))
       connectors.forEach((ConnectorType) => {
         appContext.injectObject(ConnectorType, new ConnectorType(context))
       })
