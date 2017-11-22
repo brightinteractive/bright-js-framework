@@ -23,3 +23,12 @@ export function patchProperty(object: any, property: string, impl: (this: any) =
     get: impl
   })
 }
+
+/**
+ * Provide node require function to server-side webpack modules
+ */
+export function loadModule(id: string): any {
+  // [HACK] Return node require function passed into devserver on module load
+  const g = global as any
+  return g.__require(id)
+}

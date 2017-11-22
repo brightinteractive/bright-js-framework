@@ -5,17 +5,18 @@ import { RequestHandler } from 'express'
 import { graphqlExpress, graphiqlExpress } from 'graphql-server-express'
 import * as bodyParser from 'body-parser'
 import { PluginConfig, decorateRequestHandler } from '../../core/PluginConfig'
+import { loadModule } from '../../core/util'
 import { GraphQLServer } from './server/GraphQLServer'
 
 const server = new GraphQLServer({
   readFile: (filepath) => fs.readFileSync(filepath, 'utf8'),
   resolvePath: path.resolve,
   glob: glob.sync,
-  loadModule: require
+  loadModule
 })
 
 const serverMiddleware = [
-  bodyParser.json({ limit: 50 })
+  bodyParser.json()
 ]
 
 export default class GraphQLPlugin extends PluginConfig {
