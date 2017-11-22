@@ -1,4 +1,4 @@
-import { identity } from 'lodash'
+import { identity, size } from 'lodash'
 import { Store, createStore, combineReducers, GenericStoreEnhancer } from 'redux'
 import { PluginConfig, exportDependency, PluginConstructor } from '../../core/PluginConfig'
 import { injectDependency, InjectionDecorator, InjectionContext } from '../../core/InjectionClient'
@@ -14,18 +14,26 @@ export type Selector<T> = (x: any) => T
  * Owns and provides access to the application's redux store.
  */
 export function createStorePlugin(otherPlugins: PluginConstructor[]): PluginConstructor {
+  const reducers = getDeclaredReducers(otherPlugins)
+
   class StorePlugin extends PluginConfig {
     /** Store instance exported for use by other services */
     @exportDependency(STORE)
-    store: Store<any> = createStore(
-      combineReducers(getDeclaredReducers(otherPlugins)),
-      getDevtools()
+    store?: Store<any> = (
+      size(reducers) > 0
+      ? createStore(
+        combineReducers(getDeclaredReducers(otherPlugins)),
+        getDevtools()
+      )
+      : undefined
     )
 
     /** Dispatch function exported for use by other services */
     @exportDependency(DISPATCH)
     dispatch = (action: any) => {
-      this.store.dispatch(action)
+      if (this.store) {
+        this.store.dispatch(action)
+      }
     }
   }
 
