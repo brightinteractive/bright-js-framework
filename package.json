@@ -136,6 +136,6 @@
     "plugins"
   ],
   "bin": {
-    "bright-js-framework": "cli/cli.js"
+    "bright-js-framework": "cli/entry.js"
   }
 }
