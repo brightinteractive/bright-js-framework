@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { PluginConfig, exportDependency } from './PluginConfig'
 import { ApplicationContext } from './ApplicationContext'
-import { declareReducer } from './declareReducer';
+import { declareReducer } from './declareReducer'
 
 describe('ApplicationContext', () => {
   class MyPlugin extends PluginConfig {

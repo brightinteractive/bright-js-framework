@@ -67,6 +67,22 @@ export interface HttpClient {
    * Defaults to empty request and response types
    */
   delete<T = undefined>(opts: RequestOpts): Promise<T>
+
+  /**
+   * Performs an HTTP OPTIONS request and returns the response.
+   *
+   * Throws an HttpError if the response status code is >= 400.
+   * Defaults to empty request type and JSON response type
+   */
+  options<T = undefined>(opts: RequestOpts): Promise<T>
+
+  /**
+   * Performs an HTTP HEAD request and returns the response.
+   *
+   * Throws an HttpError if the response status code is >= 400.
+   * Defaults to empty request and response types
+   */
+  head<T = undefined>(opts: RequestOpts): Promise<T>
 }
 export const HttpClient: {} = _HttpClient
 

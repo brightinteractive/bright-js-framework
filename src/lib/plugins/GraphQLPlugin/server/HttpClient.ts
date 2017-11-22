@@ -19,7 +19,7 @@ export class HttpError implements Error {
   }
 }
 
-export type HttpMethod = 'GET' | 'PUT' | 'PATCH' | 'POST' | 'DELETE'
+export type HttpMethod = 'GET' | 'PUT' | 'PATCH' | 'POST' | 'DELETE' | 'OPTIONS' | 'HEAD'
 
 export interface FetchUrl {
   baseUrl: string
@@ -96,9 +96,9 @@ export class HttpClient extends InjectionClient {
       method,
       body: bodyType.convert(body),
       headers: toPairs({
-        ...(headers || {}),
         ...bodyType.headers,
-        ...responseType.headers
+        ...responseType.headers,
+        ...(headers || {}),
       })
     })
 
@@ -143,6 +143,22 @@ export class HttpClient extends InjectionClient {
 
   delete(opts: RequestOpts) {
     return this.request('DELETE', {
+      bodyType: BodyType.Empty,
+      responseType: ResponseType.Empty,
+      ...opts
+    })
+  }
+
+  options(opts: RequestOpts) {
+    return this.request('OPTIONS', {
+      bodyType: BodyType.Empty,
+      responseType: ResponseType.Json,
+      ...opts
+    })
+  }
+
+  head(opts: RequestOpts) {
+    return this.request('HEAD', {
       bodyType: BodyType.Empty,
       responseType: ResponseType.Empty,
       ...opts

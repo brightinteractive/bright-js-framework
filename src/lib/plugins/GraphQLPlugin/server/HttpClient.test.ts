@@ -65,7 +65,7 @@ describe('HttpClient', () => {
     )
   })
 
-  it('should delete json', async () => {
+  it('should delete', async () => {
     const fetch = mockFetch(200, JSON.stringify(true))
     const client = createClient(fetch)
 
@@ -73,6 +73,29 @@ describe('HttpClient', () => {
     expect(fetch).to.have.been.calledWithMatch(
       match('http://foo.com'),
       hasMethod('DELETE')
+    )
+  })
+
+  it('should perform HEAD call', async () => {
+    const fetch = mockFetch(200, JSON.stringify(true))
+    const client = createClient(fetch)
+
+    expect(await client.head({ url: 'http://foo.com' })).to.be.undefined
+    expect(fetch).to.have.been.calledWithMatch(
+      match('http://foo.com'),
+      hasMethod('HEAD')
+    )
+  })
+
+  it('should perform OPTIONS call', async () => {
+    const fetch = mockFetch(200, JSON.stringify(true))
+    const client = createClient(fetch)
+
+    expect(await client.options({ url: 'http://foo.com' })).to.eql(true)
+    expect(fetch).to.have.been.calledWithMatch(
+      match('http://foo.com'),
+      hasHeader('Accept', 'application/json')
+        .and(hasMethod('OPTIONS'))
     )
   })
 
@@ -143,6 +166,27 @@ describe('HttpClient', () => {
     })
 
     expect(fetch).to.have.been.calledWith('http://foo.com/api/users/me?list=1&list=2&list=3')
+  })
+
+  it('should give presidence to explicitly provided headers', async () => {
+    const fetch = mockFetch(200, JSON.stringify(true))
+    const client = createClient(fetch)
+
+    await client.request('GET', {
+      bodyType: BodyType.Json,
+      url: {
+        baseUrl: 'http://foo.com/api',
+        path: '/users/me'
+      },
+      headers: {
+        'Content-Type': 'application/json+foo'
+      }
+    })
+
+    expect(fetch).to.have.been.calledWithMatch(
+      match.any,
+      hasHeader('Content-Type', 'application/json+foo')
+    )
   })
 
   it('should throw on http error', async () => {
