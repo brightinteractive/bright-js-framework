@@ -31,7 +31,7 @@ function installDependencies() {
 
 function writeConfigs() {
   fs.writeFileSync('.env', '')
-  fs.appendFileSync('.gitignore', '.env\nbuild', { encoding: 'utf8' })
+  fs.appendFileSync('.gitignore', '.env\nbuild\nnode_modules', { encoding: 'utf8' })
 
   writeJson(['package.json'], {
     name: path.basename(process.cwd()),
