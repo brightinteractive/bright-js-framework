@@ -31,7 +31,7 @@ function installDependencies() {
 
 function writeConfigs() {
   fs.writeFileSync('.env', '')
-  fs.appendFileSync('.gitignore', '.env\nbuild', { encoding: 'utf8' })
+  fs.appendFileSync('.gitignore', '.env\nbuild\nnode_modules', { encoding: 'utf8' })
 
   writeJson(['package.json'], {
     name: path.basename(process.cwd()),
@@ -96,7 +96,7 @@ import * as React from 'react'
 import { RouteProps, route } from '@brightinteractive/bright-js-framework'
 
 @route('*')
-export class Error404 extends React.PureComponent<RouteProps> {
+export class Error404 extends React.PureComponent<RouteProps<any, any>> {
   render() {
     return (
       <h1>NOT FOUND</h1>
@@ -109,7 +109,7 @@ import * as React from 'react'
 import { RouteProps, route } from '@brightinteractive/bright-js-framework'
 
 @route('/')
-export class IndexPage extends React.PureComponent<RouteProps> {
+export class IndexPage extends React.PureComponent<RouteProps<any, any>> {
   render() {
     return (
       <h1>Hello, world!</h1>
