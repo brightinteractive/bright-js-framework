@@ -1,5 +1,8 @@
-import {PluginConstructor, SelectFn} from '../../index'
-import {createBrowserStoragePlugin, storageSelect} from '../../lib/plugins/BrowserPlugin/BrowserStorage'
+import {PluginConstructor} from '../../index'
+import {
+  createBrowserStoragePlugin,
+  injectBrowserStorage,
+} from '../../lib/plugins/BrowserPlugin/BrowserStorage'
 
 export interface BrowserStorageSystem {
   /**
@@ -37,4 +40,6 @@ export function browserStoragePlugin(props?: BrowserStoragePluginProps): PluginC
 /**
  * Grabs the currently-in-use browser storage mechanism
  */
-export const browserStorage: SelectFn<BrowserStorageSystem> = storageSelect
+export function browserStorage(): PropertyDecorator {
+  return injectBrowserStorage
+}

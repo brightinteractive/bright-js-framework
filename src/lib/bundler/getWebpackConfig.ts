@@ -139,7 +139,7 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
       externals: [nodeExternals({
         whitelist: [
           '@brightinteractive/bright-js-framework',
-          '@brightinteractive/bright-js-framework/plugins/graphql'
+          /@brightinteractive\/bright-js-framework\/plugins\/.*/
         ]
       })],
 

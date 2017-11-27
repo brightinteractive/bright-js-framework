@@ -1,41 +1,35 @@
 /**
- * Interface that can be used to hook up to an identity provider.
- *
- * The provider needs to implement all of these methods, which will be used by the authentication plugin to feed information to the rest of the application
+ * Represents an authentication token that can be used by the app to access resources on behalf of a user
  */
-export interface AuthClient {
+export interface Token {
   /**
-   * Get the current authentication token
-   *
-   * This client should be responsible for not returning an invalid token
-   *
-   * E.g. Should not return an expired token
+   * The token as a String
    */
-  getToken(): string | null
-
+  value: string
   /**
-   * Clears the authentication context.
-   *
-   * If applicable, should clear both local and remotely. (I.e. the stored token, and clear any sessions with the auth provider)
+   * When the token expires
    */
-  logout(): void
+  expiresAt?: Date
 }
 
 /**
- * Interface provided to the application to manage authentication state
+ * Contains information about the current authentication information available.
  */
-export interface AuthManager {
+export interface AuthTokenState {
+  token?: Token
+}
+
+/**
+ * Actions that can be performed on an AuthToken in the in-memory store
+ */
+export interface AuthTokenActions {
   /**
-   * Get the current authentication token from the authentication provider (or a cache)
-   *
-   * If the token is expired or is not present, this will return null
+   * Removes the previous value and exposes the new value to anything using it
    */
-  getToken(): string | null
+  update(token: Token): void
 
   /**
-   * Clears the authentication context.
-   *
-   * If applicable, should clear both local and remotely. (I.e. the stored token, and clear any sessions with the auth provider)
+   * Clears the current value
    */
-  logout(): void
+  clear(): void
 }
