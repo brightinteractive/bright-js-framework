@@ -112,7 +112,7 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
       },
 
       output: {
-        path: path.join(__dirname, 'build'),
+        path: path.join(process.cwd(), 'build'),
         filename: 'bundle.js',
       },
 
@@ -152,7 +152,7 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
       },
 
       output: {
-        path: path.join(__dirname, 'build'),
+        path: path.join(process.cwd(), 'build'),
         filename: 'server.js',
         libraryTarget: 'commonjs2',
       },
