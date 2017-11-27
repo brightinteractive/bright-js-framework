@@ -1,7 +1,7 @@
 import {
   authTokenActionsInjector,
   authTokenValueInjector,
-  createAuthTokenPlugin,
+  createAuthTokenPlugin, isLoggedInInjector,
 } from '../../lib/plugins/AuthTokenPlugin/AuthTokenPlugin'
 import {PluginConstructor, SelectFn} from '../../index'
 import {AuthTokenState} from './auth'
@@ -25,4 +25,11 @@ export function authTokenActions(): PropertyDecorator {
  */
 export function authTokenValue(): SelectFn<AuthTokenState> {
   return authTokenValueInjector
+}
+
+/**
+ * Returns whether the user is logged in
+ */
+export function isLoggedIn(): SelectFn<boolean> {
+  return isLoggedInInjector
 }

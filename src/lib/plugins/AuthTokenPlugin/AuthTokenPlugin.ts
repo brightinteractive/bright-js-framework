@@ -39,3 +39,17 @@ export const authTokenActionsInjector = inject(AUTH_TOKEN_ACTIONS)
 
 // Exported API to bind a selected state value into a service or controller
 export const authTokenValueInjector: SelectFn<AuthTokenState> = (appState) => appState[AUTH_TOKEN_STATE]
+
+export const isLoggedInInjector: SelectFn<boolean> = (appState) => {
+  const tokenState: AuthTokenState = appState[AUTH_TOKEN_STATE]
+
+  if (!tokenState || !tokenState.token) {
+    return false
+  }
+
+  if (tokenState.token.expiresAt && tokenState.token.expiresAt <= new Date()) {
+    return false
+  }
+
+  return true
+}
