@@ -12,8 +12,10 @@ export class Service<State = any> implements InjectionClient {
     this.context = context
   }
 
+  readonly controllerProps: {}
+
   readonly state: State
-  setState(state: Partial<State>): void {}
+  setState(state: Partial<State>, nextFn?: () => void): void {}
 
   context: InjectionContext
 }
@@ -28,8 +30,8 @@ export class Service<State = any> implements InjectionClient {
 export interface Service {
   serviceWillMount?(): void
   serviceDidMount?(): void
-  serviceWillLoad?(): void | Promise<void>
-  serviceDidLoad?(): void | Promise<void>
+  serviceWillLoad?(): void | Promise<any>
+  serviceDidLoad?(): void | Promise<any>
   serviceWillUnmount?(): void
 }
 
@@ -40,15 +42,14 @@ const SERVICES = '__luminant__services'
 /**
  * Return a property descriptor that instantiates a service
  */
-export function decorateServiceProperty<T extends Service>(Constructor: ServiceConstructor<T>) {
-  return (proto: any, key: string): any => {
-    const cacheKey = Symbol(key)
+export function decorateServiceProperty<T extends Service>(Constructor: ServiceConstructor<T>): PropertyDecorator {
+  return (proto: any, key: string | symbol): any => {
+    const cacheKey = Symbol(key.toString())
 
     proto[SERVICES] = proto[SERVICES] || []
     proto[SERVICES].push(key)
 
     return {
-      enumerable: true,
       get(this: any) {
         if (!isController(this) && !isService(this)) {
           throw new Error([
