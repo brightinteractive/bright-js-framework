@@ -6,7 +6,9 @@ import { mount, ReactWrapper } from 'enzyme'
 import { PluginConstructor, PluginConfig } from '../core/PluginConfig'
 import { ApplicationContext } from '../core/ApplicationContext'
 import { ContextProvider } from '../core/ContextProvider'
-import { createBrowserPlugin } from '../plugins/BrowserPlugin/BrowserPlugin';
+import { load } from '../core/load'
+import { createBrowserPlugin } from '../plugins/BrowserPlugin/BrowserPlugin'
+import { mountSpy } from '../plugins/ControllerMountSpyPlugin/ControllerMountSpyPlugin'
 
 export interface TestFixtureProps {
   plugins?: PluginConstructor[]
@@ -25,8 +27,17 @@ export class TestFixture {
     this.markup = markup
     this.appContext = new ApplicationContext([
       ...plugins,
+      mountSpy(),
       createBrowserPlugin({ history: this.history })
     ])
+  }
+
+  load() {
+    return load(
+      <ContextProvider appContext={this.appContext}>
+        {this.markup}
+      </ContextProvider>
+    )
   }
 
   render() {
@@ -41,15 +52,26 @@ export class TestFixture {
     return this.reactWrapper.update()
   }
 
-  stub<T extends PluginConfig>(constructor: PluginConstructor<T>, stubFn: (fn: T) => void) {
+  getPlugin<T extends PluginConfig>(constructor: PluginConstructor<T>): T {
     const matches = filter(this.appContext.plugins, (x) => x instanceof constructor) as T[]
-    matches.forEach(stubFn)
 
-    return this
+    if (!matches[0]) {
+      throw new Error(`Could not find installed plugin of type ${constructor.name}`)
+    }
+
+    return matches[0]
   }
 
-  getInstance<T>() {
-    return this.render().childAt(0).instance() as any as T
+  getInstance<T = any>(): T {
+    return this.render().childAt(0).instance() as any
+  }
+
+  waitForController(type: React.ComponentClass) {
+    return this.getPlugin(mountSpy()).waitFor((controller: any) => controller.constructor === type)
+  }
+
+  unmount() {
+    this.render().unmount()
   }
 
   get location(): Location {

@@ -59,9 +59,7 @@ describe('TestFixture', () => {
       markup: <PluginConsumer />
     })
 
-    fixture.stub(TestPlugin, (plugin) => {
-      plugin.value = 5
-    })
+    fixture.getPlugin(TestPlugin).value = 5
 
     expect(fixture.render()).to.have.text('value=5')
   })
