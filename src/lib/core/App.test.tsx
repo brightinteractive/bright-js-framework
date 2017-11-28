@@ -5,9 +5,9 @@ import { createMemoryHistory } from 'history'
 import { App, AppProps } from './App'
 import { ApplicationContext } from './ApplicationContext'
 import { RouteProps } from '../../index'
-import { spyController } from './mocks/SpyController';
-import { spyService } from './mocks/SpyService';
-import { mountSpy } from './mocks/MountSpy';
+import { spyController } from './mocks/SpyController'
+import { spyService } from './mocks/SpyService'
+import { mountSpy } from './mocks/MountSpy'
 
 describe('App', () => {
   it('should render the initially matched route', () => {

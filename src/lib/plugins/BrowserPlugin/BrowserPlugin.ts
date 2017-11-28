@@ -44,6 +44,9 @@ export function createBrowserPlugin({ history }: BrowserPluginProps): PluginCons
 
     /** Sync the history state when a page transition occurs */
     handlePageTransition: History.LocationListener = (location, action) => {
+      // XXX: This will reflect the outgoing location when the page loads.
+      //      this is generally what we want to render, but some hooks
+      //      might want the incoming location.
       this.dispatch({
         type: 'browser:transition',
         payload: {
