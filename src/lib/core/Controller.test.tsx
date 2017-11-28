@@ -4,6 +4,7 @@ import * as React from 'react'
 import { decorateController, isController } from './Controller'
 import { Service, decorateServiceProperty, ServiceConstructor } from './Service'
 import { SpyService } from './mocks/SpyService'
+import { TestFixture } from '../entry/TestFixture'
 
 describe('Controller', () => {
   describe('isController()', () => {
@@ -25,7 +26,7 @@ describe('Controller', () => {
 
   context('when mounted into dom', () => {
     context('and lifecycle hooks are implemented', () => {
-      function setup(serviceConstructor: ServiceConstructor<Service> = SpyService) {
+      async function setup(serviceConstructor: ServiceConstructor<Service> = SpyService) {
         @decorateController
         class TestController extends React.Component {
           @decorateServiceProperty(serviceConstructor)
@@ -36,44 +37,50 @@ describe('Controller', () => {
           }
         }
 
-        const dom = mount(<TestController />)
-        const controller = dom.instance() as TestController
+        const fixture = new TestFixture({
+          markup: <TestController />
+        })
 
-        return { dom, service: controller.myService }
+        await fixture.load()
+        fixture.render()
+
+        return {
+          service: fixture.getInstance<TestController>().myService,
+          fixture
+        }
       }
 
-      it('should call serviceWillMount() on mount', () => {
-        const { service } = setup()
+      it('should call serviceWillMount() on mount', async () => {
+        const { service } = await setup()
         expect(service.serviceWillMount).to.have.been.called
       })
 
-      it('should call serviceDidMount() on mount', () => {
-        const { service } = setup()
+      it('should call serviceDidMount() on mount', async () => {
+        const { service } = await setup()
         expect(service.serviceDidMount).to.have.been.calledAfter(service.serviceWillMount as any)
       })
 
-      it('should call serviceDidMount() on unmount', () => {
-        const { dom, service } = setup()
-        dom.unmount()
+      it('should call serviceDidMount() on unmount', async () => {
+        const { fixture, service } = await setup()
+        fixture.unmount()
 
         expect(service.serviceWillUnmount).to.have.been.called
       })
 
-      it('should support set and get state', () => {
-        const { dom, service } = setup()
+      it('should support set and get state', async () => {
+        const { service } = await setup()
 
         service.setState({ foo: 1 })
-        dom.update()
 
         expect(service.state).to.eql({ foo: 1 })
       })
 
-      it('should support services having initial state', () => {
+      it('should support services having initial state', async () => {
         class SpyServiceWithInitialState extends SpyService {
           state = { foo: 1 }
         }
 
-        const { service } = setup(SpyServiceWithInitialState)
+        const { service } = await setup(SpyServiceWithInitialState)
 
         expect(service.state).to.eql({ foo: 1 })
       })

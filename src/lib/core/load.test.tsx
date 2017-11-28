@@ -4,9 +4,11 @@ import { expect } from 'chai'
 import { load } from './load'
 import { spyController } from './mocks/SpyController'
 import { spyService } from './mocks/SpyService'
-import { Service } from './Service'
+import { Service, decorateServiceProperty } from './Service'
+import { decorateController } from './Controller'
+import { TestFixture } from '../entry/TestFixture'
 
-describe.only('load()', () => {
+describe('load()', () => {
   it('should descend shallowly through primitive element types', async () => {
     const { Controller, componentWillMount } = spyController()
 
@@ -39,6 +41,38 @@ describe.only('load()', () => {
 
     await load(
       <ParentController />
+    )
+
+    expect(componentWillMount).to.have.been.calledOnce
+  })
+
+  it('should descend into composite element types', async () => {
+    const { Controller: ChildController, componentWillMount } = spyController()
+
+    const { Controller: ParentController } = spyController({
+      children: <ChildController />
+    })
+
+    await load(
+      <ParentController />
+    )
+
+    expect(componentWillMount).to.have.been.calledOnce
+  })
+
+  it('should descend into array results from components', async () => {
+    class Parent extends React.Component {
+      render() {
+        return [<div key="a" />, <Controller key="b" />]
+      }
+    }
+
+    const { Controller, componentWillMount } = spyController({
+      children: <div />
+    })
+
+    await load(
+      <Parent />
     )
 
     expect(componentWillMount).to.have.been.calledOnce
@@ -90,7 +124,6 @@ describe.only('load()', () => {
       serviceDidLoad: parentDidLoad,
       serviceWillMount: parentWillMount
     } = spyService([ChildService])
-
 
     const { Controller } = spyController({
       services: [ParentService]
@@ -175,5 +208,71 @@ describe.only('load()', () => {
     }
 
     await load(<Parent><Child /></Parent>, { a: 1 })
+  })
+
+  context('when controller with load hook dynamically inserted into DOM', () => {
+    function setup() {
+      let state = 'not-loaded'
+
+      class MyService extends Service {
+        async serviceWillLoad() {
+          state = 'loaded'
+        }
+
+        get stateValue() {
+          return state
+        }
+      }
+
+      @decorateController
+      class Child extends React.PureComponent {
+        @decorateServiceProperty(MyService)
+        service: MyService
+
+        render() {
+          return <div>{this.service.stateValue}</div>
+        }
+      }
+
+      @decorateController
+      class Parent extends React.PureComponent<{}, { child: React.ReactElement<{}> }> {
+        render() {
+          return this.state && this.state.child || null
+        }
+      }
+
+      return { Parent, Child }
+    }
+
+    it('should not render the child initially', async () => {
+      const { Parent, Child } = setup()
+
+      const fixture = new TestFixture({
+        markup: <Parent />
+      })
+
+      await fixture.load()
+      fixture.getInstance().setState({
+        child: <Child />
+      })
+
+      expect(fixture.render().html()).to.be.null
+    })
+
+    it('should load data and render once fetched', async () => {
+      const { Parent, Child } = setup()
+
+      const fixture = new TestFixture({
+        markup: <Parent />
+      })
+
+      await fixture.load()
+      fixture.getInstance().setState({
+        child: <Child />
+      })
+
+      await fixture.waitForController(Child)
+      expect(fixture.render()).to.contain(<div>loaded</div>)
+    })
   })
 })
