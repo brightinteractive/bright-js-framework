@@ -15,6 +15,7 @@
     "experimentalDecorators": true,
     "rootDir": "src",
     "importHelpers": true,
+    "skipLibCheck": true,
     "lib": [
       "dom",
       "es2017",
