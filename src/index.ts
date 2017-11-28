@@ -146,6 +146,7 @@ export interface Service<State = {}> {
   setState(state: Partial<State>): void
 
   context: ServiceContext
+  controllerProps: {}
 }
 
 export type ServiceConstructor<State = {}> = new (context: ServiceContext) => Service<State>

@@ -1,4 +1,5 @@
-import { PluginConfig } from '../../core/PluginConfig'
+import GraphQLPluginBase, { GraphQLPluginProps } from './GraphQLPlugin.common'
 
-export default class GraphQLPlugin extends PluginConfig {
+export default function graphQlPlugin(props: GraphQLPluginProps) {
+  return GraphQLPluginBase
 }

@@ -5,6 +5,10 @@ import { declareReducer } from '../../core/declareReducer'
 import { Selector } from '../StorePlugin/StorePlugin'
 import { GraphQLError } from 'graphql/error/GraphQLError'
 
+export interface GraphQLPluginProps {
+  backendUrl?: string
+}
+
 export interface GraphQLAction {
   type: 'graphql:error'
   query: DocumentNode

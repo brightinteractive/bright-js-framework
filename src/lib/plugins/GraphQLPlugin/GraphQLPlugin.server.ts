@@ -21,7 +21,11 @@ const serverMiddleware = [
   bodyParser.json()
 ]
 
-export default class GraphQLPlugin extends GraphQLPluginBase {
+export default function graphQlPlugin() {
+  return GraphQLPluginServer
+}
+
+export class GraphQLPluginServer extends GraphQLPluginBase {
   @decorateRequestHandler('/graphql', { method: 'POST', middleware: serverMiddleware })
   static handleGraphQLRequest?: RequestHandler = createServer()
 
