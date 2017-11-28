@@ -1,14 +1,23 @@
 import * as React from 'react'
-import { CONTROLLER_CONTEXT_TYPES } from './Controller'
-import { InjectionContext } from './InjectionClient'
+import { CONTROLLER_CONTEXT_TYPES, ControllerContext, CONTROLLER_CHILD_CONTEXT_TYPES } from './Controller'
 import { ApplicationContext } from './ApplicationContext'
 
 export interface ContextProviderProps {
   appContext: ApplicationContext
 }
 
-export class ContextProvider<Props extends ContextProviderProps = ContextProviderProps> extends React.PureComponent<Props> {
-  static childContextTypes: {} = CONTROLLER_CONTEXT_TYPES
+export interface ContextProviderState {
+  mounted?: boolean
+}
+
+export class ContextProvider<
+  Props extends ContextProviderProps = ContextProviderProps,
+  State = {}
+> extends React.PureComponent<Props, ContextProviderState & State> {
+  static childContextTypes: {} = {
+    ...CONTROLLER_CONTEXT_TYPES,
+    ...CONTROLLER_CHILD_CONTEXT_TYPES
+  }
 
   componentWillMount() {
     this.props.appContext.plugins.forEach((plugin) => {
@@ -24,6 +33,8 @@ export class ContextProvider<Props extends ContextProviderProps = ContextProvide
         plugin.serviceDidMount()
       }
     })
+
+    this.setState({ mounted: true })
   }
 
   componentWillUnmount() {
@@ -34,9 +45,10 @@ export class ContextProvider<Props extends ContextProviderProps = ContextProvide
     })
   }
 
-  getChildContext(): InjectionContext {
+  getChildContext(): ControllerContext {
     return {
-      '@appContext': this.props.appContext
+      '@appContext': this.props.appContext,
+      '@parentHasMounted': this.state && this.state.mounted
     }
   }
 
