@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { CONTROLLER_CONTEXT_TYPES, ControllerContext, CONTROLLER_CHILD_CONTEXT_TYPES } from './Controller'
+import { CONTROLLER_CONTEXT_TYPES, ControllerContext } from './Controller'
 import { ApplicationContext } from './ApplicationContext'
 
 export interface ContextProviderProps {
@@ -14,10 +14,7 @@ export class ContextProvider<
   Props extends ContextProviderProps = ContextProviderProps,
   State = {}
 > extends React.PureComponent<Props, ContextProviderState & State> {
-  static childContextTypes: {} = {
-    ...CONTROLLER_CONTEXT_TYPES,
-    ...CONTROLLER_CHILD_CONTEXT_TYPES
-  }
+  static childContextTypes: {} = CONTROLLER_CONTEXT_TYPES
 
   componentWillMount() {
     this.props.appContext.plugins.forEach((plugin) => {
