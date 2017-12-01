@@ -30,6 +30,10 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
           loader: require.resolve('json-loader'),
         },
         {
+          test: /\.graphql$/,
+          loader: require.resolve('graphql-tag/loader'),
+        },
+        {
           test: /\.tsx?$/,
           use: [
             require.resolve('source-map-loader'),
