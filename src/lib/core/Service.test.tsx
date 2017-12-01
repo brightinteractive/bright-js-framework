@@ -32,7 +32,7 @@ describe('Service', () => {
         service: Service
       }
 
-      expect(new Parent().service).to.be.instanceOf(Service)
+      expect(new Parent({}).service).to.be.instanceOf(Service)
     })
 
     it('should instantiate service when attached to service', () => {
@@ -51,7 +51,7 @@ describe('Service', () => {
           service: Service
         }
 
-        return new Parent().service
+        return new Parent({}).service
       }).to.throw()
     })
   })
