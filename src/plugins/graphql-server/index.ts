@@ -1,8 +1,8 @@
 import { ServiceContext } from '../../index'
 import {
-  Resolver as _Resolver,
-  decorateResolverProperty,
-  decorateTypeResolver
+  GraphQLType as _GraphQLType,
+  decorateResolver,
+  decorateGraphQLType
 } from '../../lib/plugins/GraphQLServerPlugin/Resolver'
 import {
   Connector as _Connector,
@@ -26,12 +26,12 @@ import {
  *
  * @class
  */
-export interface Resolver {
+export interface GraphQLType {
   /** ID of the object that is being resolved */
   readonly id: string
   readonly context: ServiceContext
 }
-export const Resolver: new(context: ServiceContext, id: string) => Resolver = _Resolver
+export const GraphQLType: new(context: ServiceContext, id: string) => GraphQLType = _GraphQLType
 
 /**
  * Declare the that a resolver is used to resolve schema objects of a specific type
@@ -40,7 +40,7 @@ export const Resolver: new(context: ServiceContext, id: string) => Resolver = _R
  * @param typeName Name of the type to resolve.
  */
 export function type(typeName: string): ClassDecorator {
-  return decorateTypeResolver(typeName)
+  return decorateGraphQLType(typeName)
 }
 
 /**
@@ -48,21 +48,21 @@ export function type(typeName: string): ClassDecorator {
  * a parent object).
  */
 export function queries(): ClassDecorator {
-  return decorateTypeResolver('Query')
+  return decorateGraphQLType('Query')
 }
 
 /**
  * Declare the that a resolver is used to perform mutations.
  */
 export function mutations(): ClassDecorator {
-  return decorateTypeResolver('Mutation')
+  return decorateGraphQLType('Mutation')
 }
 
 /**
  * Declare the a method of a resolver is used to resolve a type field of the same name.
  */
-export function resolve(): MethodDecorator {
-  return decorateResolverProperty
+export function resolver(): MethodDecorator {
+  return decorateResolver
 }
 
 /**

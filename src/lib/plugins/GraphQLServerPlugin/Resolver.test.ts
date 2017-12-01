@@ -1,15 +1,15 @@
 import { expect } from 'chai'
-import { Resolver, decorateTypeResolver, isTypeResolver, getResolverTypename, decorateResolverProperty, getResolverProperties } from './Resolver'
+import { GraphQLType, decorateGraphQLType, isGraphQLType, getGraphQLTypename, decorateResolver, getResolvers } from './Resolver'
 
 describe('Resolver', () => {
-  @decorateTypeResolver('foo')
-  class TypeResolver extends Resolver {
-    @decorateResolverProperty
+  @decorateGraphQLType('foo')
+  class TypeResolver extends GraphQLType {
+    @decorateResolver
     prop1() {
 
     }
 
-    @decorateResolverProperty
+    @decorateResolver
     prop2() {
 
     }
@@ -21,22 +21,22 @@ describe('Resolver', () => {
 
   describe('isTypeResolver', () => {
     it('should return true if decorated as type', () => {
-      expect(isTypeResolver(TypeResolver)).to.be.true
+      expect(isGraphQLType(TypeResolver)).to.be.true
     })
 
     it('should return false if not decorated as type', () => {
-      expect(isTypeResolver({})).to.be.false
+      expect(isGraphQLType({})).to.be.false
     })
 
     it('should return resolver type', () => {
-      expect(getResolverTypename(TypeResolver)).to.eql('foo')
+      expect(getGraphQLTypename(TypeResolver)).to.eql('foo')
     })
   })
 
   describe('getResolverProperties', () => {
     it('should return set of decorated properties', () => {
-      expect(getResolverProperties(TypeResolver)).to.have.all.keys(['prop1', 'prop2'])
-      expect(getResolverProperties(TypeResolver)).to.not.have.keys('notProp')
+      expect(getResolvers(TypeResolver)).to.have.all.keys(['prop1', 'prop2'])
+      expect(getResolvers(TypeResolver)).to.not.have.keys('notProp')
     })
   })
 })

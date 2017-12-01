@@ -1,10 +1,10 @@
 import { inject } from '@brightinteractive/bright-js-framework'
-import { Resolver, type, resolve, queries, mutations } from '@brightinteractive/bright-js-framework/plugins/graphql-server'
+import { GraphQLType, type, resolve, queries, mutations } from '@brightinteractive/bright-js-framework/plugins/graphql-server'
 import { UserMetadataConnector } from '../../connectors/UserMetadataConnector'
 import { UserAccountConnector } from '../../connectors/UserAccountConnector'
 
 @queries()
-export class UserQueryResolver extends Resolver {
+export class UserQueryResolverMap extends GraphQLType {
   @inject(UserMetadataConnector)
   metadata: UserMetadataConnector
 
@@ -20,7 +20,7 @@ export class UserQueryResolver extends Resolver {
 }
 
 @type('User')
-export class UserResolver extends Resolver {
+export class UserResolverMap extends GraphQLType {
   @inject(UserMetadataConnector)
   metadata: UserMetadataConnector
 
@@ -40,7 +40,7 @@ export class UserResolver extends Resolver {
 }
 
 @mutations()
-export class UserMutationResolver extends Resolver {
+export class UserMutationResolverMap extends GraphQLType {
   @inject(UserAccountConnector)
   account: UserAccountConnector
 
