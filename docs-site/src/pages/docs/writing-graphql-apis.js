@@ -27,7 +27,7 @@ export default () => {
           GraphQL APIs within bright-js-framework are written using three parts:
           <ul>
             <li><em>Schema:</em> Schemas are written in a <code>.graphql</code>
-            schema definition file. They purely define the types, queries and mutations for a particular object.</li>
+            schema definition file. They define the GraphQL types, queries and mutations for a particular object.</li>
             <li><em>ResolverMap:</em> ResolverMaps are <code>.ts</code> files. ResolverMaps are objects
             that contain a set of functions for a specific type from the schema. Each <code>@resolver</code> decorated function within a
             ResolverMap is equivalent to a GraphQL resolver. As an example, a UserResolverMap would contain resolver functions
