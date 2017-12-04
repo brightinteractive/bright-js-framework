@@ -10,8 +10,7 @@ import errorOverlay = require('react-dev-utils/errorOverlayMiddleware')
 import { pick } from 'lodash'
 import { getWebpackConfig } from '../../lib/bundler/getWebpackConfig'
 import { renderHtmlWrapper } from '../../lib/server/renderHtmlWrapper'
-import { getConfig } from '../getConfig'
-import { Compiler } from 'webpack'
+import { getConfig } from '../../lib/server/getConfig'
 
 export interface RunCommandOpts {
   entry: string
@@ -33,13 +32,14 @@ export function handler({ port }: RunCommandOpts) {
   loadEnvironment()
 
   const webpackConfig = getWebpackConfig({
-    entrypoints: getEntrypointFiles(),
+    pages: getEntrypointFiles(),
+    plugins: appConfig.plugins
   })
 
   const bundler = webpack(webpackConfig)
   const app = express()
 
-  const clientBundler = (bundler as any).compilers.find((compiler: Compiler) => compiler.name === 'client')
+  const clientBundler = (bundler as any).compilers.find((compiler: webpack.Compiler) => compiler.name === 'client')
   app.use(hot(clientBundler, { path: '/_hot' }))
   app.get('*', devserver(bundler, { noInfo: true, publicPath: '/' }))
   app.use(hotServer(bundler, { serverRendererOptions: { nodeRequire: require } }))

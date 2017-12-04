@@ -1,24 +1,33 @@
 import * as autoprefixer from 'autoprefixer'
 import * as path from 'path'
 import * as webpack from 'webpack'
+import { map } from 'lodash'
 import nodeExternals  = require('webpack-node-externals')
 import { entrypointLoader } from './entrypointLoader'
+import { getPluginLoader } from './getPluginLoader'
 
 export interface WebpackConfigOpts {
   /** List of absolute paths to modules exporting routes */
-  entrypoints: string[]
+  pages: string[],
+
+  /** List of plugin configs */
+  plugins: any
 }
 
-export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Configuration[] {
+export function getWebpackConfig({ pages, plugins }: WebpackConfigOpts): webpack.Configuration[] {
   const extensions = ['.ts', '.tsx', '.js', '.jsx']
   const serverExtensions = [
     ...extensions.map((extension) => `.server${extension}`),
-    ...extensions
+    ...extensions,
+    '*'
   ]
   const clientExtensions = [
     ...extensions.map((extension) => `.client${extension}`),
-    ...extensions
+    ...extensions,
+    '*'
   ]
+
+  const pluginModules = map(plugins, getPluginLoader)
 
   const sharedConfig: Partial<webpack.Configuration> = {
     devtool: 'cheap-module-source-map',
@@ -123,7 +132,7 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
       },
 
       output: {
-        path: path.join(__dirname, 'build'),
+        path: path.join(process.cwd(), 'build'),
         filename: 'bundle.js',
       },
 
@@ -135,8 +144,10 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
         'whatwg-fetch',
         entrypointLoader({
           entry: require.resolve('../entry/client'),
-          topLevelModules: entrypoints,
-          configFile: path.resolve(path.join('src', 'config.ts'))
+          topLevelModules: {
+            pages,
+            plugins: pluginModules
+          },
         }),
       ],
     },
@@ -147,12 +158,13 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
 
       target: 'node',
 
-      externals: [nodeExternals({
+      externals: nodeExternals({
         whitelist: [
-          '@brightinteractive/bright-js-framework',
-          '@brightinteractive/bright-js-framework/plugins/graphql'
+          // Exclude framework plugins
+          // XXX: Exclude anything with a plugin-config.ts file
+          /^@brightinteractive\/bright-js-framework/,
         ]
-      })],
+      }),
 
       resolve: {
         extensions: serverExtensions
@@ -163,15 +175,17 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
       },
 
       output: {
-        path: path.join(__dirname, 'build'),
+        path: path.join(process.cwd(), 'build'),
         filename: 'server.js',
         libraryTarget: 'commonjs2',
       },
 
       entry: entrypointLoader({
         entry: require.resolve('../entry/server'),
-        topLevelModules: entrypoints,
-        configFile: path.resolve(path.join('src', 'config.ts'))
+        topLevelModules: {
+          pages,
+          plugins: pluginModules
+        },
       }),
     }
   ]

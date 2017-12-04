@@ -77,8 +77,9 @@ function writeConfigs() {
     ]
   })
 
-  writeJson<Config>(['.bright-js-framework'], {
-    frontendEnvironment: []
+  writeJson<Config>(['luminant.json'], {
+    frontendEnvironment: [],
+    plugins: {}
   })
 }
 
@@ -116,9 +117,6 @@ export class IndexPage extends React.PureComponent<RouteProps<any, any>> {
     )
   }
 }
-    `)
-  writeSource(['src', 'config.ts'], `
-export default []
   `)
 }
 

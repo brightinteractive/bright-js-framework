@@ -3,19 +3,14 @@ import 'colors'
 import * as express from 'express'
 import { Express } from 'express-serve-static-core'
 import { getRequestHandlers } from '../core/PluginConfig'
-import { EntryOpts, RequireList } from '../bundler/Entrypoint'
+import { RequireList } from '../bundler/Entrypoint'
 
-export default function serverEntry(topLevelModules: RequireList, opts: EntryOpts): (require: NodeRequire) => Express {
-  return function serverRenderer({ nodeRequire }: any) {
+export default function serverEntry(opts: { plugins: RequireList }): (require: NodeRequire) => Express {
+  return function serverRenderer() {
     const app = express()
+    const pluginConfigs = opts.plugins.map((loadPlugin) => loadPlugin())
 
-    // FIXME: Set require as a global so that plugins have access to it
-    //        To be replaced with convention for allowing plugins to specify their source
-    //        dependencies directly to webpack
-    const g = global as any
-    g.__require = nodeRequire
-
-    getRequestHandlers(opts.config()).forEach((requestHandlerConfig) => {
+    getRequestHandlers(pluginConfigs).forEach((requestHandlerConfig) => {
       if (requestHandlerConfig.method) {
         if (!requestHandlerConfig.path) {
           throw new Error(`${requestHandlerConfig.method} request handler must have a path associated`)
