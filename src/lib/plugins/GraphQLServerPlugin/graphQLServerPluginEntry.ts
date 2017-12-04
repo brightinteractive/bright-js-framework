@@ -5,7 +5,7 @@ import { PluginConfig, decorateRequestHandler, PluginConstructor } from '../../c
 import { RequireList, isSubclassOf, getEntrypointExports, RequireFn } from '../../bundler/Entrypoint'
 import { Connector } from './Connector'
 import { GraphQLServer } from './GraphQLServer'
-import { isGraphQLType } from './Resolver'
+import { isSchemaType } from './Resolver'
 
 const serverMiddleware = [
   bodyParser.json()
@@ -21,7 +21,7 @@ export default function graphQLServerPluginEntry({ connectors, schemas }: GraphQ
     connectors: getEntrypointExports(connectors, isSubclassOf(Connector)),
     schema: schemas.map(({ typeDefs, resolvers }) => ({
       typeDefs: typeDefs(),
-      resolvers: getEntrypointExports(resolvers, isGraphQLType)
+      resolvers: getEntrypointExports(resolvers, isSchemaType)
     })),
   })
 

@@ -1,5 +1,5 @@
 import { inject } from '@brightinteractive/bright-js-framework'
-import { Connector, IdentityConfig } from '@brightinteractive/bright-js-framework/plugins/graphql-server'
+import { Connector, ResourceBatchFetcher } from '@brightinteractive/bright-js-framework/plugins/graphql-server'
 import { HttpClient } from '@brightinteractive/bright-js-framework/plugins/graphql-server/http'
 
 export interface UserMetadata {
@@ -7,7 +7,7 @@ export interface UserMetadata {
   name: string
 }
 
-class UserMetadataIdentity extends IdentityConfig<UserMetadata> {
+class UserMetadataIdentity extends ResourceBatchFetcher<UserMetadata> {
   @inject(HttpClient)
   http: HttpClient
 
@@ -24,7 +24,7 @@ class UserMetadataIdentity extends IdentityConfig<UserMetadata> {
   }
 }
 
-export class UserMetadataConnector extends Connector.withIdentity<UserMetadata>(UserMetadataIdentity) {
+export class UserMetadataConnector extends Connector.forResource<UserMetadata>(UserMetadataIdentity) {
   @inject(HttpClient)
   http: HttpClient
 

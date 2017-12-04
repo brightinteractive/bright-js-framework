@@ -2,8 +2,8 @@ import { GraphQLObjectType, execute } from 'graphql'
 import gql from 'graphql-tag'
 import { expect } from 'chai'
 import { GraphQLServer } from './GraphQLServer'
-import { GraphQLType, decorateGraphQLType, decorateResolver } from './Resolver'
-import { Connector, IdentityConfig } from './Connector'
+import { SchemaType, decorateSchemaType, decorateResolver } from './Resolver'
+import { Connector, ResourceBatchFetcher } from './Connector'
 import { ApplicationContext } from '../../core/ApplicationContext'
 import { HttpClient } from './HttpClient'
 
@@ -19,7 +19,7 @@ describe('GraphQLServer', () => {
 
   it('should load connectors', () => {
     class Identity extends Connector { }
-    class Basic extends Connector.withIdentity(class extends IdentityConfig<string> { }) { }
+    class Basic extends Connector.forResource(class extends ResourceBatchFetcher<string> { }) { }
 
     const server = new GraphQLServer({
       connectors: [Basic, Identity],
@@ -60,16 +60,16 @@ describe('GraphQLServer', () => {
   })
 
   it('should return an choose an aribitrary resolver on conflict between resolvers', async () => {
-    @decorateGraphQLType('Query')
-    class QueryResolver1 extends GraphQLType {
+    @decorateSchemaType('Query')
+    class QueryResolver1 extends SchemaType {
       @decorateResolver
       something() {
         return 'b'
       }
     }
 
-    @decorateGraphQLType('Query')
-    class QueryResolver2 extends GraphQLType {
+    @decorateSchemaType('Query')
+    class QueryResolver2 extends SchemaType {
       @decorateResolver
       something() {
         return 'a'
@@ -153,16 +153,16 @@ describe('GraphQLServer', () => {
   })
 })
 
-@decorateGraphQLType('User')
-class UserResolver extends GraphQLType {
+@decorateSchemaType('User')
+class UserResolver extends SchemaType {
   @decorateResolver
   name() {
     return this.id
   }
 }
 
-@decorateGraphQLType('Query')
-class UserQuery extends GraphQLType {
+@decorateSchemaType('Query')
+class UserQuery extends SchemaType {
   @decorateResolver
   getUser(id: string) {
     return id
@@ -179,16 +179,16 @@ const UserSchema = `
   }
 `
 
-@decorateGraphQLType('Organisation')
-class OrganisationResolver extends GraphQLType {
+@decorateSchemaType('Organisation')
+class OrganisationResolver extends SchemaType {
   @decorateResolver
   orgName() {
     return this.id
   }
 }
 
-@decorateGraphQLType('Query')
-class OrganisationQuery extends GraphQLType {
+@decorateSchemaType('Query')
+class OrganisationQuery extends SchemaType {
   @decorateResolver
   getOrganisation(id: string) {
     return id

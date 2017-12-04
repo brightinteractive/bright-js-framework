@@ -22,7 +22,25 @@ export default () => {
           </a> for an overview.
         </p>
       </Section>
-      <Section title="Adding a GraphQL Server">
+      <Section title="GraphQL in bright-js-framework">
+        <p>
+          GraphQL APIs within bright-js-framework are written using three parts:
+          <ul>
+            <li><em>Schema:</em> Schemas are written in a <code>.graphql</code>
+            schema definition file. They purely define the types, queries and mutations for a particular object.</li>
+            <li><em>ResolverMap:</em> ResolverMaps are <code>.ts</code> files. ResolverMaps are objects
+            that contain a set of functions for a specific type from the schema. Each <code>@resolver</code> decorated function within a
+            ResolverMap is equivalent to a GraphQL resolver. As an example, a UserResolverMap would contain resolver functions
+            for the users forname, surname, email etc. There are three arguments normally passed to a GraphQL resolver: args, obj and context.
+            Two of these are member varibables within the ResolverMap object (obj and context), the final one (args) is still passed to the
+            individual <code>@resolver</code> decorated functions.</li>
+            <li><em>Connector:</em> Connectors are <code>.ts</code> files. Connectors provide implementations for data
+            retrievals that are used by resolver funtions in ResolverMaps (i.e. a UserResolverMap will resolve a users forename by
+            making a call to UserConnector.getUser() and returning the forename property).</li>
+          </ul>
+        </p>
+        </Section>
+        <Section title="Example GraphQL Implementation">
         <p>
           First of all, we need to add the GraphQL plugin to our application’s config file:
         </p>
@@ -30,7 +48,7 @@ export default () => {
           {require('!raw!../../../../examples/graphql-server/luminant.json')}
         </CodeFile>
         <p>
-          Next, we’ll add a new type to our GraphQL API. When we write GraphQL APIs with bright-js-framework,
+          Next, we’ll add a new type to our GraphQL API. As described, when we write GraphQL APIs with bright-js-framework,
           we separate our schema definitions from our <em>resolvers</em> by writing the Schema in a <code>.graphql</code>
           schema definition file. This makes it easy to get a high-level overview of a schema by looking at its
           schema file. It also means that breaking changes to APIs can easily be identified by looking at the
@@ -39,17 +57,17 @@ export default () => {
         <p>
           Bright-js-framework encourages you to split your API into modules. This makes it easy to navigate around
           your API schema and implementation. Any directory with a <code>.graphql</code> file in it is considered
-          a module. Resolver implementations are picked up from any file in the same directory. In this example,
+          a module. ResolverMap implementations are picked up from any file in the same directory. In this example,
           we’ve created the <code>User</code> directory, which contains the schema definition for the <code>User</code>
-          type and its resolvers.
+          type and its ResolverMap.
         </p>
         <CodeFile path="src/graphql/schema/User/User.graphql">
           {require('raw!../../../../examples/graphql-server/src/graphql/schema/User/User.graphql')}
         </CodeFile>
         <p>
-          For each type in our schema, we create a subclass of Resolver and use the <code>@type</code>,
-          <code>@queries</code> and <code>@mutations</code> decorators to associate the Resolve with the 
-          schema type it resolves.
+          For each type in our schema, we create a subclass of ResolverMap and use the <code>@type</code>,
+          <code>@queries</code> and <code>@mutations</code> decorators to associate the resolvers within the ResolverMap
+          with the schema type they resolve.
         </p>
         <p>
           The Query and Mutation types are special top-level types that are not associated with any data.
@@ -58,12 +76,12 @@ export default () => {
           and <code>@mutations</code> decorators.
         </p>
         <p>
-          When a resolver is written for a scalar property (such as a string or number), it
+          When a resolver within a ResolverMap is written for a scalar property (i.e. a string for a users forename), it
           should return either the scalar value or (more typically) a Promise for the scalar value.
         </p>
         <p>
-          When a resolver is written for a relation to another object, it should not fetch the object,
-          but instead return a string ID for that object. This is then provided to that Object's resolver
+          When a resolver within a ResolverMap is written for a relation to another object, it should not fetch the object,
+          but instead return a string ID for that object. This is then provided to that Object's ResolverMap
           as its <code>id</code> property, which can then be used to fetch data about it from backend services.
           This is important, as it avoids coupling a resolver to a specific backend service, allowing data from
           multiple backend services to be presented to the frontend as a single type.
@@ -74,11 +92,9 @@ export default () => {
           and a metadata service that stores additional metadata. You can see that we have injected some
           data connectors. We'll come back to those later. In the meantime, observe the way that an object's
           properties are resolved — a request to fetch the user each time a property of the user is resolved.
-          The <code>Connector</code> class will ensure that these requests are de-duplicated and batched to
-          maximise efficiency.
         </p>
-        <CodeFile path="src/graphql/schema/User/UserResolver.ts">
-          {require('raw!../../../../examples/graphql-server/src/graphql/schema/User/UserResolver.ts')}
+        <CodeFile path="src/graphql/schema/User/UserResolvers.ts">
+          {require('raw!../../../../examples/graphql-server/src/graphql/schema/User/UserResolvers.ts')}
         </CodeFile>
         <p>
           Next, we’ll implement the connector to the user account backend service. Connectors are picked up
@@ -106,7 +122,7 @@ export default () => {
           typically be implemented using a fast <code>SELECT * WHERE ID IN (...)</code>—type query.
         </p>
         <p>
-          Subclassing <code>Connector.withIdentity</code> and providing to it a special connector that defines
+          Subclassing <code>Connector.forResource</code> and providing to it a special connector that defines
           how to fetch a batch of resources by ID makes it extremely easy to avoid this scenario. The base class returned
           from this method implements methods to get one or many resources by ID, with batching and de-duplication
           transparently handled.

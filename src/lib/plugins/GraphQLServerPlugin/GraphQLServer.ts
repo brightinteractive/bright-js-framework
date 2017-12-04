@@ -3,12 +3,12 @@ import { flatMap, fromPairs } from 'lodash'
 import { mergeSchemas, makeExecutableSchema } from 'graphql-tools'
 import { GraphQLOptions } from 'apollo-server-core'
 import { ApplicationContext } from '../../core/ApplicationContext'
-import { ResolverConstructor, GraphQLType, getResolvers, getGraphQLTypename } from './Resolver'
+import { ResolverConstructor, SchemaType, getResolvers, getSchemaTypename } from './Resolver'
 import { ConnectorConstructor } from './Connector'
 import { HttpClient } from './HttpClient'
 
 export interface GraphQLServerProps {
-  schema: Array<{ typeDefs: DocumentNode | string, resolvers: Array<typeof GraphQLType> }>
+  schema: Array<{ typeDefs: DocumentNode | string, resolvers: Array<typeof SchemaType> }>
   connectors: ConnectorConstructor[]
 }
 
@@ -76,7 +76,7 @@ export class GraphQLServer {
    * Given a path to a GraphQL schema, create an executable GraphQL schema by combining it
    * with Resolvers exported from source files in the same directory (or child directories).
    */
-  private createSchemaModule(config: { typeDefs: DocumentNode | string, resolvers: Array<typeof GraphQLType> }): GraphQLSchema | undefined {
+  private createSchemaModule(config: { typeDefs: DocumentNode | string, resolvers: Array<typeof SchemaType> }): GraphQLSchema | undefined {
     const resolverTypes = config.resolvers
     if (resolverTypes.length === 0) {
       return undefined
@@ -99,7 +99,7 @@ export class GraphQLServer {
     return fromPairs(resolverTypes.map((ResolverClass) => {
       const resolveFnMap = fromPairs(Array.from(getResolvers(ResolverClass)).map((key) => [key, this.createFieldResolver(ResolverClass, key)]))
 
-      return [getGraphQLTypename(ResolverClass), resolveFnMap]
+      return [getSchemaTypename(ResolverClass), resolveFnMap]
     }))
   }
 

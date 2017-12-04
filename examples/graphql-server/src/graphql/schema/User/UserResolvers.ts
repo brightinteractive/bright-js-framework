@@ -1,38 +1,38 @@
 import { inject } from '@brightinteractive/bright-js-framework'
-import { GraphQLType, type, resolve, queries, mutations } from '@brightinteractive/bright-js-framework/plugins/graphql-server'
+import { SchemaType, type, resolver, queries, mutations } from '@brightinteractive/bright-js-framework/plugins/graphql-server'
 import { UserMetadataConnector } from '../../connectors/UserMetadataConnector'
 import { UserAccountConnector } from '../../connectors/UserAccountConnector'
 
 @queries()
-export class UserQueryResolverMap extends GraphQLType {
+export class UserQueries extends SchemaType {
   @inject(UserMetadataConnector)
   metadata: UserMetadataConnector
 
-  @resolve()
+  @resolver()
   getUser(props: { id: string }) {
     return props.id
   }
 
-  @resolve()
+  @resolver()
   searchUser(props: { name: string }) {
     return this.metadata.findByName(props.name)
   }
 }
 
 @type('User')
-export class UserResolverMap extends GraphQLType {
+export class UserType extends SchemaType {
   @inject(UserMetadataConnector)
   metadata: UserMetadataConnector
 
   @inject(UserAccountConnector)
   account: UserAccountConnector
 
-  @resolve()
+  @resolver()
   name() {
     return this.metadata.getOne(this.id).then((user) => user && user.name)
   }
 
-  @resolve()
+  @resolver()
   email() {
     // Sugar for this.account.getOne(this.id).then((user) => user && user.email)
     return this.account.getProperty(this.id, 'email')
@@ -40,11 +40,11 @@ export class UserResolverMap extends GraphQLType {
 }
 
 @mutations()
-export class UserMutationResolverMap extends GraphQLType {
+export class UserMutations extends SchemaType {
   @inject(UserAccountConnector)
   account: UserAccountConnector
 
-  @resolve()
+  @resolver()
   deleteUser(id: string) {
     this.account.delete(id)
   }

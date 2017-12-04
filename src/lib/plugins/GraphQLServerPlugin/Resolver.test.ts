@@ -1,9 +1,9 @@
 import { expect } from 'chai'
-import { GraphQLType, decorateGraphQLType, isGraphQLType, getGraphQLTypename, decorateResolver, getResolvers } from './Resolver'
+import { SchemaType, decorateSchemaType, isSchemaType, getSchemaTypename, decorateResolver, getResolvers } from './Resolver'
 
 describe('Resolver', () => {
-  @decorateGraphQLType('foo')
-  class TypeResolver extends GraphQLType {
+  @decorateSchemaType('foo')
+  class TypeResolver extends SchemaType {
     @decorateResolver
     prop1() {
 
@@ -21,15 +21,15 @@ describe('Resolver', () => {
 
   describe('isTypeResolver', () => {
     it('should return true if decorated as type', () => {
-      expect(isGraphQLType(TypeResolver)).to.be.true
+      expect(isSchemaType(TypeResolver)).to.be.true
     })
 
     it('should return false if not decorated as type', () => {
-      expect(isGraphQLType({})).to.be.false
+      expect(isSchemaType({})).to.be.false
     })
 
     it('should return resolver type', () => {
-      expect(getGraphQLTypename(TypeResolver)).to.eql('foo')
+      expect(getSchemaTypename(TypeResolver)).to.eql('foo')
     })
   })
 
