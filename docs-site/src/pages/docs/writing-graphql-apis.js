@@ -28,8 +28,8 @@ export default () => {
           <ul>
             <li><em>Schema:</em> Schemas are written in a <code>.graphql</code>
             schema definition file. They define the GraphQL types, queries and mutations for a particular object.</li>
-            <li><em>ResolverMap:</em> ResolverMaps are <code>.ts</code> files. ResolverMaps are objects
-            that contain a set of functions for a specific type from the schema. Each <code>@resolver</code> decorated function within a
+            <li><em>ResolverMap:</em> ResolverMaps are objects written as <code>.ts</code> files. They contain a set of resolver functions
+            for a specific type from the schema. Each <code>@resolver</code> decorated function within a
             ResolverMap is equivalent to a GraphQL resolver. As an example, a UserResolverMap would contain resolver functions
             for the users forname, surname, email etc. There are three arguments normally passed to a GraphQL resolver: args, obj and context.
             Two of these are member varibables within the ResolverMap object (obj and context), the final one (args) is still passed to the
