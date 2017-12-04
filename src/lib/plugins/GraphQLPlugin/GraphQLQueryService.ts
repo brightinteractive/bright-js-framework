@@ -3,11 +3,11 @@ import { ApolloClient, WatchQueryOptions, ApolloError } from 'apollo-client'
 import { Subscription } from 'apollo-client/util/Observable'
 import { isUndefined } from 'util'
 import { Dispatch } from 'redux'
-import { Service, decorateServiceProperty } from '../../../core/Service'
-import { injectDependency } from '../../../core/InjectionClient'
-import { createSelectService, StateSelector } from '../../StorePlugin/SelectService'
-import { injectDispatch } from '../../StorePlugin/StorePlugin'
-import GraphQLPlugin, { GraphQLAction } from '../GraphQLPlugin.common'
+import { Service, decorateServiceProperty } from '../../core/Service'
+import { injectDependency } from '../../core/InjectionClient'
+import { createSelectService, StateSelector } from '../StorePlugin/SelectService'
+import { injectDispatch } from '../StorePlugin/StorePlugin'
+import GraphQLPlugin, { GraphQLAction } from './GraphQLPlugin.common'
 
 export interface GraphQLQueryService<Result> extends Service {
   readonly data: Result

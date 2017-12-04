@@ -1,5 +1,5 @@
 import * as Dataloader from 'dataloader'
-import { InjectionClient, InjectionContext } from '../../../core/InjectionClient'
+import { InjectionClient, InjectionContext } from '../../core/InjectionClient'
 
 export class Connector extends InjectionClient {
   /**

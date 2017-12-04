@@ -2,7 +2,7 @@ import { spy, match } from 'sinon'
 import { expect } from 'chai'
 import { Response } from 'node-fetch'
 import { HttpClient, HttpMethod, BodyType } from './HttpClient'
-import { ApplicationContext } from '../../../core/ApplicationContext'
+import { ApplicationContext } from '../../core/ApplicationContext'
 
 describe('HttpClient', () => {
   it('should get json', async () => {

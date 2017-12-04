@@ -3,7 +3,7 @@ import {
   HttpError as _HttpError,
   ResponseType as _ResponseType,
   BodyType as _BodyType,
-} from '../../lib/plugins/GraphQLPlugin/server/HttpClient'
+} from '../../lib/plugins/GraphQLServerPlugin/HttpClient'
 
 /**
  * HTTP client for use in GraphQL connectors.

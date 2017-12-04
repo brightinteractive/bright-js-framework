@@ -1,5 +1,5 @@
 import { inject } from '@brightinteractive/bright-js-framework'
-import { Resolver, type, resolve, queries, mutations } from '@brightinteractive/bright-js-framework/plugins/graphql/server'
+import { Resolver, type, resolve, queries, mutations } from '@brightinteractive/bright-js-framework/plugins/graphql-server'
 import { UserMetadataConnector } from '../../connectors/UserMetadataConnector'
 import { UserAccountConnector } from '../../connectors/UserAccountConnector'
 

@@ -1,36 +1,28 @@
-import { GraphQLSchema, GraphQLFieldResolver } from 'graphql'
-import * as path from 'path'
-import { flatMap, filter, fromPairs } from 'lodash'
+import { GraphQLSchema, GraphQLFieldResolver, DocumentNode } from 'graphql'
+import { flatMap, fromPairs } from 'lodash'
 import { mergeSchemas, makeExecutableSchema } from 'graphql-tools'
 import { GraphQLOptions } from 'apollo-server-core'
-import { ApplicationContext } from '../../../core/ApplicationContext'
-import { getResolverTypename, getResolverProperties, ResolverConstructor, isTypeResolver } from './Resolver'
-import { ConnectorConstructor, Connector } from './Connector'
-import { HttpClient } from './HttpClient';
+import { ApplicationContext } from '../../core/ApplicationContext'
+import { getResolverTypename, getResolverProperties, ResolverConstructor, Resolver } from './Resolver'
+import { ConnectorConstructor } from './Connector'
+import { HttpClient } from './HttpClient'
 
 export interface GraphQLServerProps {
-  loadModule: (moduleName: string) => any
-  readFile: (path: string) => string
-  resolvePath: (path: string) => any
-  glob: (pattern: string) => string[]
-  loadResolvers?: boolean
+  schema: Array<{ typeDefs: DocumentNode | string, resolvers: Array<typeof Resolver> }>
+  connectors: ConnectorConstructor[]
 }
 
-export class GraphQLServer implements GraphQLServerProps {
-  readonly schema: GraphQLSchema | undefined
-  readonly connectors: ConnectorConstructor[]
+export class GraphQLServer {
+  private props: GraphQLServerProps
+  readonly schema?: GraphQLSchema
 
-  loadModule: (moduleName: string) => any
-  readFile: (path: string) => string
-  resolvePath: (path: string) => any
-  glob: (pattern: string) => string[]
-  loadResolvers?: boolean
+  get connectors() {
+    return this.props.connectors
+  }
 
   constructor(props: GraphQLServerProps) {
-    Object.assign(this, props)
-
+    this.props = props
     this.schema = this.createSchema()
-    this.connectors = this.loadConnectors()
   }
 
   /**
@@ -38,7 +30,7 @@ export class GraphQLServer implements GraphQLServerProps {
    * for handling an incoming GraphQL request.
    */
   get requestConfig() {
-    const { schema, connectors } = this
+    const { schema, props: { connectors } } = this
     if (!schema) {
       return undefined
     }
@@ -66,9 +58,8 @@ export class GraphQLServer implements GraphQLServerProps {
    * of them, then merge the schemas together to produce the application schema.
    */
   private createSchema(): GraphQLSchema | undefined {
-    const schemaFiles = this.findSchemas()
-    const sourceSchemas = flatMap(schemaFiles, (file) => {
-      const schemaModule = this.createSchemaModule(file)
+    const sourceSchemas = flatMap(this.props.schema, (config) => {
+      const schemaModule = this.createSchemaModule(config)
       return schemaModule ? [schemaModule] : []
     })
 
@@ -85,14 +76,8 @@ export class GraphQLServer implements GraphQLServerProps {
    * Given a path to a GraphQL schema, create an executable GraphQL schema by combining it
    * with Resolvers exported from source files in the same directory (or child directories).
    */
-  private createSchemaModule(schemaPath: string): GraphQLSchema | undefined {
-    if (!this.loadResolvers) {
-      return makeExecutableSchema({
-        typeDefs: this.readFile(schemaPath)
-      })
-    }
-
-    const resolverTypes = this.loadResolversForSchema(schemaPath)
+  private createSchemaModule(config: { typeDefs: DocumentNode | string, resolvers: Array<typeof Resolver> }): GraphQLSchema | undefined {
+    const resolverTypes = config.resolvers
     if (resolverTypes.length === 0) {
       return undefined
     }
@@ -101,7 +86,7 @@ export class GraphQLServer implements GraphQLServerProps {
 
     return makeExecutableSchema({
       resolvers,
-      typeDefs: this.readFile(schemaPath)
+      typeDefs: config.typeDefs
     })
   }
 
@@ -127,32 +112,5 @@ export class GraphQLServer implements GraphQLServerProps {
       const resolver = new ResolverClass(context, id) as any
       return resolver[propertyName](params)
     }
-  }
-
-  /** Looks up schema files from conventional location */
-  private findSchemas() {
-    return this.glob('src/graphql/schema/**/*.graphql')
-  }
-
-  /**
-   * For a given schema filepath, extract all Resolver classes associated with a type from
-   * typescript files in the same directory (or any subdirectories)
-   */
-  private loadResolversForSchema(schemaPath: string) {
-    const modulePaths = this.glob(`${path.dirname(schemaPath)}/**/*.ts`)
-    const modules = modulePaths.map((modulePath) => this.loadModule(this.resolvePath(modulePath)))
-
-    return flatMap(modules, (moduleExports) => filter(moduleExports, isTypeResolver)) as ResolverConstructor[]
-  }
-
-  /**
-   * For a given schema filepath, extract all Connector classes from typescript files in the
-   * same directory (or any subdirectories)
-   */
-  private loadConnectors() {
-    const modulePaths = this.glob('src/graphql/connectors/**/*.ts')
-    const modules = modulePaths.map((modulePath) => this.loadModule(this.resolvePath(modulePath)))
-
-    return flatMap(modules, (moduleExports) => filter(moduleExports, (moduleExport: any) => moduleExport.prototype instanceof Connector)) as ConnectorConstructor[]
   }
 }

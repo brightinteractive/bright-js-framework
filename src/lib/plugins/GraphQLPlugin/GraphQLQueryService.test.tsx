@@ -2,10 +2,10 @@ import * as React from 'react'
 import gql from 'graphql-tag'
 import { expect } from 'chai'
 import { DocumentNode } from 'graphql'
-import { TestFixture } from '../../../entry/TestFixture'
-import { decorateController } from '../../../core/Controller'
+import { TestFixture } from '../../entry/TestFixture'
+import { decorateController } from '../../core/Controller'
 import { GraphQLQueryService, decorateGraphQLQuery } from './GraphQLQueryService'
-import { graphQlTestPlugin, GraphQlMocks } from '../GraphQLTestPlugin'
+import { graphQlTestPlugin, GraphQlMocks } from '../GraphQLTestPlugin/GraphQLTestPlugin'
 
 const schema = `
   type Query {

@@ -1,15 +1,17 @@
 import * as glob from 'glob'
 import * as path from 'path'
-import * as fs from 'fs'
 import { NormalizedCacheObject, InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloCache } from 'apollo-cache'
 import { ApolloClient } from 'apollo-client'
 import { addMockFunctionsToSchema, makeExecutableSchema } from 'graphql-tools'
 import { GraphQLFieldResolver, DocumentNode } from 'graphql'
 import { exportDependency, PluginConstructor } from '../../core/PluginConfig'
-import { GraphQLServer } from './server/GraphQLServer'
-import { LocalLink } from './client/LocalLink'
-import GraphQLPluginBase from './GraphQLPlugin.common'
+import { getEntrypointExports, RequireList } from '../../bundler/Entrypoint'
+import { GraphQLServer } from '../GraphQLServerPlugin/GraphQLServer'
+import { LocalLink } from '../GraphQLPlugin/LocalLink'
+import GraphQLPluginBase from '../GraphQLPlugin/GraphQLPlugin.common'
+import { findGraphQLSources } from '../GraphQLServerPlugin/loadSchema'
+import { isTypeResolver } from '../GraphQLServerPlugin/Resolver'
 
 export interface GraphQlPluginProps {
   schema?: DocumentNode | string
@@ -46,13 +48,18 @@ export function graphQlTestPlugin({ schema, mocks }: GraphQlPluginProps): Plugin
 }
 
 function getApplicationSchema() {
+  const { schemas } = findGraphQLSources({ glob: glob.sync, resolvePath: (pathname) => path.resolve(pathname) })
   const server = new GraphQLServer({
-    loadResolvers: false,
-    readFile: (filepath) => fs.readFileSync(filepath, 'utf8'),
-    resolvePath: path.resolve,
-    glob: glob.sync,
-    loadModule: require
+    connectors: [],
+    schema: schemas.map(({ typeDefs, resolvers }) => ({
+      typeDefs: require(typeDefs),
+      resolvers: getEntrypointExports(createRequireList(resolvers), isTypeResolver)
+    })),
   })
 
   return server.schema
+}
+
+export function createRequireList(paths: string[]): RequireList {
+  return paths.map((pathname) => () => require(pathname))
 }

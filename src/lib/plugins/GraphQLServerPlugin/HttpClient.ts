@@ -1,7 +1,7 @@
 import 'isomorphic-fetch'
 import { forEach, toPairs } from 'lodash'
 import * as qs from 'querystring'
-import { InjectionContext, InjectionClient } from '../../../core/InjectionClient'
+import { InjectionContext, InjectionClient } from '../../core/InjectionClient'
 
 export class HttpError implements Error {
   readonly status: number

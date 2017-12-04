@@ -1,4 +1,4 @@
-import { InjectionContext, InjectionClient } from '../../../core/InjectionClient'
+import { InjectionContext, InjectionClient } from '../../core/InjectionClient'
 
 const RESOLVER_TYPENAME_KEY = '__luminant__ResolverType'
 const RESOLVER_PROPERTIES_KEY = '__luminant__ResolverProps'
@@ -20,7 +20,7 @@ export function decorateTypeResolver(typeName: string): ClassDecorator {
   }
 }
 
-export function isTypeResolver(constructor: any) {
+export function isTypeResolver(constructor: any): constructor is typeof Resolver {
   return Boolean(getResolverTypename(constructor))
 }
 

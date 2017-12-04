@@ -3,11 +3,11 @@ import {
   Resolver as _Resolver,
   decorateResolverProperty,
   decorateTypeResolver
-} from '../../lib/plugins/GraphQLPlugin/server/Resolver'
+} from '../../lib/plugins/GraphQLServerPlugin/Resolver'
 import {
   Connector as _Connector,
   IdentityConfig as _IdentityConfig
-} from '../../lib/plugins/GraphQLPlugin/server/Connector'
+} from '../../lib/plugins/GraphQLServerPlugin/Connector'
 
 /**
  * Base class for implementing resolvers.

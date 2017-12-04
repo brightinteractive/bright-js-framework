@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { fromPairs } from 'lodash'
-import { ApplicationContext } from '../../../core/ApplicationContext'
+import { ApplicationContext } from '../../core/ApplicationContext'
 import { IdentityConfig, Connector } from './Connector'
 
 describe('Connector', () => {

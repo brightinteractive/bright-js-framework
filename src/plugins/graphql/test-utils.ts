@@ -1,5 +1,5 @@
 import { PluginConstructor } from '../../index'
-import { graphQlTestPlugin as graphQlTestPlugin_ } from '../../lib/plugins/GraphQLPlugin/GraphQLTestPlugin'
+import { graphQlTestPlugin as graphQlTestPlugin_ } from '../../lib/plugins/GraphQLTestPlugin/GraphQLTestPlugin'
 
 export interface GraphQlTestPluginProps {
   /**
