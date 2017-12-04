@@ -7,7 +7,7 @@ export interface UserMetadata {
   name: string
 }
 
-class UserMetadataIdentity extends ResourceBatchFetcher<UserMetadata> {
+class UserMetadataFetcher extends ResourceBatchFetcher<UserMetadata> {
   @inject(HttpClient)
   http: HttpClient
 
@@ -24,7 +24,7 @@ class UserMetadataIdentity extends ResourceBatchFetcher<UserMetadata> {
   }
 }
 
-export class UserMetadataConnector extends Connector.forResource<UserMetadata>(UserMetadataIdentity) {
+export class UserMetadataConnector extends Connector.forResource<UserMetadata>(UserMetadataFetcher) {
   @inject(HttpClient)
   http: HttpClient
 
