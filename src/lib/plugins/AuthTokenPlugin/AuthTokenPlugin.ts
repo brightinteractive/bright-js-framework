@@ -2,7 +2,7 @@ import {PluginConfig, PluginConstructor} from '../../core/PluginConfig'
 import {AuthTokenActions, AuthTokenState, Token} from '../../../plugins/auth/auth'
 import {Action, dispatcher, Dispatcher, exported, inject, SelectFn, state} from '../../../index'
 
-const AUTH_TOKEN_STATE = 'authTokenValue'
+export const AUTH_TOKEN_STATE = 'authTokenValue'
 
 const AUTH_TOKEN_ACTIONS = 'authTokenActions'
 
