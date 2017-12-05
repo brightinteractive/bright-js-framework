@@ -77,7 +77,7 @@ function writeConfigs() {
     ]
   })
 
-  writeJson<Config>(['luminant.json'], {
+  writeJson<Pick<Config, 'frontendEnvironment' | 'plugins'>>(['luminant.json'], {
     frontendEnvironment: [],
     plugins: {}
   })

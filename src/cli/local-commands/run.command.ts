@@ -11,6 +11,7 @@ import { pick } from 'lodash'
 import { getWebpackConfig } from '../../lib/bundler/getWebpackConfig'
 import { renderHtmlWrapper } from '../../lib/server/renderHtmlWrapper'
 import { getConfig } from '../../lib/server/getConfig'
+import { getProjectPluginConfigs } from '../../lib/server/getProjectPluginConfigs'
 
 export interface RunCommandOpts {
   entry: string
@@ -33,7 +34,10 @@ export function handler({ port }: RunCommandOpts) {
 
   const webpackConfig = getWebpackConfig({
     pages: getEntrypointFiles(),
-    plugins: appConfig.plugins
+    plugins: {
+      ...appConfig.plugins,
+      ...getProjectPluginConfigs(glob.sync(appConfig.projectPlugins))
+    }
   })
 
   const bundler = webpack(webpackConfig)
@@ -42,7 +46,7 @@ export function handler({ port }: RunCommandOpts) {
   const clientBundler = (bundler as any).compilers.find((compiler: webpack.Compiler) => compiler.name === 'client')
   app.use(hot(clientBundler, { path: '/_hot' }))
   app.get('*', devserver(bundler, { noInfo: true, publicPath: '/' }))
-  app.use(hotServer(bundler, { serverRendererOptions: { nodeRequire: require } }))
+  app.use(hotServer(bundler))
   app.use(errorOverlay())
 
   app.get('*', (req, res) => {

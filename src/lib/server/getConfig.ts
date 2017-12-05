@@ -17,6 +17,10 @@ const schema = {
     plugins: {
       type: 'object',
       default: {}
+    },
+    projectPlugins: {
+      type: 'string',
+      default: 'src/plugins/**/*.tsx?'
     }
   },
 }
