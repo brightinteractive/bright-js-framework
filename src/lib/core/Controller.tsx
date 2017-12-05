@@ -36,7 +36,7 @@ export const CONTROLLER_CHILD_CONTEXT_TYPES = {
 }
 
 /** Prepare a component class for having services attached to it. */
-export function decorateController(cls: React.ComponentClass): void {
+export function decorateController(cls: any): void {
   declareIsController(cls)
   declareControllerContextTypes(cls)
   injectControllerBehavior(cls)

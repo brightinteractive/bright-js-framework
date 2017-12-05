@@ -36,7 +36,7 @@ import { locationSelect } from './lib/plugins/BrowserPlugin/BrowserPlugin'
  *
  * @param path  Path pattern to serve the route from
  */
-export function route(path: string): ComponentDecorator<RouteProps<any, any>> {
+export function route(path: string): ClassDecorator {
   return (ComponentClass) => {
     decorateRouteComponent(path, ComponentClass)
   }
@@ -86,7 +86,7 @@ export const Link: React.ComponentClass<React.HTMLProps<{}>> = _Link
  * You must annotate a React Component as a controller before attaching services to it.
  * You do not need to annotate a service before attaching other services to it.
  */
-export function controller(): ComponentDecorator {
+export function controller(): ClassDecorator {
   return (cls) => decorateController(cls)
 }
 
@@ -301,6 +301,3 @@ export const BrowserActions: ServiceConstructor<BrowserActions> = _BrowserAction
  * Select the current page location
  */
 export const location: SelectFn<Location> = locationSelect
-
-export type ComponentDecorator<Props = {}> = (cls: React.ComponentClass<Props>) => void
-export type PropertyDecorator = (proto: any, key: string) => any

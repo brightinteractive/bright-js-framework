@@ -22,8 +22,8 @@ export type ContextValueMap<T = any> = Map<{}, T>
  * Property decorator used to add an exported dependency declaration to a plugin.
  * Dependency metadata is added to the object's prototype.
  */
-export function exportDependency(id: any): (proto: PluginConfig, key: string) => any {
-  return (proto: any, key: string) => {
+export function exportDependency(id: any): PropertyDecorator {
+  return (proto: any, key) => {
     proto[EXPORTED_OBJECT_KEYS] = proto[EXPORTED_OBJECT_KEYS] || new Set()
     proto[EXPORTED_OBJECT_KEYS].add({
       dependencyId: id,

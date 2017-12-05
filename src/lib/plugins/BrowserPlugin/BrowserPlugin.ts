@@ -1,7 +1,7 @@
 import { History, Location } from 'history'
 import { Dispatch } from 'redux'
 import { PluginConfig, exportDependency, PluginConstructor } from '../../core/PluginConfig'
-import { injectDependency, InjectionDecorator } from '../../core/InjectionClient'
+import { injectDependency } from '../../core/InjectionClient'
 import { declareReducer } from '../../core/declareReducer'
 import { injectDispatch, Selector } from '../StorePlugin/StorePlugin'
 
@@ -65,5 +65,5 @@ export function createBrowserPlugin({ history }: BrowserPluginProps): PluginCons
   return BrowserPlugin
 }
 
-export const injectHistory: InjectionDecorator = injectDependency(HISTORY)
+export const injectHistory: PropertyDecorator = injectDependency(HISTORY)
 export const locationSelect: Selector<Location> = (state) => state[LOCATION]
