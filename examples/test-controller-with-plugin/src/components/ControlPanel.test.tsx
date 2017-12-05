@@ -12,10 +12,8 @@ describe('ControlPanel', () => {
       )
     })
 
-    fixture.stub(EventManagerPlugin, (plugin: EventManagerPlugin) => {
-      plugin.eventManager.registerHandler('request-open-pod-bay-doors', () => {
-        done()
-      })
+    fixture.getPlugin(EventManagerPlugin).eventManager.registerHandler('request-open-pod-bay-doors', () => {
+      done()
     })
 
     fixture.render().closest('button').simulate('click')
