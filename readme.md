@@ -34,6 +34,7 @@ This repo uses npm to manage dependencies. It also includes a helpful pre-commit
 
 ```
 npm install
+gulp
 
 # Optional: symlink githook scripts
 ln -s ../../githooks/pre-commit .git/hooks/pre-commit
