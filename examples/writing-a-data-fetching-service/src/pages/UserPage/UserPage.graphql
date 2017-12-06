@@ -1,0 +1,6 @@
+query UserPage($id: String!) {
+  user(id: $id) {
+    firstName
+    lastName
+  }
+}

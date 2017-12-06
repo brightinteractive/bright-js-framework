@@ -25,6 +25,9 @@ export default ({ order }) => {
         <LinkItem link="/docs/extending-with-plugins">
           Using Plugins
         </LinkItem>
+        <LinkItem link="/docs/fetching-data">
+          Fetching Data
+        </LinkItem>
         <LinkItem link="/docs/writing-graphql-apis">
           Writing GraphQL APIs
         </LinkItem>
