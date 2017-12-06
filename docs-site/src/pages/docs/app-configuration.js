@@ -14,7 +14,7 @@ export default () => {
           which contains the application's build and runtime configuration.
         </p>
         <p>
-          Environmental variables are substituted for words beginning with <code>$</code> in all strings.
+          Environmental variables are substituted for strings beginning with <code>$</code> in all strings.
         </p>
         <Subheader>Options</Subheader>
         <OptionsTable>

@@ -5,8 +5,9 @@ import { mapValues, memoize } from 'lodash'
 import { Config } from './Config'
 import { isArray, isObject } from 'util'
 
-const schema = {
-  definitions: {
+export const configSchema = {
+  type: 'object',
+  properties: {
     frontendEnvironment: {
       type: 'array',
       default: [],
@@ -22,7 +23,7 @@ const schema = {
       type: 'string',
       default: 'src/plugins/**/*.tsx?'
     }
-  },
+  }
 }
 
 const ajv = new Ajv({ useDefaults: true })
@@ -32,24 +33,24 @@ export const getConfig: () => Config = memoize(() => {
   return validateConfig(substituteEnvironment(config))
 })
 
-export function substituteEnvironment(x: any): any {
-  if (typeof x === 'string' && x.startsWith('$')) {
-    return process.env[x]
+export function substituteEnvironment(config: any, env = process.env): any {
+  if (typeof config === 'string' && config.startsWith('$')) {
+    return env[config.substr(1)]
   }
 
-  if (isArray(x)) {
-    return x.map(substituteEnvironment)
+  if (isArray(config)) {
+    return config.map((x) => substituteEnvironment(x, env))
   }
 
-  if (isObject(x)) {
-    return mapValues(x, substituteEnvironment)
+  if (isObject(config)) {
+    return mapValues(config, (x) => substituteEnvironment(x, env))
   }
 
-  return x
+  return config
 }
 
-function validateConfig(c: {}): Config {
-  const validate = ajv.compile(schema)
+export function validateConfig(c: {}): Config {
+  const validate = ajv.compile(configSchema)
 
   if (validate(c)) {
     return c as any
