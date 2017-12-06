@@ -5,7 +5,7 @@ import {Service} from '@brightinteractive/bright-js-framework'
 
 export default class TokenInBrowserStorageService extends Service<any> {
 
-    ID_TOKEN_KEY = 'ap_auth0_id_token'
+    ID_TOKEN_KEY = 'demo_id_token'
 
     @browserStorage()
     browserStorage: BrowserStorageSystem
