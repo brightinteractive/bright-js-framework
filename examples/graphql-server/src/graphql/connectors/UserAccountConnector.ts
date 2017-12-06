@@ -1,6 +1,6 @@
 import { inject } from '@brightinteractive/bright-js-framework'
-import { Connector, IdentityConfig } from '@brightinteractive/bright-js-framework/plugins/graphql/server'
-import { HttpClient } from '@brightinteractive/bright-js-framework/plugins/graphql/http'
+import { Connector, IdentityConfig } from '@brightinteractive/bright-js-framework/plugins/graphql-server'
+import { HttpClient } from '@brightinteractive/bright-js-framework/plugins/graphql-server/http'
 
 /**
  * Type definition for a resource returned by the backend service.

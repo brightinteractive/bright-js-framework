@@ -12,7 +12,7 @@ export default () => {
           First of all, we need to add the GraphQL plugin to our application’s config file:
         </p>
         <CodeFile path="src/config.ts">
-          {require('raw!../../../../examples/fetching-data-with-graphql/src/config.ts')}
+          {require('!raw!../../../../examples/fetching-data-with-graphql/luminant.json')}
         </CodeFile>
         <p>
           Next, we write a query. Let’s assume for now that we have a GraphQL backend capable of

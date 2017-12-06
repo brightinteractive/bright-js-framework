@@ -5,9 +5,11 @@ import { createBrowserHistory } from 'history'
 import { ApplicationContext } from '../core/ApplicationContext'
 import { App } from '../core/App'
 import { load } from '../core/load'
-import { RequireList, EntryOpts } from '../bundler/Entrypoint'
+import { RequireList, isSubclassOf, getEntrypointDefaultExports, getEntrypointExports } from '../bundler/Entrypoint'
 import { createBrowserPlugin } from '../plugins/BrowserPlugin/BrowserPlugin'
-import { getBundleRoutes } from './getBundleRoutes'
+import { PluginConfig } from '../core/PluginConfig'
+import { isRouteComponent, getRouteComponentPath } from '../core/route'
+import { RouteConfig } from '../core/Router'
 
 // Configuration passed from server in ‘magic’ variable
 declare const ___process_env_config: NodeJS.ProcessEnv
@@ -17,7 +19,7 @@ declare const ___process_env_config: NodeJS.ProcessEnv
  *
  * Performs initial client app setup and launches the app.
  */
-export default async function clientEntry(topLevelModules: RequireList, opts: EntryOpts) {
+export default async function clientEntry(modules: { pages: RequireList, plugins: RequireList }) {
   /** Hydrate process.env from magic variable passed through from server */
   function restoreProcessEnv() {
     process.env = ___process_env_config
@@ -25,7 +27,7 @@ export default async function clientEntry(topLevelModules: RequireList, opts: En
 
   /** Construct plugin instances specified in config file */
   const getAppContext = memoize(() => {
-    const pluginConfigs = opts.config() || []
+    const pluginConfigs = getEntrypointDefaultExports(modules.plugins, isSubclassOf(PluginConfig))
 
     return new ApplicationContext([
       ...pluginConfigs,
@@ -41,7 +43,7 @@ export default async function clientEntry(topLevelModules: RequireList, opts: En
   /** Render the root app component */
   const renderApp = memoize(() => (
     <App
-      routes={getBundleRoutes(topLevelModules)}
+      routes={getRoutes()}
       history={getHistory()}
       appContext={getAppContext()}
     />
@@ -52,12 +54,18 @@ export default async function clientEntry(topLevelModules: RequireList, opts: En
     return load(renderApp())
   }
 
-  /** Start the application and render into DOM  */
-  function run() {
-    ReactDOM.render(renderApp(), document.getElementById('app'))
+  /** Get bundled routes and return configuration array for the router */
+  function getRoutes(): RouteConfig[] {
+    const routeComponents = getEntrypointExports(modules.pages, isRouteComponent)
+
+    return routeComponents.map((Component) => ({
+      handler: Component,
+      path: getRouteComponentPath(Component)
+    }))
   }
 
   restoreProcessEnv()
   await prefetchData()
-  run()
+
+  ReactDOM.render(renderApp(), document.getElementById('app'))
 }

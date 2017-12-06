@@ -1,24 +1,37 @@
 import * as autoprefixer from 'autoprefixer'
 import * as path from 'path'
 import * as webpack from 'webpack'
+import { map } from 'lodash'
 import nodeExternals  = require('webpack-node-externals')
 import { entrypointLoader } from './entrypointLoader'
+import { getPluginLoader } from './getPluginLoader'
 
 export interface WebpackConfigOpts {
   /** List of absolute paths to modules exporting routes */
-  entrypoints: string[]
+  pages: string[],
+
+  /** List of plugin configs */
+  plugins: any
 }
 
-export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Configuration[] {
+export function getWebpackConfig({ pages, plugins }: WebpackConfigOpts): webpack.Configuration[] {
   const extensions = ['.ts', '.tsx', '.js', '.jsx']
+
+  // If a module has a specific server-side version, give it prescidence when building for server
   const serverExtensions = [
     ...extensions.map((extension) => `.server${extension}`),
-    ...extensions
+    ...extensions,
+    '*'
   ]
+
+  // If a module has a specific client-side version, give it prescidence when building for client
   const clientExtensions = [
     ...extensions.map((extension) => `.client${extension}`),
-    ...extensions
+    ...extensions,
+    '*'
   ]
+
+  const pluginModules = map(plugins, getPluginLoader)
 
   const sharedConfig: Partial<webpack.Configuration> = {
     devtool: 'cheap-module-source-map',
@@ -135,8 +148,10 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
         'whatwg-fetch',
         entrypointLoader({
           entry: require.resolve('../entry/client'),
-          topLevelModules: entrypoints,
-          configFile: path.resolve(path.join('src', 'config.ts'))
+          topLevelModules: {
+            pages,
+            plugins: pluginModules
+          },
         }),
       ],
     },
@@ -147,12 +162,19 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
 
       target: 'node',
 
-      externals: [nodeExternals({
+      // Don't include external modules in the server bundle
+      externals: nodeExternals({
         whitelist: [
-          '@brightinteractive/bright-js-framework',
-          /@brightinteractive\/bright-js-framework\/plugins\/.*/
+          // XXX: Plugins need to be loaded using webpack, otherwise they don't handle
+          // client/server distinctions, live-reloading, resource loading properly.
+          // This presents a problem for plugins in external modules. As a temp workaround,
+          // we bundle the framework using webpack too so that built-in plugins behave as expected.
+          //
+          // Would be better to extract external plugin paths from the plugin config, although this
+          // raises issues for locally linked modules.
+          /^@brightinteractive\/bright-js-framework/,
         ]
-      })],
+      }),
 
       resolve: {
         extensions: serverExtensions
@@ -170,8 +192,10 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
 
       entry: entrypointLoader({
         entry: require.resolve('../entry/server'),
-        topLevelModules: entrypoints,
-        configFile: path.resolve(path.join('src', 'config.ts'))
+        topLevelModules: {
+          pages,
+          plugins: pluginModules
+        },
       }),
     }
   ]

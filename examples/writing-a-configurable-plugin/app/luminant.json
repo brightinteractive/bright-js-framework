@@ -1,0 +1,7 @@
+{
+  "plugins": {
+    "../throw-error-on-load": {
+      "message": "YOU SHALL NOT PASS"
+    }
+  }
+}

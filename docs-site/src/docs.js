@@ -1,3 +1,4 @@
+const path = require('path')
 const json = require('../docs.json')
 
 function shouldGenerateDocumentationForModule(moduleDocs) {
@@ -6,7 +7,14 @@ function shouldGenerateDocumentationForModule(moduleDocs) {
     '/cli'
   ]
 
-  return !ignoredDirs.some(dir => moduleDocs.originalName.match(dir))
+  const ignoredFiles = [
+    /^plugin-config\./,
+  ]
+
+  return (
+    !ignoredDirs.some(dir => moduleDocs.originalName.match(dir))
+    && !ignoredFiles.some(file => path.basename(moduleDocs.originalName).match(file))
+  )
 }
 
 module.exports = {

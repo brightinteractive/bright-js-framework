@@ -13,6 +13,7 @@
     "quotemark": [true, "single", "avoid-escape", "jsx-double"],
     "member-ordering": [false],
     "no-empty-interface": [false],
+    "ban-types": false,
     "member-access": [false],
     "no-var-requires": true,
     "trailing-comma": [false],

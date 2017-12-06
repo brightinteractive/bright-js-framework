@@ -174,7 +174,7 @@ function addBaseServices(ComponentClass: React.ComponentClass) {
   )
 
   __decorate(
-    [injectDependency(ControllerMountSpy)],
+    [injectDependency(ControllerMountSpy, { optional: true })],
     ComponentClass.prototype,
     '@mountObserver',
     undefined
