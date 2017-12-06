@@ -32,5 +32,3 @@ export function getRequiredDependencies(constructor: new (...props: any[]) => In
 export function getRequiredDependencies(constructor: any) {
   return constructor.prototype[INJECTED_OBJECT_KEYS] || new Set()
 }
-
-export type InjectionDecorator = (proto: InjectionClient, key: string) => any

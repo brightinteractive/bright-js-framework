@@ -1,6 +1,6 @@
 {
   "name": "@brightinteractive/bright-js-framework",
-  "version": "3.0.1",
+  "version": "3.2.0",
   "description": "React at the speed of ⚡️",
   "devDependencies": {
     "@types/autoprefixer": "^6.7.3",
@@ -16,6 +16,7 @@
     "@types/glob": "^5.0.33",
     "@types/graphql": "^0.11.6",
     "@types/history": "^4.6.1",
+    "@types/json-stable-stringify": "^1.0.32",
     "@types/lodash": "^4.14.63",
     "@types/minimatch": "^3.0.1",
     "@types/mkdirp": "^0.5.1",
@@ -69,7 +70,10 @@
   },
   "dependencies": {
     "ajv": "^5.2.3",
+    "apollo-cache-inmemory": "^1.1.1",
+    "apollo-client": "^2.0.3",
     "apollo-link": "^1.0.3",
+    "apollo-link-http": "^1.2.0",
     "autoprefixer": "^7.1.5",
     "body-parser": "^1.18.2",
     "colors": "^1.1.2",
@@ -89,8 +93,10 @@
     "history": "^4.7.2",
     "isomorphic-fetch": "^2.2.1",
     "json-loader": "^0.5.7",
+    "json-stable-stringify": "^1.0.1",
     "lodash": "^4.17.4",
     "mkdirp": "^0.5.1",
+    "node-fetch": "^1.7.3",
     "node-sass": "^4.5.3",
     "postcss-loader": "^2.0.8",
     "prop-types": "^15.6.0",

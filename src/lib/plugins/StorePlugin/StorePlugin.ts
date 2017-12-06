@@ -1,7 +1,7 @@
 import { identity, size } from 'lodash'
 import { Store, createStore, combineReducers, GenericStoreEnhancer } from 'redux'
 import { PluginConfig, exportDependency, PluginConstructor } from '../../core/PluginConfig'
-import { injectDependency, InjectionDecorator, InjectionContext } from '../../core/InjectionClient'
+import { injectDependency, InjectionContext } from '../../core/InjectionClient'
 import { getDeclaredReducers } from '../../core/declareReducer'
 
 const STORE = 'store'
@@ -61,5 +61,5 @@ function getDevtools() {
   )
 }
 
-export const injectStore: InjectionDecorator = injectDependency(STORE)
-export const injectDispatch: InjectionDecorator = injectDependency(DISPATCH)
+export const injectStore: PropertyDecorator = injectDependency(STORE)
+export const injectDispatch: PropertyDecorator = injectDependency(DISPATCH)

@@ -1,5 +1,5 @@
-require('ts-node').register({ fast: true, compilerOptions: { target: 'es2015',  } })
-require('source-map-support/register')
+require('ts-node').register({ fast: true, compilerOptions: { target: 'es2015' } })
+require('source-map-support').install({ hookRequire: true })
 require('jsdom-global/register')
 require('raf').polyfill(global)
 
@@ -15,6 +15,7 @@ enzyme.configure({
 })
 
 console.error = () => {}
+console.warn = () => {}
 
 chai.use(chaiEnzyme())
 chai.use(sinonChai)

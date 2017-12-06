@@ -271,6 +271,7 @@ function testServer(opts: { modules: Record<string, () => any>, schemas: Record<
   }
 
   return new GraphQLServer({
+    loadResolvers: true,
     resolvePath: (path) => {
       const resolvedPath = resolve(path)
       if (!opts.modules[resolvedPath]) {

@@ -5,7 +5,7 @@ import { PluginConstructor } from './PluginConfig'
 const DECLARED_REDUCER_KEYS = '__luminant__declaredReducerKeys'
 
 /** Decorate a static function of a plugin as a reducer */
-export function declareReducer(id: string): ReducerDecorator
+export function declareReducer(id: string): PropertyDecorator
 export function declareReducer(id: string) {
   return (constructor: any, key: string) => {
     if (typeof constructor[key] !== 'function') {
@@ -27,5 +27,3 @@ function getPluginDeclaredReducers(constructor: PluginConstructor[]): Record<str
 function getPluginDeclaredReducers(constructor: any) {
   return constructor[DECLARED_REDUCER_KEYS] || {}
 }
-
-export type ReducerDecorator = (proto: PluginConstructor, key: string) => any
