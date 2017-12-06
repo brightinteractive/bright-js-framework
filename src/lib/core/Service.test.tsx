@@ -5,8 +5,8 @@ import { Service, isService, decorateServiceProperty } from './Service'
 import { decorateController } from './Controller'
 import { ApplicationContext } from './ApplicationContext'
 import { PluginConfig, exportDependency } from './PluginConfig'
-import { ContextProvider } from './ContextProvider';
-import { injectDependency } from './InjectionClient';
+import { ContextProvider } from './ContextProvider'
+import { injectDependency } from './InjectionClient'
 
 describe('Service', () => {
   describe('isService()', () => {

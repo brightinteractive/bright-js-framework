@@ -4,22 +4,28 @@ import * as fs from 'fs'
 import { RequestHandler } from 'express'
 import { graphqlExpress, graphiqlExpress } from 'graphql-server-express'
 import * as bodyParser from 'body-parser'
-import { PluginConfig, decorateRequestHandler } from '../../core/PluginConfig'
+import { decorateRequestHandler } from '../../core/PluginConfig'
 import { loadModule } from '../../core/util'
 import { GraphQLServer } from './server/GraphQLServer'
+import GraphQLPluginBase from './GraphQLPlugin.common'
 
 const server = new GraphQLServer({
   readFile: (filepath) => fs.readFileSync(filepath, 'utf8'),
   resolvePath: path.resolve,
   glob: glob.sync,
-  loadModule
+  loadModule,
+  loadResolvers: true
 })
 
 const serverMiddleware = [
   bodyParser.json()
 ]
 
-export default class GraphQLPlugin extends PluginConfig {
+export default function graphQlPlugin() {
+  return GraphQLPluginServer
+}
+
+export class GraphQLPluginServer extends GraphQLPluginBase {
   @decorateRequestHandler('/graphql', { method: 'POST', middleware: serverMiddleware })
   static handleGraphQLRequest?: RequestHandler = createServer()
 

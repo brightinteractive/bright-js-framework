@@ -21,10 +21,10 @@ describe('StorePlugin', () => {
     }
   }
 
-  const counter = createSelectService((state) => state.counter)
+  const counter = createSelectService((state, props) => props.overrideValue || state.counter)
 
   @decorateController
-  class CounterView extends React.PureComponent {
+  class CounterView extends React.PureComponent<{ overrideValue?: number }> {
     @counter
     counter: StateSelector<number>
 
@@ -69,6 +69,16 @@ describe('StorePlugin', () => {
     fixture.render().unmount()
 
     expect(unsubscribe).to.have.been.calledOnce
+  })
+
+  it('should pass controller props through to selector', () => {
+    const fixture = new TestFixture({
+      plugins: [CounterPlugin],
+      markup: <CounterView overrideValue={123} />
+    })
+
+    expect(fixture.getInstance<CounterView>().counter.value).to.eql(123
+    )
   })
 
   it('should not create a store if no reducers are installed', () => {

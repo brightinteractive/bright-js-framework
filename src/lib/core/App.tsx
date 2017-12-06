@@ -1,7 +1,9 @@
 import * as React from 'react'
 import { History, Location } from 'history'
+import { uniqueId } from 'lodash'
 import { Router, RouteConfig } from './Router'
 import { ContextProviderProps, ContextProvider } from './ContextProvider'
+import { load } from './load'
 
 export interface AppProps extends ContextProviderProps {
   routes: RouteConfig[]
@@ -23,7 +25,8 @@ export type RedirectFunction = (l: Location) => void
 /**
  * Root application container.
  */
-export class App extends ContextProvider<AppProps> {
+export class App extends ContextProvider<AppProps, AppState> {
+  pendingTransition?: string
   router = new Router(this.props.routes)
   unsubscribeHistory: () => void
 
@@ -31,8 +34,23 @@ export class App extends ContextProvider<AppProps> {
     location: this.props.history.location,
   }
 
-  handlePageTransition: History.LocationListener = (location) => {
-    this.setState({ location })
+  handlePageTransition: History.LocationListener = async (location) => {
+    this.transitionToLocation(location)
+  }
+
+  async transitionToLocation(location: Location) {
+    const nextRoute = this.router.match(location)
+    const transitionIdentifier = uniqueId('transition:' + location.pathname)
+    this.pendingTransition = transitionIdentifier
+
+    if (nextRoute) {
+      const Handler = nextRoute.handler
+      await load(<Handler />, this.getChildContext())
+    }
+
+    if (transitionIdentifier === this.pendingTransition) {
+      this.setState({ location })
+    }
   }
 
   componentDidMount() {

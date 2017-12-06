@@ -9,9 +9,9 @@ export default function serverEntry(topLevelModules: RequireList, opts: EntryOpt
   return function serverRenderer({ nodeRequire }: any) {
     const app = express()
 
-    // [HACK] Set require as a global so that plugins have access to it
-    // To be replaced with convention for allowing plugins to specify their source dependencies
-    // directly to webpack
+    // FIXME: Set require as a global so that plugins have access to it
+    //        To be replaced with convention for allowing plugins to specify their source
+    //        dependencies directly to webpack
     const g = global as any
     g.__require = nodeRequire
 

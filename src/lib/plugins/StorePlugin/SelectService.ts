@@ -8,7 +8,7 @@ export interface StateSelector<T> extends Service {
 
 export type SelectServiceConstructor<T> = ServiceConstructor<StateSelector<T>>
 
-export function createSelectService(selector: (x: any) => any): any {
+export function createSelectService(selector: (x: any, props: any) => any): any {
   class SelectService extends Service<{ value: any }> {
     @injectStore
     private store: Store<any>
@@ -17,7 +17,7 @@ export function createSelectService(selector: (x: any) => any): any {
 
     handleStoreChange = () => {
       this.setState({
-        value: selector(this.store.getState())
+        value: selector(this.store.getState(), this.controllerProps)
       })
     }
 
@@ -33,7 +33,7 @@ export function createSelectService(selector: (x: any) => any): any {
 
     get value() {
       if (typeof this.state.value === 'undefined') {
-        return selector(this.store.getState())
+        return selector(this.store.getState(), this.controllerProps)
       }
 
       return this.state.value

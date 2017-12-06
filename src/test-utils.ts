@@ -23,13 +23,26 @@ export interface TestFixture {
   render(): any
 
   /**
-   * Stub all plugins of a particular type
+   * Get a plugin of a specified type. If it exists, it will be returned.
+   * If it does not exist, an exception is thrown.
    *
-   * @param constructor Type of the plugins to stub
-   * @param stubFn      Customizer function. It receives an instance of the plugin, which can be
-   *                    used to customize its behavior.
+   * @param constructor Type of the plugins to search for.
    */
-  stub<T extends PluginConfig>(constructor: PluginConstructor<T>, stubFn: (fn: T) => void): TestFixture
+  getPlugin<T extends PluginConfig>(constructor: PluginConstructor<T>): T
+
+  /**
+   * Get the root object rendered by the component.
+   */
+  getInstance<T = any>(): T
+
+  /**
+   * Return a promise that resolves when a controller of a specific type has finished loading.
+   * Useful for waiting until an async action has completed before making a test assertion.
+   */
+  waitForController(type: React.ComponentClass): Promise<void>
+
+  /** Unmount the test case */
+  unmount(): void
 }
 
 export const TestFixture: new (props: TestFixtureProps) => TestFixture = _TestFixture

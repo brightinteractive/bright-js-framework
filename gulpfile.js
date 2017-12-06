@@ -139,7 +139,7 @@ gulp.task('bootstrap:examples', gulp.series(
   shell.task(['npm install'], { cwd: './examples' })
 ))
 
-gulp.task('bootstrap', gulp.parallel(
+gulp.task('bootstrap', gulp.series(
   'bootstrap:site',
   'bootstrap:examples'
 ))

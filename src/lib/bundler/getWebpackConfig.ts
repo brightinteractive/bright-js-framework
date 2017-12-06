@@ -11,7 +11,14 @@ export interface WebpackConfigOpts {
 
 export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Configuration[] {
   const extensions = ['.ts', '.tsx', '.js', '.jsx']
-  const serverExtensions = extensions.map((extension) => `.server${extension}`)
+  const serverExtensions = [
+    ...extensions.map((extension) => `.server${extension}`),
+    ...extensions
+  ]
+  const clientExtensions = [
+    ...extensions.map((extension) => `.client${extension}`),
+    ...extensions
+  ]
 
   const sharedConfig: Partial<webpack.Configuration> = {
     devtool: 'cheap-module-source-map',
@@ -21,6 +28,10 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
         {
           test: /\.json$/,
           loader: require.resolve('json-loader'),
+        },
+        {
+          test: /\.graphql$/,
+          loader: require.resolve('graphql-tag/loader'),
         },
         {
           test: /\.tsx?$/,
@@ -104,11 +115,11 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
       name: 'client',
 
       resolve: {
-        extensions
+        extensions: clientExtensions
       },
 
       resolveLoader: {
-        extensions
+        extensions: clientExtensions
       },
 
       output: {
@@ -144,11 +155,11 @@ export function getWebpackConfig({ entrypoints }: WebpackConfigOpts): webpack.Co
       })],
 
       resolve: {
-        extensions: [...serverExtensions, ...extensions]
+        extensions: serverExtensions
       },
 
       resolveLoader: {
-        extensions: [...serverExtensions, ...extensions]
+        extensions: serverExtensions
       },
 
       output: {

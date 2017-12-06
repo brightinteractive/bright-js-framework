@@ -13,6 +13,7 @@ export interface GraphQLServerProps {
   readFile: (path: string) => string
   resolvePath: (path: string) => any
   glob: (pattern: string) => string[]
+  loadResolvers?: boolean
 }
 
 export class GraphQLServer implements GraphQLServerProps {
@@ -23,6 +24,7 @@ export class GraphQLServer implements GraphQLServerProps {
   readFile: (path: string) => string
   resolvePath: (path: string) => any
   glob: (pattern: string) => string[]
+  loadResolvers?: boolean
 
   constructor(props: GraphQLServerProps) {
     Object.assign(this, props)
@@ -84,6 +86,12 @@ export class GraphQLServer implements GraphQLServerProps {
    * with Resolvers exported from source files in the same directory (or child directories).
    */
   private createSchemaModule(schemaPath: string): GraphQLSchema | undefined {
+    if (!this.loadResolvers) {
+      return makeExecutableSchema({
+        typeDefs: this.readFile(schemaPath)
+      })
+    }
+
     const resolverTypes = this.loadResolversForSchema(schemaPath)
     if (resolverTypes.length === 0) {
       return undefined
