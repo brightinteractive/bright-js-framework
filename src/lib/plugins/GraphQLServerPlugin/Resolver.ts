@@ -1,9 +1,9 @@
 import { InjectionContext, InjectionClient } from '../../core/InjectionClient'
 
-const RESOLVER_TYPENAME_KEY = '__luminant__ResolverType'
-const RESOLVER_PROPERTIES_KEY = '__luminant__ResolverProps'
+const GRAPHQL_TYPENAME_KEY = '__luminant__ResolverType'
+const RESOLVER_METHODS_KEY = '__luminant__ResolverProps'
 
-export class Resolver extends InjectionClient {
+export class SchemaType extends InjectionClient {
   readonly id: string
 
   constructor(context: InjectionContext, id: string) {
@@ -12,28 +12,28 @@ export class Resolver extends InjectionClient {
   }
 }
 
-export type ResolverConstructor = new(context: InjectionContext, id: string) => Resolver
+export type ResolverConstructor = new(context: InjectionContext, id: string) => SchemaType
 
-export function decorateTypeResolver(typeName: string): ClassDecorator {
+export function decorateSchemaType(typeName: string): ClassDecorator {
   return (constructor: any) => {
-    constructor[RESOLVER_TYPENAME_KEY] = typeName
+    constructor[GRAPHQL_TYPENAME_KEY] = typeName
   }
 }
 
-export function isTypeResolver(constructor: any): constructor is typeof Resolver {
-  return Boolean(getResolverTypename(constructor))
+export function isSchemaType(constructor: any): constructor is typeof SchemaType {
+  return Boolean(getSchemaTypename(constructor))
 }
 
-export function getResolverTypename(constructor: any) {
-  return constructor[RESOLVER_TYPENAME_KEY]
+export function getSchemaTypename(constructor: any) {
+  return constructor[GRAPHQL_TYPENAME_KEY]
 }
 
-export function decorateResolverProperty(prototype: any, key: string | symbol) {
-  prototype[RESOLVER_PROPERTIES_KEY] = prototype[RESOLVER_PROPERTIES_KEY] || new Set()
-  prototype[RESOLVER_PROPERTIES_KEY].add(key)
+export function decorateResolver(prototype: any, key: string | symbol) {
+  prototype[RESOLVER_METHODS_KEY] = prototype[RESOLVER_METHODS_KEY] || new Set()
+  prototype[RESOLVER_METHODS_KEY].add(key)
 }
 
-export function getResolverProperties(constructor: ResolverConstructor): Set<string>
-export function getResolverProperties(constructor: any) {
-  return constructor.prototype[RESOLVER_PROPERTIES_KEY] || new Set()
+export function getResolvers(constructor: ResolverConstructor): Set<string>
+export function getResolvers(constructor: any) {
+  return constructor.prototype[RESOLVER_METHODS_KEY] || new Set()
 }

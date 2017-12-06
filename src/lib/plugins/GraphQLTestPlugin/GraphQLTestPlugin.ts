@@ -11,7 +11,7 @@ import { GraphQLServer } from '../GraphQLServerPlugin/GraphQLServer'
 import { LocalLink } from '../GraphQLPlugin/LocalLink'
 import GraphQLPluginBase from '../GraphQLPlugin/GraphQLPlugin.common'
 import { findGraphQLSources } from '../GraphQLServerPlugin/loadSchema'
-import { isTypeResolver } from '../GraphQLServerPlugin/Resolver'
+import { isSchemaType } from '../GraphQLServerPlugin/Resolver'
 
 export interface GraphQlPluginProps {
   schema?: DocumentNode | string
@@ -53,7 +53,7 @@ function getApplicationSchema() {
     connectors: [],
     schema: schemas.map(({ typeDefs, resolvers }) => ({
       typeDefs: require(typeDefs),
-      resolvers: getEntrypointExports(createRequireList(resolvers), isTypeResolver)
+      resolvers: getEntrypointExports(createRequireList(resolvers), isSchemaType)
     })),
   })
 

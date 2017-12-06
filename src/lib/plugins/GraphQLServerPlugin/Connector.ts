@@ -10,8 +10,8 @@ export class Connector extends InjectionClient {
    * de-duplicates requests for the same resource over a single GraphQL request and batches requests
    * into a single network request.
    */
-  static withIdentity<T>(Config: IdentityConfigConstructor<T>): IdentityConnectorConstructor<T> {
-    class ConnectorWithIdentity extends Connector {
+  static forResource<T>(Config: ResourceBatchFetcherConstructor<T>): ResourceConnectorConstructor<T> {
+    class ResourceWithIdConnector extends Connector {
       loader: Dataloader<string, T | undefined>
 
       constructor(context: InjectionContext) {
@@ -40,16 +40,16 @@ export class Connector extends InjectionClient {
       }
     }
 
-    return ConnectorWithIdentity
+    return ResourceWithIdConnector
   }
 }
 
-export class IdentityConfig<T> extends InjectionClient {
+export class ResourceBatchFetcher<T> extends InjectionClient {
   constructor(context: InjectionContext) {
     super(context)
 
     if (process.env.NODE_ENV !== 'production') {
-      if (this.getMany === IdentityConfig.prototype.getMany) {
+      if (this.getMany === ResourceBatchFetcher.prototype.getMany) {
         throw new Error(`${this.constructor.name} must override getMany()`)
       }
     }
@@ -60,16 +60,16 @@ export class IdentityConfig<T> extends InjectionClient {
   }
 }
 
-export type IdentityConfigConstructor<T> = new(context: InjectionContext) => IdentityConfig<T>
+export type ResourceBatchFetcherConstructor<T> = new(context: InjectionContext) => ResourceBatchFetcher<T>
 
-export interface IdentityConnector<T> extends Connector {
+export interface ResourceConnector<T> extends Connector {
   getProperty<Key extends keyof T>(id: string, key: Key): Promise<T[Key] | undefined>
   getOne(id: string): Promise<T | undefined>
   getMany(ids: string[]): Promise<Array<T | undefined>>
 }
 
-export interface IdentityConnectorConstructor<T> {
-  new(context: InjectionContext): IdentityConnector<T>
+export interface ResourceConnectorConstructor<T> {
+  new(context: InjectionContext): ResourceConnector<T>
 }
 
 export interface ConnectorConstructor {

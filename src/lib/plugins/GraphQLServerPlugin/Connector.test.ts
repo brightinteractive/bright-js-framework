@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { fromPairs } from 'lodash'
 import { ApplicationContext } from '../../core/ApplicationContext'
-import { IdentityConfig, Connector } from './Connector'
+import { ResourceBatchFetcher, Connector } from './Connector'
 
 describe('Connector', () => {
   describe('getOne', () => {
@@ -47,13 +47,13 @@ describe('Connector', () => {
 })
 
 function testConnector(values: Record<string, any>) {
-  class Config extends IdentityConfig<number> {
+  class Fetcher extends ResourceBatchFetcher<number> {
     async getMany(ids: string[]) {
       return fromPairs(ids.map((id) => [id, values[id]]))
     }
   }
 
-  class MyConnector extends Connector.withIdentity(Config) { }
+  class MyConnector extends Connector.forResource(Fetcher) { }
 
   return new MyConnector({ '@appContext': new ApplicationContext() })
 }

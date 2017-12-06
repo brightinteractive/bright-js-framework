@@ -3,12 +3,12 @@ import { flatMap, fromPairs } from 'lodash'
 import { mergeSchemas, makeExecutableSchema } from 'graphql-tools'
 import { GraphQLOptions } from 'apollo-server-core'
 import { ApplicationContext } from '../../core/ApplicationContext'
-import { getResolverTypename, getResolverProperties, ResolverConstructor, Resolver } from './Resolver'
+import { ResolverConstructor, SchemaType, getResolvers, getSchemaTypename } from './Resolver'
 import { ConnectorConstructor } from './Connector'
 import { HttpClient } from './HttpClient'
 
 export interface GraphQLServerProps {
-  schema: Array<{ typeDefs: DocumentNode | string, resolvers: Array<typeof Resolver> }>
+  schema: Array<{ typeDefs: DocumentNode | string, resolvers: Array<typeof SchemaType> }>
   connectors: ConnectorConstructor[]
 }
 
@@ -76,7 +76,7 @@ export class GraphQLServer {
    * Given a path to a GraphQL schema, create an executable GraphQL schema by combining it
    * with Resolvers exported from source files in the same directory (or child directories).
    */
-  private createSchemaModule(config: { typeDefs: DocumentNode | string, resolvers: Array<typeof Resolver> }): GraphQLSchema | undefined {
+  private createSchemaModule(config: { typeDefs: DocumentNode | string, resolvers: Array<typeof SchemaType> }): GraphQLSchema | undefined {
     const resolverTypes = config.resolvers
     if (resolverTypes.length === 0) {
       return undefined
@@ -91,20 +91,20 @@ export class GraphQLServer {
   }
 
   /**
-   * Given a list of Resolver classes, return a map of shape `{ type: { property: resolverFn } }`
+   * Given a list of ResolverMap classes, return a map of shape `{ type: { property: resolverFn } }`
    * suitable for generating an executable GraphQL schema for each type and property declared
    * using the Resolver decorator API.
    */
   private createFieldResolversForTypes(resolverTypes: ResolverConstructor[]): Record<string, Record<string, GraphQLFieldResolver<string, any>>> {
     return fromPairs(resolverTypes.map((ResolverClass) => {
-      const resolveFnMap = fromPairs(Array.from(getResolverProperties(ResolverClass)).map((key) => [key, this.createFieldResolver(ResolverClass, key)]))
+      const resolveFnMap = fromPairs(Array.from(getResolvers(ResolverClass)).map((key) => [key, this.createFieldResolver(ResolverClass, key)]))
 
-      return [getResolverTypename(ResolverClass), resolveFnMap]
+      return [getSchemaTypename(ResolverClass), resolveFnMap]
     }))
   }
 
   /**
-   * Given a Resolver class and a property name, return a GraphQL field resolver function that
+   * Given a ResolverMap class and a property name, return a GraphQL field resolver function that
    * resolves the property identified by `propertyName`
    */
   private createFieldResolver(ResolverClass: ResolverConstructor, propertyName: string): GraphQLFieldResolver<string, any> {
