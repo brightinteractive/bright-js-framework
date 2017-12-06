@@ -5,38 +5,48 @@ import {isLoggedInInjector} from './AuthTokenPlugin';
 describe('isLoggedInInjector', () => {
 
   it('should return false when no auth token state', () => {
-    const appState = {AUTH_TOKEN_STATE: undefined}
+    const appState = {authTokenValue: undefined}
 
-    expect(isLoggedInInjector(appState)).to.eql(false)
+    expectIsLoggedInIsFalse(appState)
   })
 
   it('should return false when no token in auth token state', () => {
-    const appState = {AUTH_TOKEN_STATE: {token: undefined}}
+    const appState = {authTokenValue: {token: undefined}}
 
-    expect(isLoggedInInjector(appState)).to.eql(false)
+    expectIsLoggedInIsFalse(appState)
   })
 
   it('should return true when no token expiry', () => {
-    const appState = {AUTH_TOKEN_STATE: {token: {expiresAt: undefined}}}
+    const appState = {authTokenValue: {token: {expiresAt: undefined}}}
 
-    expect(isLoggedInInjector(appState)).to.eql(false)
+    expectIsLoggedInIsTrue(appState)
   })
 
   it('should return false when token expiry is in the past', () => {
     const oneMilliSecondAgo = new Date()
     oneMilliSecondAgo.setMilliseconds(oneMilliSecondAgo.getSeconds() - 1)
+    const appState = {authTokenValue: {token: {expiresAt: oneMilliSecondAgo}}}
 
-    const appState = {AUTH_TOKEN_STATE: {token: {expiresAt: oneMilliSecondAgo}}}
-
-    expect(isLoggedInInjector(appState)).to.eql(false)
+    expectIsLoggedInIsFalse(appState)
   })
 
   it('should return true when token expiry is in the future', () => {
     const oneSecondFromNow = new Date()
     oneSecondFromNow.setSeconds(oneSecondFromNow.getSeconds() + 1)
+    const appState = {authTokenValue: {token: {expiresAt: oneSecondFromNow}}}
 
-    const appState = {AUTH_TOKEN_STATE: {token: {expiresAt: oneSecondFromNow}}}
-
-    expect(isLoggedInInjector(appState)).to.eql(false)
+    expectIsLoggedInIsTrue(appState)
   })
+
+  function expectIsLoggedInIsFalse(appState: { authTokenValue: any }) {
+    expectIsLoggedInIs(false, appState)
+  }
+
+  function expectIsLoggedInIsTrue(appState: { authTokenValue: any }) {
+    expectIsLoggedInIs(true, appState)
+  }
+
+  function expectIsLoggedInIs(isLoggedIn: boolean, appState: { authTokenValue: any }) {
+    expect(isLoggedInInjector(appState)).to.eql(isLoggedIn)
+  }
 })
