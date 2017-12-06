@@ -34,7 +34,7 @@ export default () => {
             name="projectPlugins"
             type="string"
             description="Path pattern defining where the application’s own plugins are placed. These are automatically added to the application."
-            defaultValue="src/plugins/**/*.tsx?"
+            defaultValue="src/plugins/**/*.ts?(x)"
           />
         </OptionsTable>
       </Section>
