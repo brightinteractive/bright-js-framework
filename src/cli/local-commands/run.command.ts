@@ -11,7 +11,7 @@ import { pick } from 'lodash'
 import { getWebpackConfig } from '../../lib/bundler/getWebpackConfig'
 import { renderHtmlWrapper } from '../../lib/server/renderHtmlWrapper'
 import { getConfig } from '../../lib/server/getConfig'
-import { getProjectPluginConfigs } from '../../lib/server/getProjectPluginConfigs'
+import getImplicitProjectPluginConfigurationsFromFilepaths from '../../lib/server/getProjectPluginConfigs'
 
 export interface RunCommandOpts {
   entry: string
@@ -36,7 +36,7 @@ export function handler({ port }: RunCommandOpts) {
     pages: getEntrypointFiles(),
     plugins: {
       ...appConfig.plugins,
-      ...getProjectPluginConfigs(glob.sync(appConfig.projectPlugins))
+      ...getImplicitProjectPluginConfigurationsFromFilepaths(glob.sync(appConfig.projectPlugins))
     }
   })
 

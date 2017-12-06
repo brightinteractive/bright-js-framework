@@ -30,7 +30,7 @@ const ajv = new Ajv({ useDefaults: true })
 
 export const getConfig: () => Config = memoize(() => {
   const config = loadConfig()
-  return validateConfig(substituteEnvironment(config))
+  return compileConfig(substituteEnvironment(config))
 })
 
 export function substituteEnvironment(config: any, env = process.env): any {
@@ -49,7 +49,7 @@ export function substituteEnvironment(config: any, env = process.env): any {
   return config
 }
 
-export function validateConfig(c: {}): Config {
+export function compileConfig(c: {}): Config {
   const validate = ajv.compile(configSchema)
 
   if (validate(c)) {

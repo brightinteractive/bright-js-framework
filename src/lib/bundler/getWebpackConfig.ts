@@ -16,11 +16,15 @@ export interface WebpackConfigOpts {
 
 export function getWebpackConfig({ pages, plugins }: WebpackConfigOpts): webpack.Configuration[] {
   const extensions = ['.ts', '.tsx', '.js', '.jsx']
+
+  // If a module has a specific server-side version, give it prescidence when building for server
   const serverExtensions = [
     ...extensions.map((extension) => `.server${extension}`),
     ...extensions,
     '*'
   ]
+
+  // If a module has a specific client-side version, give it prescidence when building for client
   const clientExtensions = [
     ...extensions.map((extension) => `.client${extension}`),
     ...extensions,
@@ -158,10 +162,16 @@ export function getWebpackConfig({ pages, plugins }: WebpackConfigOpts): webpack
 
       target: 'node',
 
+      // Don't include external modules in the server bundle
       externals: nodeExternals({
         whitelist: [
-          // Exclude framework plugins
-          // XXX: Exclude anything with a plugin-config.ts file
+          // XXX: Plugins need to be loaded using webpack, otherwise they don't handle
+          // client/server distinctions, live-reloading, resource loading properly.
+          // This presents a problem for plugins in external modules. As a temp workaround,
+          // we bundle the framework using webpack too so that built-in plugins behave as expected.
+          //
+          // Would be better to extract external plugin paths from the plugin config, although this
+          // raises issues for locally linked modules.
           /^@brightinteractive\/bright-js-framework/,
         ]
       }),

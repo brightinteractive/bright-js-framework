@@ -1,18 +1,18 @@
 import { expect } from 'chai'
-import { getProjectPluginConfigs } from './getProjectPluginConfigs'
+import getImplicitProjectPluginConfigurationsFromFilepaths from './getProjectPluginConfigs'
 
-describe('getProjectPluginConfigs()', () => {
-  it('create plugin config object with empty configuration for base path', () => {
+describe('getImplicitProjectPluginConfigurationsFromFilepaths()', () => {
+  it('returns default plugin configs for a list of filepaths to plugin modules', () => {
     const configs = [
-      '/a/b/c.def',
-      '/a/b/c.defgh',
-      '/a/b/c',
-      '/a/b/d.def',
+      '/a/b/MyPlugin.client.ts',
+      '/a/b/MyPlugin.server.ts',
+      '/a/b/MyPlugin.ts',
+      '/a/b/MyOtherPlugin.ts',
     ]
 
-    expect(getProjectPluginConfigs(configs)).to.eql({
-      '/a/b/c': {},
-      '/a/b/d': {},
+    expect(getImplicitProjectPluginConfigurationsFromFilepaths(configs)).to.eql({
+      '/a/b/MyPlugin': {},
+      '/a/b/MyOtherPlugin': {},
     })
   })
 })

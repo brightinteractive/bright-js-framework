@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { substituteEnvironment, validateConfig, configSchema } from './getConfig'
+import { substituteEnvironment, compileConfig, configSchema } from './getConfig'
 
 describe('getConfig', () => {
   describe('substituteEnvironment()', () => {
@@ -26,7 +26,7 @@ describe('getConfig', () => {
     it('should assign default values', () => {
       const config = {}
 
-      expect(validateConfig(config)).to.eql({
+      expect(compileConfig(config)).to.eql({
         frontendEnvironment: configSchema.properties.frontendEnvironment.default,
         plugins: configSchema.properties.plugins.default,
         projectPlugins: configSchema.properties.projectPlugins.default

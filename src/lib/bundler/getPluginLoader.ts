@@ -1,7 +1,7 @@
 import * as path from 'path'
 import { entrypointLoader, EntrypointOpts } from './entrypointLoader'
 
-const defaultEntry = require.resolve('../entry/default-plugin')
+const defaultEntry = require.resolve('../entry/plugin-default')
 
 export function getPluginLoader(pluginConfig: any, pluginName: string) {
   const pluginPath = resolvePlugin(pluginName)
