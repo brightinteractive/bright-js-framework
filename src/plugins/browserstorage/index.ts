@@ -33,7 +33,7 @@ export interface BrowserStoragePluginProps {
  *
  * (Defaults to using localStorage if no props are provided)
  */
-export function browserStoragePlugin(props?: BrowserStoragePluginProps): PluginConstructor {
+export default function browserStoragePlugin(props?: BrowserStoragePluginProps): PluginConstructor {
   return createBrowserStoragePlugin(props)
 }
 

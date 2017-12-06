@@ -9,7 +9,7 @@ import {AuthTokenState} from './auth'
 /**
  * Creates the AuthToken Plugin which is used for storing the Token by an AuthService so it can be accessed later by things needing to make requests on behalf of the user.
  */
-export function authTokenPlugin(): PluginConstructor {
+export default function authTokenPlugin(): PluginConstructor {
   return createAuthTokenPlugin()
 }
 
