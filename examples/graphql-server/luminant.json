@@ -1,0 +1,6 @@
+{
+  "plugins": {
+    "@brightinteractive/bright-js-framework/plugins/graphql": {},
+    "@brightinteractive/bright-js-framework/plugins/graphql-server": {}
+  }
+}

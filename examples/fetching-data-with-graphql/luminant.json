@@ -1,0 +1,5 @@
+{
+  "plugins": {
+    "@brightinteractive/bright-js-framework/plugins/graphql": {}
+  }
+}

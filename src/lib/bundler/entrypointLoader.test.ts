@@ -3,37 +3,92 @@ import { LoaderContext } from 'loader-utils'
 import { entrypointLoader } from './entrypointLoader'
 
 describe('entrypointLoader', () => {
-  it('should handle empty modules array', () => {
+  it('should generate loader string for minimally speciified options', () => {
     const loaderString = entrypointLoader({
       entry: 'myEntrypoint',
-      topLevelModules: [],
-      configFile: 'foo.config'
+      topLevelModules: {},
     })
 
     const { query, resourcePath } = parseLoaderString(loaderString)
 
     expect(callLoader({ query, resourcePath })).to.eql([
       `var entry = require("myEntrypoint").default;`,
-      `var opts = {config: function() { return require("foo.config").default; }};`,
-      `var modules = [];`,
-      `module.exports = entry(modules, opts);`,
+      `var modules = {};`,
+      `var options = {};`,
+      `module.exports = entry(modules, options);`,
     ].join('\n'))
   })
 
-  it('should generate shim code to load top level modules using entrypoint', () => {
+  it('should stringify custom options object', () => {
     const loaderString = entrypointLoader({
       entry: 'myEntrypoint',
-      topLevelModules: ['module1', 'module2'],
-      configFile: 'foo.config'
+      topLevelModules: {},
+      options: {
+        foo: 1
+      }
     })
 
     const { query, resourcePath } = parseLoaderString(loaderString)
 
     expect(callLoader({ query, resourcePath })).to.eql([
       `var entry = require("myEntrypoint").default;`,
-      `var opts = {config: function() { return require("foo.config").default; }};`,
-      `var modules = [function() { return require("module1"); },function() { return require("module2"); }];`,
-      `module.exports = entry(modules, opts);`,
+      `var modules = {};`,
+      `var options = {"foo":1};`,
+      `module.exports = entry(modules, options);`,
+    ].join('\n'))
+  })
+
+  it('should generate shim code to load single module', () => {
+    const loaderString = entrypointLoader({
+      entry: 'myEntrypoint',
+      topLevelModules: {
+        foo: 'foo-module'
+      },
+    })
+
+    const { query, resourcePath } = parseLoaderString(loaderString)
+
+    expect(callLoader({ query, resourcePath })).to.eql([
+      `var entry = require("myEntrypoint").default;`,
+      `var modules = {"foo": function(){ return require("foo-module"); }};`,
+      `var options = {};`,
+      `module.exports = entry(modules, options);`,
+    ].join('\n'))
+  })
+
+  it('should generate shim code to load module array', () => {
+    const loaderString = entrypointLoader({
+      entry: 'myEntrypoint',
+      topLevelModules: {
+        foo: ['foo-module']
+      },
+    })
+
+    const { query, resourcePath } = parseLoaderString(loaderString)
+
+    expect(callLoader({ query, resourcePath })).to.eql([
+      `var entry = require("myEntrypoint").default;`,
+      `var modules = {"foo": [function(){ return require("foo-module"); }]};`,
+      `var options = {};`,
+      `module.exports = entry(modules, options);`,
+    ].join('\n'))
+  })
+
+  it('should recurse into module maps', () => {
+    const loaderString = entrypointLoader({
+      entry: 'myEntrypoint',
+      topLevelModules: {
+        foo: { bar: 'bar-module' }
+      },
+    })
+
+    const { query, resourcePath } = parseLoaderString(loaderString)
+
+    expect(callLoader({ query, resourcePath })).to.eql([
+      `var entry = require("myEntrypoint").default;`,
+      `var modules = {"foo": {"bar": function(){ return require("bar-module"); }}};`,
+      `var options = {};`,
+      `module.exports = entry(modules, options);`,
     ].join('\n'))
   })
 })

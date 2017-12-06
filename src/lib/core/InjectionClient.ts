@@ -15,14 +15,19 @@ export interface InjectionContext {
   '@appContext': ApplicationContext
 }
 
-export function injectDependency(id: {}): PropertyDecorator {
+export function injectDependency(id: any, opts: { optional?: boolean } = {}): PropertyDecorator {
   return (proto: any) => {
     proto[INJECTED_OBJECT_KEYS] = proto[INJECTED_OBJECT_KEYS] || new Set()
     proto[INJECTED_OBJECT_KEYS].add(id)
 
     return {
       get(this: InjectionClient) {
-        return this.context['@appContext'].getInjectedObject(id)
+        const injectedObject = this.context['@appContext'].getInjectedObject(id)
+        if (!injectedObject && !opts.optional) {
+          throw new Error(`Could not find dependency ${id.name || id}. Did you forget to install a plugin?`)
+        }
+
+        return injectedObject
       }
     }
   }

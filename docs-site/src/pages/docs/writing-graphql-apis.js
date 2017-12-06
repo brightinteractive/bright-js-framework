@@ -27,7 +27,7 @@ export default () => {
           First of all, we need to add the GraphQL plugin to our application’s config file:
         </p>
         <CodeFile path="src/config.ts">
-          {require('raw!../../../../examples/graphql-server/src/config.ts')}
+          {require('!raw!../../../../examples/graphql-server/luminant.json')}
         </CodeFile>
         <p>
           Next, we’ll add a new type to our GraphQL API. When we write GraphQL APIs with bright-js-framework,
@@ -156,7 +156,7 @@ export default () => {
           its GraphQL endpoint (<code>https://my-backend.com/graphql)</code> to your frontend as a configuration option:
         </p>
         <CodeFile path="src/graphql/config.ts">
-          {require('raw!../../../../examples/graphql-client-with-external-api/src/config.ts')}
+          {require('!raw!../../../../examples/graphql-client-with-external-api/luminant.json')}
         </CodeFile>
       </Section>
     </div>

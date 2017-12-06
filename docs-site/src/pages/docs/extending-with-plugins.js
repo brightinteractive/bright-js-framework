@@ -35,10 +35,14 @@ export default () => {
       </Section>
       <Section title="Using plugins">
         <p>
-          Plugins are configured in a special file at the root of your application's source, <code>src/config.ts</code>. Let’s look at a hypothetical plugin called <code>EventManager</code> that allows components to post and subscribe to events. We would install the plugin by adding it to the default export of our config file.
+          Plugins are picked up from the default exports of source files in a conventional directory in your project. By default, this is <code>src/plugins</code>.
         </p>
-        <CodeFile path="src/config.ts">
-          {require('raw!../../../../examples/plugin-with-injection/src/config.ts')}
+        <p>
+          Sometimes, you will want to use plugins that live in external modules. Some of these may allow or require configuration. This can be done by adding the plugin, along with
+          any configuration, to your <code>luminant.json</code> file. For example, here is how Luminant's GraphQL plugin is installed and configured:
+        </p>
+        <CodeFile path="luminant.json">
+          {require('!raw!../../../../examples/graphql-client-with-external-api/luminant.json')}
         </CodeFile>
         <p>
           Some plugins provide an API to controllers. Others may have application-wide effects that do not require any usage. Consult the documentation for the specific plugin for further usage instructions.
@@ -107,6 +111,46 @@ export default () => {
         </p>
         <CodeFile path="src/components/Counter.tsx">
           {require('raw!../../../../examples/plugin-with-state/src/components/Counter.tsx')}
+        </CodeFile>
+      </Section>
+      <Section title="Distributing plugins that require configuration">
+        <p>
+          When a plugin is distributed as a node module, it may require configuration from the application
+          it is used in (for example, a plugin implementing an authentication provider will need API keys,
+          an auth endpoint, etc providing to it).
+        </p>
+        <p>
+          If the default export of a plugin file is a factory function that returns a PluginConfig class
+          (as opposed ot exporting a PluginConfig class directly), this function will receive any options
+          provided to the plugin in the application’s <code>luminant.json</code>.
+        </p>
+        <p>
+          In this (slightly contrived) example, we write a plugin designed to be distributed as a node module
+          that throw an exception when the application loads. It helpfuly allows users to pass in the message
+          that is thrown as a configuration value:
+        </p>
+        <CodeFile path="throw-error-on-load/index.ts">
+          {require('raw!../../../../examples/writing-a-configurable-plugin/throw-error-on-load/index.ts')}
+        </CodeFile>
+        <p>
+          A user of the plugin can now reference it in their <code>luminant.json</code> (in this example via a relative path.
+          Typically it will be the name of a node module):
+        </p>
+        <CodeFile path="app/luminant.json">
+          {require('!raw!../../../../examples/writing-a-configurable-plugin/app/luminant.json')}
+        </CodeFile>
+      </Section>
+      <Section title="Writing plugins that bundle additional source files">
+        <p>[TODO]</p>
+        <p>Example usage in the GraphQL server:</p>
+        <CodeFile path="plugin-config.ts">
+          {require('!raw!../../../../src/plugins/graphql-server/plugin-config.ts')}
+        </CodeFile>
+        <CodeFile path="../../lib/plugins/GraphQLServerPlugin/loadSchema">
+          {require('!raw!../../../../src/lib/plugins/GraphQLServerPlugin/loadSchema.ts')}
+        </CodeFile>
+        <CodeFile path="../../lib/plugins/GraphQLServerPlugin/graphQLServerPluginEntry">
+          {require('!raw!../../../../src/lib/plugins/GraphQLServerPlugin/graphQLServerPluginEntry.ts')}
         </CodeFile>
       </Section>
     </div>
