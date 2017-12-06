@@ -3,14 +3,14 @@ import {controller, select, StateSelection} from '@brightinteractive/bright-js-f
 import {isLoggedIn} from '@brightinteractive/bright-js-framework/plugins/auth'
 
 @controller()
-export class IsLoggedIn extends React.PureComponent {
+export class IsLoggedIn extends React.PureComponent<any,any> {
 
     @select(isLoggedIn())
     isLoggedIn: StateSelection<boolean>
 
     render() {
         if (this.isLoggedIn.value && this.props.children) {
-            return React.Children.only(this.props.children)
+            return this.props.children
         } else {
             return <div/>
         }

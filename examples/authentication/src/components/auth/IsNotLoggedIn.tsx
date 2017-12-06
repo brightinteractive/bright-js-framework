@@ -12,7 +12,7 @@ export class IsNotLoggedIn extends React.PureComponent {
         if (this.isLoggedIn.value || !this.props.children) {
             return <div/>
         } else {
-            return React.Children.only(this.props.children)
+            return this.props.children
         }
     }
 }

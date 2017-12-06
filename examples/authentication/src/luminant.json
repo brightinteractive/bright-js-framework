@@ -1,0 +1,6 @@
+{
+  "plugins": {
+    "@brightinteractive/bright-js-framework/plugins/browserstorage": {},
+    "@brightinteractive/bright-js-framework/plugins/auth": {}
+  }
+}
