@@ -70,12 +70,7 @@ export function controllerSubtreeLoadingService(): PropertyDecorator {
         return true
       }
 
-      if (this.state.dynamicLoadState === 'loading') {
-        return false
-
-      } else {
-        return true
-      }
+      return this.state.dynamicLoadState !== 'loading'
     }
 
     async loadSubtreeIfNeeded(controller: React.ComponentClass, props: React.Props<{}>, cb: () => void) {

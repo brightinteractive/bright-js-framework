@@ -113,7 +113,7 @@ export function injectControllerBehavior(ComponentClass: React.ComponentClass) {
 
   patchReturnMethod(ComponentClass.prototype, 'render', function(this: Controller, prev?: React.ReactElement<{}> | null) {
     const { shouldRender } = this['@subtreeLoader']
-    return shouldRender ? prev || null : null
+    return shouldRender && prev || null
   })
 
   patchReturnMethod(ComponentClass.prototype, 'getChildContext', function(this: Controller, prev?: any) {
