@@ -150,7 +150,7 @@ export interface Service<State = {}> {
 }
 
 export type ServiceConstructor<State = {}> = new (context: ServiceContext) => Service<State>
-export const Service: new <State>(context: ServiceContext) => Service<State> = _Service
+export const Service: new <State = {}>(context: ServiceContext) => Service<State> = _Service
 
 /** Opaque object passed into service constructors */
 export interface ServiceContext {
