@@ -1,2 +1,2 @@
-webpackJsonp([0xb7ae3edfe821],{"./node_modules/json-loader/index.js!./.cache/json/docs-app-configuration.json":function(o,e){o.exports={pathContext:{}}}});
+webpackJsonp([0xb7ae3edfe821],{490:function(e,t){e.exports={pathContext:{}}}});
 //# sourceMappingURL=path---docs-app-configuration-a0e39f21c11f6a62c5ab.js.map

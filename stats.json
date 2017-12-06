@@ -5,8 +5,8 @@
       "path---docs-cli-tool-a0e39f21c11f6a62c5ab.js.map"
     ],
     "path---modules-plugins-graphql-http": [
-      "path---modules-plugins-graphql-http-e3ff1ad68ccb2bc59ea2.js",
-      "path---modules-plugins-graphql-http-e3ff1ad68ccb2bc59ea2.js.map"
+      "path---modules-plugins-graphql-http-66a1ea196f4b3be0ef27.js",
+      "path---modules-plugins-graphql-http-66a1ea196f4b3be0ef27.js.map"
     ],
     "path---docs-test-support": [
       "path---docs-test-support-a0e39f21c11f6a62c5ab.js",
@@ -17,20 +17,28 @@
       "path---docs-services-and-controllers-a0e39f21c11f6a62c5ab.js.map"
     ],
     "path---modules-test-utils": [
-      "path---modules-test-utils-801ed328b650fd965a3f.js",
-      "path---modules-test-utils-801ed328b650fd965a3f.js.map"
+      "path---modules-test-utils-6257a435d51cec49935f.js",
+      "path---modules-test-utils-6257a435d51cec49935f.js.map"
     ],
     "component---src-pages-index-js": [
       "component---src-pages-index-js-5bc6e4a0f3a60cb17b78.js",
       "component---src-pages-index-js-5bc6e4a0f3a60cb17b78.js.map"
     ],
     "path---modules-index": [
-      "path---modules-index-609cd0e59d4362d1e3f4.js",
-      "path---modules-index-609cd0e59d4362d1e3f4.js.map"
+      "path---modules-index-cbfaa0014ec4dd0a0da2.js",
+      "path---modules-index-cbfaa0014ec4dd0a0da2.js.map"
+    ],
+    "path---modules-plugins-graphql-test-utils": [
+      "path---modules-plugins-graphql-test-utils-9933da9327fa05e9d934.js",
+      "path---modules-plugins-graphql-test-utils-9933da9327fa05e9d934.js.map"
+    ],
+    "component---src-pages-docs-fetching-data-js": [
+      "component---src-pages-docs-fetching-data-js-b75170797d08830586f9.js",
+      "component---src-pages-docs-fetching-data-js-b75170797d08830586f9.js.map"
     ],
     "path---": [
-      "path----d26b077e5568739805d8.js",
-      "path----d26b077e5568739805d8.js.map"
+      "path----f4a5ec33e4b335548556.js",
+      "path----f4a5ec33e4b335548556.js.map"
     ],
     "component---src-pages-docs-cli-tool-js": [
       "component---src-pages-docs-cli-tool-js-49b49646dbabbf77e822.js",
@@ -53,16 +61,16 @@
       "component---src-pages-docs-environmental-variables-js-1c669895bcf6b78ac5ef.js.map"
     ],
     "component---src-layouts-index-js": [
-      "component---src-layouts-index-js-1c114dd3665658354975.js",
-      "component---src-layouts-index-js-1c114dd3665658354975.js.map"
+      "component---src-layouts-index-js-d0b45915a06acca3496c.js",
+      "component---src-layouts-index-js-d0b45915a06acca3496c.js.map"
     ],
     "component---src-templates-module-doc-js": [
-      "component---src-templates-module-doc-js-be95be3e4e80e4cdcfdc.js",
-      "component---src-templates-module-doc-js-be95be3e4e80e4cdcfdc.js.map"
+      "component---src-templates-module-doc-js-c5b9f18424baac2c5d8e.js",
+      "component---src-templates-module-doc-js-c5b9f18424baac2c5d8e.js.map"
     ],
     "component---src-pages-docs-test-support-js": [
-      "component---src-pages-docs-test-support-js-6040ba7533b82f12287f.js",
-      "component---src-pages-docs-test-support-js-6040ba7533b82f12287f.js.map"
+      "component---src-pages-docs-test-support-js-c9ed571480e7d920a036.js",
+      "component---src-pages-docs-test-support-js-c9ed571480e7d920a036.js.map"
     ],
     "component---src-pages-docs-services-and-controllers-js": [
       "component---src-pages-docs-services-and-controllers-js-b793ca893ca5a450abd4.js",
@@ -77,16 +85,16 @@
       "path---docs-writing-graphql-apis-a0e39f21c11f6a62c5ab.js.map"
     ],
     "path---modules-plugins-graphql-server": [
-      "path---modules-plugins-graphql-server-aef10b68b7fb0ad07d02.js",
-      "path---modules-plugins-graphql-server-aef10b68b7fb0ad07d02.js.map"
+      "path---modules-plugins-graphql-server-9705d56676a5b238dc41.js",
+      "path---modules-plugins-graphql-server-9705d56676a5b238dc41.js.map"
     ],
     "component---src-pages-404-js": [
       "component---src-pages-404-js-4503918ea3a16cfcdb75.js",
       "component---src-pages-404-js-4503918ea3a16cfcdb75.js.map"
     ],
     "commons": [
-      "commons-0f3440863dec3b4b8957.js",
-      "commons-0f3440863dec3b4b8957.js.map"
+      "commons-2740d92aa23d10f2a44b.js",
+      "commons-2740d92aa23d10f2a44b.js.map"
     ],
     "path---404-html": [
       "path---404-html-a0e39f21c11f6a62c5ab.js",
@@ -101,17 +109,21 @@
       "path---docs-interacting-with-the-browser-a0e39f21c11f6a62c5ab.js.map"
     ],
     "path---modules-plugins-graphql-index": [
-      "path---modules-plugins-graphql-index-7b2c359a6d0ebc6b108c.js",
-      "path---modules-plugins-graphql-index-7b2c359a6d0ebc6b108c.js.map"
+      "path---modules-plugins-graphql-index-e37580ad0ecc5ef81dca.js",
+      "path---modules-plugins-graphql-index-e37580ad0ecc5ef81dca.js.map"
     ],
     "path---docs-app-configuration": [
       "path---docs-app-configuration-a0e39f21c11f6a62c5ab.js",
       "path---docs-app-configuration-a0e39f21c11f6a62c5ab.js.map"
     ],
+    "path---docs-fetching-data": [
+      "path---docs-fetching-data-a0e39f21c11f6a62c5ab.js",
+      "path---docs-fetching-data-a0e39f21c11f6a62c5ab.js.map"
+    ],
     "app": [
-      "app-9d7547a4e10926e0eed7.js",
+      "app-01292689817770873ea1.js",
       "build-js-styles.css",
-      "app-9d7547a4e10926e0eed7.js.map",
+      "app-01292689817770873ea1.js.map",
       "build-js-styles.css.map"
     ],
     "path---docs-environmental-variables": [
