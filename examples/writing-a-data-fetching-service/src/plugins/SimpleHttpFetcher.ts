@@ -72,7 +72,7 @@ type SimpleHttpFetcherAction
   = { type: 'http:fetch:completed', url: string, payload: any }
   | { type: 'http:fetch:failed', url: string, error: Error }
 
-export class SimpleHttpFetcher extends PluginConfig {
+export default class SimpleHttpFetcherPlugin extends PluginConfig {
   @state(HTTP_STATE)
   static updateState(prev: HttpState = {}, action: SimpleHttpFetcherAction): HttpState {
     if (action.type === 'http:fetch:completed') {

@@ -1,0 +1,7 @@
+{
+  "plugins": {
+    "@brightinteractive/bright-js-framework/plugins/graphql": {
+      "backendUrl": "$MY_GRAPHQL_BACKEND"
+    }
+  }
+}

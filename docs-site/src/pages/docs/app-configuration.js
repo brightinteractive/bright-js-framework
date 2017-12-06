@@ -8,18 +8,33 @@ export default () => {
   return (
     <div>
       <PageHeader>App Configuration</PageHeader>
-      <Section alwaysExpanded title=".bright-js-framework">
+      <Section alwaysExpanded title="luminant.json">
         <p>
-          The <code>.bright-js-framework</code> file is a JSON file optionally placed at your project root,
-          which contains the application's main configuration.
+          The <code>luminant.json</code> file is a JSON file optionally placed at your project root,
+          which contains the application's build and runtime configuration.
+        </p>
+        <p>
+          Environmental variables are substituted for words beginning with <code>$</code> in all strings.
         </p>
         <Subheader>Options</Subheader>
         <OptionsTable>
           <Option
             name="frontendEnvironment"
             type="string[]"
-            description="Whitelist of environmental variables to pass through to client"
-            defaultValue="Empty"
+            description="Whitelist of environmental variable names to pass through to client"
+            defaultValue="[]"
+          />
+          <Option
+            name="plugins"
+            type="object"
+            description="Map of plugin module names to config values defining external plugins to install in the application."
+            defaultValue="{}"
+          />
+          <Option
+            name="projectPlugins"
+            type="string"
+            description="Path pattern defining where the application’s own plugins are placed. These are automatically added to the application."
+            defaultValue="src/plugins/**/*.tsx?"
           />
         </OptionsTable>
       </Section>
