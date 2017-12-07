@@ -1,5 +1,5 @@
 import {PluginConfig, service} from '@brightinteractive/bright-js-framework'
-import TokenInBrowserStorageService from './TokenInBrowserStorageService'
+import {TokenInBrowserStorageService} from './TokenInBrowserStorageService'
 
 export default () => {
   class DemoAuthPlugin extends PluginConfig {

@@ -3,7 +3,7 @@ import {authTokenActions} from '@brightinteractive/bright-js-framework/plugins/a
 import {browserStorage, BrowserStorageSystem} from '@brightinteractive/bright-js-framework/plugins/browserstorage'
 import {Service} from '@brightinteractive/bright-js-framework'
 
-export default class TokenInBrowserStorageService extends Service<any> {
+export class TokenInBrowserStorageService extends Service<any> {
 
     ID_TOKEN_KEY = 'demo_id_token'
 
