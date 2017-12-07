@@ -1,5 +1,5 @@
 import {exportDependency, PluginConfig, PluginConstructor} from '../../core/PluginConfig'
-import {BrowserStoragePluginProps, BrowserStorageSystem} from '../../../plugins/browserstorage/index'
+import {BrowserStorageSystem} from '../../../plugins/browserstorage/index'
 import {inject} from '../../../index'
 
 export const BROWSER_STORAGE = 'browserStorage'
@@ -10,10 +10,10 @@ const LocalStorageWrapper: BrowserStorageSystem = {
   clear: (key: string) => localStorage.removeItem(key),
 }
 
-export function createBrowserStoragePlugin(props: BrowserStoragePluginProps = {underlyingStorage: LocalStorageWrapper}): PluginConstructor {
+export function createBrowserStoragePlugin(): PluginConstructor {
   class BrowserStoragePlugin extends PluginConfig {
     @exportDependency(BROWSER_STORAGE)
-    browserStorage = props.underlyingStorage
+    browserStorage = LocalStorageWrapper
   }
 
   return BrowserStoragePlugin
