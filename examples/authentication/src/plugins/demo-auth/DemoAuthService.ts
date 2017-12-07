@@ -1,5 +1,5 @@
 import {service, Service} from '@brightinteractive/bright-js-framework'
-import TokenInBrowserStorageService from './TokenInBrowserStorageService'
+import {TokenInBrowserStorageService} from './TokenInBrowserStorageService'
 import {authTokenActions} from '@brightinteractive/bright-js-framework/plugins/auth'
 import {AuthTokenActions, Token} from '@brightinteractive/bright-js-framework/plugins/auth/auth'
 
