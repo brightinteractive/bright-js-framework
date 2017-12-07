@@ -21,7 +21,7 @@ export const configSchema = {
     },
     projectPlugins: {
       type: 'string',
-      default: 'src/plugins/**/*.tsx?'
+      default: 'src/plugins/**/*.ts?(x)'
     }
   }
 }

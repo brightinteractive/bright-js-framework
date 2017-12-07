@@ -9,6 +9,10 @@ export default function defaultPluginEntry(topLevelModules: RequireMap, opts: {}
   const [requirePlugin] = topLevelModules.plugins as RequireList
   const plugin = requirePlugin().default
 
+  if (!plugin) {
+    return {}
+  }
+
   return {
     default: plugin.prototype instanceof PluginConfig ? plugin : plugin(opts)
   }

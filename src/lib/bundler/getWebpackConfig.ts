@@ -1,10 +1,25 @@
 import * as autoprefixer from 'autoprefixer'
 import * as path from 'path'
 import * as webpack from 'webpack'
-import { map } from 'lodash'
 import nodeExternals  = require('webpack-node-externals')
 import { entrypointLoader } from './entrypointLoader'
-import { getPluginLoader } from './getPluginLoader'
+import { getPluginLoaders } from './PluginLoader'
+
+const extensions = ['.ts', '.tsx', '.js', '.jsx']
+
+// If a module has a specific server-side version, give it prescidence when building for server
+export const serverExtensions = [
+  ...extensions.map((extension) => `.server${extension}`),
+  ...extensions,
+  '*'
+]
+
+// If a module has a specific client-side version, give it prescidence when building for client
+export const clientExtensions = [
+  ...extensions.map((extension) => `.client${extension}`),
+  ...extensions,
+  '*'
+]
 
 export interface WebpackConfigOpts {
   /** List of absolute paths to modules exporting routes */
@@ -15,24 +30,6 @@ export interface WebpackConfigOpts {
 }
 
 export function getWebpackConfig({ pages, plugins }: WebpackConfigOpts): webpack.Configuration[] {
-  const extensions = ['.ts', '.tsx', '.js', '.jsx']
-
-  // If a module has a specific server-side version, give it prescidence when building for server
-  const serverExtensions = [
-    ...extensions.map((extension) => `.server${extension}`),
-    ...extensions,
-    '*'
-  ]
-
-  // If a module has a specific client-side version, give it prescidence when building for client
-  const clientExtensions = [
-    ...extensions.map((extension) => `.client${extension}`),
-    ...extensions,
-    '*'
-  ]
-
-  const pluginModules = map(plugins, getPluginLoader)
-
   const sharedConfig: Partial<webpack.Configuration> = {
     devtool: 'cheap-module-source-map',
 
@@ -150,7 +147,7 @@ export function getWebpackConfig({ pages, plugins }: WebpackConfigOpts): webpack
           entry: require.resolve('../entry/client'),
           topLevelModules: {
             pages,
-            plugins: pluginModules
+            plugins: getPluginLoaders(plugins, { environment: 'client' })
           },
         }),
       ],
@@ -194,7 +191,7 @@ export function getWebpackConfig({ pages, plugins }: WebpackConfigOpts): webpack
         entry: require.resolve('../entry/server'),
         topLevelModules: {
           pages,
-          plugins: pluginModules
+          plugins: getPluginLoaders(plugins, { environment: 'server' })
         },
       }),
     }

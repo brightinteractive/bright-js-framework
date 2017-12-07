@@ -8,7 +8,12 @@ export default function getImplicitProjectPluginConfigurationsFromFilepaths(path
 }
 
 function normalizeModuleName(pathname: string) {
-  return stripExtension(stripExtension(pathname))
+  const basepath = stripExtension(stripExtension(pathname))
+  if (!basepath.startsWith('/')) {
+    return './' + basepath
+  }
+
+  return basepath
 }
 
 function stripExtension(pathname: string) {
