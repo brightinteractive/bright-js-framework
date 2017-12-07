@@ -10,6 +10,7 @@ import errorOverlay = require('react-dev-utils/errorOverlayMiddleware')
 import { pick } from 'lodash'
 import { getWebpackConfig } from '../../lib/bundler/getWebpackConfig'
 import { renderHtmlWrapper } from '../../lib/server/renderHtmlWrapper'
+import { runPluginHooks } from '../../lib/bundler/PluginLoader'
 import { getConfig } from '../../lib/server/getConfig'
 import getImplicitProjectPluginConfigurationsFromFilepaths from '../../lib/server/getProjectPluginConfigs'
 
@@ -35,19 +36,23 @@ export const enforceCustomerFacingHttps: express.RequestHandler = (req, res, nex
   return next()
 }
 
-export function handler({ port }: RunCommandOpts) {
+export async function handler({ port }: RunCommandOpts) {
   const appConfig = getConfig()
 
   const isProduction = process.env.NODE_ENV === 'production'
 
   loadEnvironment()
 
+  const plugins = {
+    ...appConfig.plugins,
+    ...getImplicitProjectPluginConfigurationsFromFilepaths(glob.sync(appConfig.projectPlugins))
+  }
+
+  await runPluginHooks('run', plugins)
+
   const webpackConfig = getWebpackConfig({
     pages: getEntrypointFiles(),
-    plugins: {
-      ...appConfig.plugins,
-      ...getImplicitProjectPluginConfigurationsFromFilepaths(glob.sync(appConfig.projectPlugins))
-    }
+    plugins
   })
 
   const bundler = webpack(webpackConfig)

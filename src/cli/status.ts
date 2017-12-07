@@ -1,21 +1,16 @@
 import 'colors'
 
-export function stage(description: string, fn?: () => void) {
+export function stage<T>(description: string, fn: () => T): T {
   process.stderr.write((description + '...').grey)
 
-  if (fn) {
-    try {
-      fn()
-
-    } catch (error) {
-      process.stderr.write(' [FAILED]\n'.red)
-      throw error
-    }
-
+  try {
+    const result = fn()
     process.stderr.write(' [OK]\n'.green)
+    return result
 
-  } else {
-    process.stderr.write('\n')
+  } catch (error) {
+    process.stderr.write(' [FAILED]\n'.red)
+    throw error
   }
 }
 

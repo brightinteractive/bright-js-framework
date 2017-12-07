@@ -14,6 +14,23 @@ export function getPluginLoaders(pluginMap: any, opts: PluginLoaderOpts) {
   return compact(map(pluginMap, (config, name: string) => getPluginLoader(name, config, opts)))
 }
 
+// XXX: This is all untested. Needs a stub implementation of require.resolve to be tested in full
+export function runPluginHooks(hook: string, pluginMap: any) {
+  Promise.all(compact(map(pluginMap, (config, name: string) => runHook(hook, name, config))))
+}
+
+function runHook(hook: string, pluginName: string, pluginConfig: any) {
+  const pluginPath = resolvePlugin(pluginName, { environment: 'server' })
+  const customLoaderPath = pluginPath && resolveCustomPluginConfig(pluginPath)
+
+  if (customLoaderPath) {
+    const hookFn = require(customLoaderPath)[hook]
+    if (hookFn) {
+      return hookFn()
+    }
+  }
+}
+
 export function getPluginLoader(pluginName: string, pluginConfig: any, opts: PluginLoaderOpts) {
   const pluginPath = resolvePlugin(pluginName, opts)
   return entrypointLoader(getCustomPluginEntry(pluginPath, pluginConfig, opts) || getDefaultPluginEntry(pluginPath, pluginConfig))
