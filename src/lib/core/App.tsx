@@ -4,6 +4,7 @@ import {uniqueId} from 'lodash'
 import {RouteConfig, Router} from './Router'
 import {ContextProvider, ContextProviderProps} from './ContextProvider'
 import {load} from './load'
+import {asyncInvokeMethodOnAllObjects} from './util'
 
 export interface AppProps extends ContextProviderProps {
   routes: RouteConfig[]
@@ -45,9 +46,10 @@ export class App extends ContextProvider<AppProps, AppState> {
 
     if (nextRoute) {
       const Handler = nextRoute.handler
-      await Promise.all(
-        this.props.appContext.plugins.filter((plugin) => plugin.pageWillTransition)
-          .map((plugin) => plugin.pageWillTransition!(location))
+      await asyncInvokeMethodOnAllObjects(
+        this.props.appContext.plugins,
+        (plugin) => plugin.pageWillTransition,
+        location
       )
       await load(<Handler/>, this.getChildContext())
     }
