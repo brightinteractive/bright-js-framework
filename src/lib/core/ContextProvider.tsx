@@ -1,7 +1,6 @@
 import * as React from 'react'
 import {CONTROLLER_CONTEXT_TYPES, ControllerContext} from './Controller'
 import {ApplicationContext} from './ApplicationContext'
-import {PluginConfig} from './PluginConfig'
 
 export interface ContextProviderProps {
   appContext: ApplicationContext
@@ -52,13 +51,5 @@ export class ContextProvider<
 
   render() {
     return React.Children.only(this.props.children)
-  }
-
-  protected invokeOnAllPlugins(pluginFunctionProvider: (plugin: PluginConfig) => any, args?: any) {
-    this.props.appContext.plugins.forEach((plugin) => {
-      if (pluginFunctionProvider(plugin)) {
-        pluginFunctionProvider(plugin)(args)
-      }
-    })
   }
 }
