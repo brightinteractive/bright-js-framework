@@ -1,15 +1,15 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import { memoize } from 'lodash'
-import { createBrowserHistory } from 'history'
-import { ApplicationContext } from '../core/ApplicationContext'
-import { App } from '../core/App'
-import { load } from '../core/load'
-import { RequireList, isSubclassOf, getEntrypointDefaultExports, getEntrypointExports } from '../bundler/Entrypoint'
-import { createBrowserPlugin } from '../plugins/BrowserPlugin/BrowserPlugin'
-import { PluginConfig } from '../core/PluginConfig'
-import { isRouteComponent, getRouteComponentPath } from '../core/route'
-import { RouteConfig } from '../core/Router'
+import {memoize} from 'lodash'
+import {createBrowserHistory} from 'history'
+import {ApplicationContext} from '../core/ApplicationContext'
+import {App} from '../core/App'
+import {load} from '../core/load'
+import {getEntrypointDefaultExports, getEntrypointExports, isSubclassOf, RequireList} from '../bundler/Entrypoint'
+import {createBrowserPlugin} from '../plugins/BrowserPlugin/BrowserPlugin'
+import {PluginConfig} from '../core/PluginConfig'
+import {getRouteComponentPath, isRouteComponent} from '../core/route'
+import {RouteConfig} from '../core/Router'
 
 // Configuration passed from server in ‘magic’ variable
 declare const ___process_env_config: NodeJS.ProcessEnv
@@ -50,8 +50,17 @@ export default async function clientEntry(modules: { pages: RequireList, plugins
   ))
 
   /** Fetch data required for the first render before loading */
-  function prefetchData() {
-    return load(renderApp())
+  async function prefetchData() {
+    const {plugins} = getAppContext()
+    await Promise.all(
+      plugins.filter((plugin) => plugin.serviceWillLoad)
+        .map((plugin) => plugin.serviceWillLoad!())
+    )
+    await load(renderApp())
+    await Promise.all(
+      plugins.filter((plugin) => plugin.serviceDidLoad)
+        .map((plugin) => plugin.serviceDidLoad!())
+    )
   }
 
   /** Get bundled routes and return configuration array for the router */

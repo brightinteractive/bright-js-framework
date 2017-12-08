@@ -1,6 +1,6 @@
-import { Store } from 'redux'
-import { Service, ServiceConstructor, decorateServiceProperty } from '../../core/Service'
-import { injectStore } from './StorePlugin'
+import {Store} from 'redux'
+import {decorateServiceProperty, Service, ServiceConstructor} from '../../core/Service'
+import {injectStore} from './StorePlugin'
 
 export interface StateSelector<T> extends Service {
   readonly value: T
@@ -10,6 +10,8 @@ export type SelectServiceConstructor<T> = ServiceConstructor<StateSelector<T>>
 
 export function createSelectService(selector: (x: any, props: any) => any): any {
   class SelectService extends Service<{ value: any }> {
+    state = {value: undefined}
+
     @injectStore
     private store: Store<any>
 

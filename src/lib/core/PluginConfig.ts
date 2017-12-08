@@ -1,12 +1,14 @@
-import { flatMap } from 'lodash'
-import { RequestHandler } from 'express'
-import { Service } from './Service'
-import { getRequiredDependencies, InjectionContext } from './InjectionClient'
+import {Location} from 'history'
+import {flatMap} from 'lodash'
+import {RequestHandler} from 'express'
+import {Service} from './Service'
+import {getRequiredDependencies, InjectionContext} from './InjectionClient'
 
 const EXPORTED_OBJECT_KEYS = '__luminant__providedObjectKeys'
 const REQUEST_HANDLERS = '__luminant__requestHandlerKeys'
 
 export class PluginConfig<T = {}> extends Service<T> {
+  pageWillTransition?(location: Location): void | Promise<any>
 }
 
 export interface DependencyExport {

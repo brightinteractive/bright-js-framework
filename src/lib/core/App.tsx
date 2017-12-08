@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { History, Location } from 'history'
-import { uniqueId } from 'lodash'
-import { Router, RouteConfig } from './Router'
-import { ContextProviderProps, ContextProvider } from './ContextProvider'
-import { load } from './load'
+import {History, Location} from 'history'
+import {uniqueId} from 'lodash'
+import {RouteConfig, Router} from './Router'
+import {ContextProvider, ContextProviderProps} from './ContextProvider'
+import {load} from './load'
 
 export interface AppProps extends ContextProviderProps {
   routes: RouteConfig[]
@@ -45,11 +45,15 @@ export class App extends ContextProvider<AppProps, AppState> {
 
     if (nextRoute) {
       const Handler = nextRoute.handler
-      await load(<Handler />, this.getChildContext())
+      await Promise.all(
+        this.props.appContext.plugins.filter((plugin) => plugin.pageWillTransition)
+          .map((plugin) => plugin.pageWillTransition!(location))
+      )
+      await load(<Handler/>, this.getChildContext())
     }
 
     if (transitionIdentifier === this.pendingTransition) {
-      this.setState({ location })
+      this.setState({location})
     }
   }
 
