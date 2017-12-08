@@ -144,6 +144,24 @@ export default () => {
           {require('raw!../../../../examples/graphql-server/src/graphql/connectors/UserMetadataConnector.ts')}
         </CodeFile>
       </Section>
+      <Section title="Writing GraphQL mutations">
+        <p>
+          Annotate a property with the <code>@mutation</code> decorator and pass in the mutation query.
+          This will install a GraphQLMutation service that can be used to perform mutations and [TOOO]
+          track the progress of the mutation.
+        </p>
+      </Section>
+      <Section title="Using GraphQL outside of components">
+        <p>
+          In general, you should use either @query or @mutation to interact with GraphQL APIs.
+          However in some plugins and services, it may be necessary to perform queries and mutations
+          with an imperative API.
+        </p>
+        <p>
+          Annotate a property with the <code>@graphQLClient</code> decorator to attach a GraphQLClient
+          object that can be used to perform imperative queries and mutation.
+        </p>
+      </Section>
       <Section title="Debugging a GraphQL server">
         <p>
           When your GraphQL server is running in development mode, a <a href="https://github.com/graphql/graphiql">

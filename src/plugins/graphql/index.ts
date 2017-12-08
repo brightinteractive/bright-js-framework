@@ -1,5 +1,7 @@
 import createGraphQLPlugin from '../../lib/plugins/GraphQLPlugin/GraphQLPlugin'
 import { decorateGraphQLQuery } from '../../lib/plugins/GraphQLPlugin/GraphQLQueryService'
+import { decorateGraphQLMutation } from '../../lib/plugins/GraphQLPlugin/GraphQLMutationService';
+import { decorateGraphQLClient } from '../../lib/plugins/GraphQLPlugin/GraphQLClientService'
 
 export interface GraphQlPluginOpts {
   /**
@@ -29,18 +31,18 @@ export function query(queryDoc: any): PropertyDecorator {
   return decorateGraphQLQuery(queryDoc)
 }
 
-export interface GraphQLMutation<T> {
+export interface GraphQLMutation<Variables, Result = {}> {
   /**
    * Perform the mutation.
    */
-  perform(variables: T): Promise<void>
+  perform(variables: Variables): Promise<GraphQLResult<Result>>
 }
 
 /**
  * Decorate a controller or service property to add a GraphQL mutation.
  */
-export function mutation(queryDoc: any): PropertyDecorator {
-  return decorateGraphQLMutation(queryDoc)
+export function mutation(mutationDoc: any): PropertyDecorator {
+  return decorateGraphQLMutation(mutationDoc)
 }
 
 /**
@@ -54,7 +56,7 @@ export interface GraphQLClient {
   query<Result, Variables>(queryDoc: any, variables: Variables): Promise<Result>
   query<Result>(queryDoc: any): Promise<Result>
 
-  performMutation<Variables, Result = {}>(queryDoc: any, variables: Variables): Promise<Result>
+  performMutation<Variables, Result = {}>(queryDoc: any, variables: Variables): Promise<GraphQLResult<Result>>
 }
 
 /**
@@ -65,5 +67,12 @@ export interface GraphQLClient {
  * with an imperative API.
  */
 export function graphQLClient(): PropertyDecorator {
-  return injectGraphQLClient()
+  return decorateGraphQLClient()
 }
+
+/**
+ * Result of a GraphQL mutation
+ */
+export type GraphQLResult<T>
+  = { status: 'succeeded', data: T }
+  | { status: 'failed', errors: Error[] }
