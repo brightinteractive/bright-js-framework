@@ -10,7 +10,7 @@ import errorOverlay = require('react-dev-utils/errorOverlayMiddleware')
 import { pick } from 'lodash'
 import { getWebpackConfig } from '../../lib/bundler/getWebpackConfig'
 import { renderHtmlWrapper } from '../../lib/server/renderHtmlWrapper'
-import { runPluginHooks } from '../../lib/bundler/PluginLoader'
+import { runPluginLoaderHook } from '../../lib/bundler/PluginLoader'
 import { getConfig } from '../../lib/server/getConfig'
 import getImplicitProjectPluginConfigurationsFromFilepaths from '../../lib/server/getProjectPluginConfigs'
 
@@ -48,7 +48,7 @@ export async function handler({ port }: RunCommandOpts) {
     ...getImplicitProjectPluginConfigurationsFromFilepaths(glob.sync(appConfig.projectPlugins))
   }
 
-  await runPluginHooks('run', plugins)
+  await runPluginLoaderHook(plugins, (loader) => loader.applicationWillStart())
 
   const webpackConfig = getWebpackConfig({
     pages: getEntrypointFiles(),

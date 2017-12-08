@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv'
 import { getConfig } from '../../lib/server/getConfig'
 import getImplicitProjectPluginConfigurationsFromFilepaths from '../../lib/server/getProjectPluginConfigs'
 import { stage } from '../status'
-import { runPluginHooks } from '../../lib/bundler/PluginLoader'
+import { runPluginLoaderHook } from '../../lib/bundler/PluginLoader'
 
 export const command = 'build'
 export const builder = {}
@@ -18,7 +18,7 @@ export async function handler() {
   }
 
   await stage('Building...', async () => {
-    await runPluginHooks('build', plugins)
+    await runPluginLoaderHook(plugins, (loader) => loader.applicationWillBuild())
   })
 
   function loadEnvironment() {

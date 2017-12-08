@@ -1,66 +1,106 @@
 import * as path from 'path'
 import { map, compact } from 'lodash'
-import { entrypointLoader, EntrypointOpts } from './entrypointLoader'
+import { EntrypointOpts, entrypointLoader } from './entrypointLoader'
 import { serverExtensions, clientExtensions } from './getWebpackConfig'
+import { isSubclassOf } from './Entrypoint'
 
-export interface PluginLoaderOpts {
-  environment: 'client' | 'server'
+export interface PluginLoaderProps<Config> {
+  environment: Environment
+  pluginEntryModulePath: string
+  pluginOptions: Config
 }
+
+export type Environment = 'client' | 'server'
+
+export class PluginLoader<Config = {}> implements PluginLoaderProps<Config> {
+  environment: Environment
+  pluginEntryModulePath: string
+  pluginOptions: Config
+
+  constructor(props: PluginLoaderProps<Config>) {
+    Object.assign(this, props)
+  }
+
+  configurePluginEntry(): EntrypointOpts | undefined {
+    return {
+      entry: defaultEntry,
+      topLevelModules: { plugins: [this.pluginEntryModulePath] },
+      options: this.pluginOptions
+    }
+  }
+
+  async applicationWillBuild(): Promise<void> {
+
+  }
+
+  async applicationWillStart(): Promise<void> {
+
+  }
+}
+
+export type PluginLoaderClass = new <T>(props: PluginLoaderProps<T>) => PluginLoader<T>
 
 const defaultEntry = require.resolve('../entry/plugin-default')
 
 // XXX: This is all untested. Needs a stub implementation of require.resolve to be tested in full
-export function getPluginLoaders(pluginMap: any, opts: PluginLoaderOpts) {
-  return compact(map(pluginMap, (config, name: string) => getPluginLoader(name, config, opts)))
+export function getPluginEntrypoints(pluginMap: any, environment: Environment) {
+  const loaders = getPluginLoaders(pluginMap, environment)
+  const entrypointConfigs = compact(loaders.map((loader) => loader.configurePluginEntry()))
+
+  return entrypointConfigs.map(entrypointLoader)
 }
 
 // XXX: This is all untested. Needs a stub implementation of require.resolve to be tested in full
-export function runPluginHooks(hook: string, pluginMap: any) {
-  Promise.all(compact(map(pluginMap, (config, name: string) => runHook(hook, name, config))))
+export function getPluginLoaders(pluginMap: any, environment: Environment) {
+  return map(pluginMap, (config, name: string) => {
+    const pluginPath = resolvePlugin(name, environment)
+    const LoaderClass = getPluginLoaderClass(name, config, environment)
+
+    return new LoaderClass({
+      pluginOptions: config,
+      pluginEntryModulePath: pluginPath,
+      environment,
+    })
+  })
 }
 
-function runHook(hook: string, pluginName: string, pluginConfig: any) {
-  const pluginPath = resolvePlugin(pluginName, { environment: 'server' })
-  const customLoaderPath = pluginPath && resolveCustomPluginConfig(pluginPath)
+// XXX: This is all untested. Needs a stub implementation of require.resolve to be tested in full
+export function runPluginLoaderHook(pluginMap: any, hook: (plugin: PluginLoader) => Promise<void>) {
+  return Promise.all(getPluginLoaders(pluginMap, 'server').map(hook))
+}
 
-  if (customLoaderPath) {
-    const hookFn = require(customLoaderPath)[hook]
-    if (hookFn) {
-      return hookFn()
-    }
+export function getPluginLoaderClass(pluginName: string, pluginConfig: any, environment: Environment): PluginLoaderClass {
+  const pluginPath = resolvePlugin(pluginName, environment)
+  const loaderPath = resolveCustomPluginLoader(pluginPath)
+
+  if (!loaderPath) {
+    return PluginLoader
   }
+
+  const CustomLoader = require(loaderPath).default
+  if (!CustomLoader || !isSubclassOf(PluginLoader)(CustomLoader)) {
+    throw new Error([
+      `Plugin ${pluginName} has a custom plugin config ${loaderPath}`,
+      `but it does not have a subclass of PluginConfig as its default export.`,
+      `Did you forget to make it the default export?`
+    ].join(' '))
+  }
+
+  return CustomLoader
 }
 
-export function getPluginLoader(pluginName: string, pluginConfig: any, opts: PluginLoaderOpts) {
-  const pluginPath = resolvePlugin(pluginName, opts)
-  return entrypointLoader(getCustomPluginEntry(pluginPath, pluginConfig, opts) || getDefaultPluginEntry(pluginPath, pluginConfig))
-}
-
-export function resolvePlugin(pluginName: string, opts: PluginLoaderOpts) {
+export function resolvePlugin(pluginName: string, environment: Environment) {
   if (pluginName.startsWith('.')) {
-    return getPluginPath(path.join(process.cwd(), pluginName), opts)
+    return getPluginPath(path.join(process.cwd(), pluginName), environment)
 
   } else {
-    return getPluginPath(path.join(process.cwd(), 'node_modules', pluginName), opts)
+    return getPluginPath(path.join(process.cwd(), 'node_modules', pluginName), environment)
   }
 }
 
-function getDefaultPluginEntry(pluginPath: string, options: any): EntrypointOpts {
-  return {
-    entry: defaultEntry,
-    topLevelModules: { plugins: [pluginPath] },
-    options
-  }
-}
-
-function getCustomPluginEntry(pluginPath: string, opts: any, loaderOpts: PluginLoaderOpts): EntrypointOpts | undefined {
-  const customLoaderPath = resolveCustomPluginConfig(pluginPath)
-  return customLoaderPath && require(customLoaderPath).default(opts, loaderOpts)
-}
-
-function resolveCustomPluginConfig(pluginPath: string): string | undefined {
+function resolveCustomPluginLoader(pluginPath: string): string | undefined {
   try {
-    const customLoaderPath = path.join(path.dirname(pluginPath), 'plugin-config')
+    const customLoaderPath = path.join(path.dirname(pluginPath), 'plugin-loader')
     return require.resolve(customLoaderPath)
 
   } catch {
@@ -68,12 +108,12 @@ function resolveCustomPluginConfig(pluginPath: string): string | undefined {
   }
 }
 
-function getPluginPath(moduleName: string, opts: PluginLoaderOpts) {
-  return require.resolve(moduleName + getExtension(moduleName, opts))
+function getPluginPath(moduleName: string, environment: Environment) {
+  return require.resolve(moduleName + getExtension(moduleName, environment))
 }
 
-function getExtension(moduleName: string, opts: PluginLoaderOpts) {
-  const extensions = opts.environment === 'server' ? serverExtensions : clientExtensions
+function getExtension(moduleName: string, environment: Environment) {
+  const extensions = environment === 'server' ? serverExtensions : clientExtensions
 
   return extensions.find((ext) => {
     try {

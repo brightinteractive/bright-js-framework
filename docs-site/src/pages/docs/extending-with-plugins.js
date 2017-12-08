@@ -143,8 +143,8 @@ export default () => {
       <Section title="Writing plugins that bundle additional source files">
         <p>[TODO]</p>
         <p>Example usage in the GraphQL server:</p>
-        <CodeFile path="plugin-config.ts">
-          {require('!raw!../../../../src/plugins/graphql-server/plugin-config.ts')}
+        <CodeFile path="plugin-loader.ts">
+          {require('!raw!../../../../src/plugins/graphql-server/plugin-loader.ts')}
         </CodeFile>
         <CodeFile path="../../lib/plugins/GraphQLServerPlugin/loadSchema">
           {require('!raw!../../../../src/lib/plugins/GraphQLServerPlugin/loadSchema.ts')}
