@@ -65,7 +65,7 @@ export function createBrowserPlugin({history}: BrowserPluginProps): PluginConstr
     }
 
     /** Subscribe to page change when app loads */
-    serviceDidMount() {
+    serviceWillMount() {
       history.listen(this.handlePageTransition)
     }
   }

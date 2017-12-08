@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { CONTROLLER_CONTEXT_TYPES, ControllerContext } from './Controller'
-import { ApplicationContext } from './ApplicationContext'
+import {CONTROLLER_CONTEXT_TYPES, ControllerContext} from './Controller'
+import {ApplicationContext} from './ApplicationContext'
 
 export interface ContextProviderProps {
   appContext: ApplicationContext
