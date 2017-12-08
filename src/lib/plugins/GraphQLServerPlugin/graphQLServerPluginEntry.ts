@@ -28,7 +28,9 @@ export default function graphQLServerPluginEntry({ connectors, schemas }: GraphQ
   class GraphQLServerPlugin extends PluginConfig {
     @decorateRequestHandler('/graphql', { method: 'POST', middleware: serverMiddleware })
     static handleGraphQLRequest?: RequestHandler = createServer()
+  }
 
+  class DevelopmentGraphQLServerPlugin extends GraphQLServerPlugin {
     @decorateRequestHandler('/graphql-ui', { method: 'GET' })
     static handleGraphQLUIRequest?: RequestHandler = createUI()
   }
@@ -38,14 +40,14 @@ export default function graphQLServerPluginEntry({ connectors, schemas }: GraphQ
   }
 
   function createUI() {
-    if (process.env.NODE_ENV === 'production') {
-      return undefined
-    }
-
     return graphiqlExpress({
       endpointURL: '/graphql'
     })
   }
 
-  return GraphQLServerPlugin
+  if (process.env.NODE_ENV === 'production') {
+    return GraphQLServerPlugin
+  } else {
+    return DevelopmentGraphQLServerPlugin
+  }
 }
