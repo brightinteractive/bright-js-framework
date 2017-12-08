@@ -28,8 +28,18 @@ export const builder = {
   },
 }
 
+export const enforceCustomerFacingHttps: express.RequestHandler = (req, res, next) => {
+  if (req.headers['x-forwarded-proto'] !== 'https') {
+    return res.redirect(301, ['https://', req.get('Host'), req.url].join(''))
+  }
+  return next()
+}
+
 export function handler({ port }: RunCommandOpts) {
   const appConfig = getConfig()
+
+  const isProduction = process.env.NODE_ENV === 'production'
+
   loadEnvironment()
 
   const webpackConfig = getWebpackConfig({
@@ -44,6 +54,11 @@ export function handler({ port }: RunCommandOpts) {
   const app = express()
 
   const clientBundler = (bundler as any).compilers.find((compiler: webpack.Compiler) => compiler.name === 'client')
+
+  if (isProduction) {
+    app.use(enforceCustomerFacingHttps)
+  }
+
   app.use(hot(clientBundler, { path: '/_hot' }))
   app.get('*', devserver(bundler, { noInfo: true, publicPath: '/' }))
   app.use(hotServer(bundler))
