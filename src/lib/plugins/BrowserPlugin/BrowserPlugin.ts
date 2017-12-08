@@ -1,12 +1,14 @@
-import { History, Location } from 'history'
-import { Dispatch } from 'redux'
-import { PluginConfig, exportDependency, PluginConstructor } from '../../core/PluginConfig'
-import { injectDependency } from '../../core/InjectionClient'
-import { declareReducer } from '../../core/declareReducer'
-import { injectDispatch, Selector } from '../StorePlugin/StorePlugin'
+import {History, Location} from 'history'
+import {Dispatch} from 'redux'
+import {exportDependency, PluginConfig, PluginConstructor} from '../../core/PluginConfig'
+import {injectDependency} from '../../core/InjectionClient'
+import {declareReducer} from '../../core/declareReducer'
+import {injectDispatch, Selector} from '../StorePlugin/StorePlugin'
 
 const HISTORY = 'history'
 const LOCATION = 'location'
+const HOST = 'host'
+const HOSTNAME = 'hostname'
 
 export interface BrowserPluginProps {
   history: History
@@ -24,13 +26,19 @@ export interface TransitionAction {
 /**
  * Owns and provides access to the application's redux store.
  */
-export function createBrowserPlugin({ history }: BrowserPluginProps): PluginConstructor {
+export function createBrowserPlugin({history}: BrowserPluginProps): PluginConstructor {
   class BrowserPlugin extends PluginConfig {
     @injectDispatch
     dispatch: Dispatch<TransitionAction>
 
     @exportDependency(HISTORY)
     history = history
+
+    @exportDependency(HOSTNAME)
+    hostname = window.location.hostname
+
+    @exportDependency(HOST)
+    host = window.location.host
 
     /** Browser state reducer */
     @declareReducer(LOCATION)
