@@ -3,7 +3,7 @@ import * as path from 'path'
 import * as webpack from 'webpack'
 import nodeExternals  = require('webpack-node-externals')
 import { entrypointLoader } from './entrypointLoader'
-import { getPluginLoaders } from './PluginLoader'
+import { getPluginEntrypoints } from './PluginLoader'
 
 const extensions = ['.ts', '.tsx', '.js', '.jsx']
 
@@ -147,7 +147,7 @@ export function getWebpackConfig({ pages, plugins }: WebpackConfigOpts): webpack
           entry: require.resolve('../entry/client'),
           topLevelModules: {
             pages,
-            plugins: getPluginLoaders(plugins, { environment: 'client' })
+            plugins: getPluginEntrypoints(plugins, 'client')
           },
         }),
       ],
@@ -191,7 +191,7 @@ export function getWebpackConfig({ pages, plugins }: WebpackConfigOpts): webpack
         entry: require.resolve('../entry/server'),
         topLevelModules: {
           pages,
-          plugins: getPluginLoaders(plugins, { environment: 'server' })
+          plugins: getPluginEntrypoints(plugins, 'server')
         },
       }),
     }

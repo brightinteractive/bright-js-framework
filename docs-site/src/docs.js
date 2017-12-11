@@ -8,7 +8,7 @@ function shouldGenerateDocumentationForModule(moduleDocs) {
   ]
 
   const ignoredFiles = [
-    /^plugin-config\./,
+    /^plugin-loader\./,
   ]
 
   return (
