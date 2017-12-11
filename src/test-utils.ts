@@ -1,5 +1,7 @@
-import { TestFixture as _TestFixture } from './lib/entry/TestFixture'
-import { PluginConfig, PluginConstructor } from './index'
+import {TestFixture as _TestFixture} from './lib/entry/TestFixture'
+import {PluginConfig, PluginConstructor, ServiceContext} from './index'
+import {Service} from './lib/core/Service'
+import {ServiceTestFixture as _ServiceTestFixture} from './lib/entry/ServiceTestFixture'
 
 export interface TestFixtureProps {
   /** Array of plugins to provide to the test context */
@@ -46,3 +48,42 @@ export interface TestFixture {
 }
 
 export const TestFixture: new (props: TestFixtureProps) => TestFixture = _TestFixture
+
+/**
+ * Utility class for providing the application context to a service, including lifecycle hooks and injecting all dependencies
+ *
+ * You can optionally provide an array of plugins, which should generally be stub implementations
+ * of interfaces used in your applications. These can be stubbed using the `stub()` method.
+ *
+ * @class
+ */
+export interface ServiceTestFixture<ServiceType extends Service> {
+  readonly service: ServiceType
+
+  /**
+   * Get a plugin of a specified type. If it exists, it will be returned.
+   * If it does not exist, an exception is thrown.
+   *
+   * @param constructor Type of the plugins to search for.
+   */
+  getPlugin<PluginType extends PluginConfig>(constructor: PluginConstructor<PluginType>): PluginType
+
+  /** Unmount the test case */
+  unmount(): void
+}
+
+export interface ServiceTestFixtureProps<ServiceType extends Service> {
+  service: new (context: ServiceContext) => ServiceType
+  plugins?: PluginConstructor[]
+  location?: string
+  hostname?: string
+  host?: string
+  port?: number
+  protocol?: string
+}
+
+export interface ServiceTestFixtureConstructor {
+  createMountedService<ServiceType extends Service>(props: ServiceTestFixtureProps<ServiceType>): Promise<ServiceTestFixture<ServiceType>>
+}
+
+export const ServiceTestFixture: ServiceTestFixtureConstructor = _ServiceTestFixture
