@@ -28,7 +28,6 @@ export class IndexPage extends React.PureComponent<RouteProps<any, any>> {
         <IsNotLoggedIn>
           <button onClick={this.loginAsAdmin}>Log me in!</button>
         </IsNotLoggedIn>
-
       </div>
     )
   }
