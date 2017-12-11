@@ -56,7 +56,7 @@ export function createBrowserPlugin({history}: BrowserPluginProps): PluginConstr
 
     private portIsNotHttpOrHttps() {
       return window.location.port && window.location.port !== '' &&
-        window.location.port !== '80' && window.location.port !== '443';
+        window.location.port !== '80' && window.location.port !== '443'
     }
 
     /** Browser state reducer */
