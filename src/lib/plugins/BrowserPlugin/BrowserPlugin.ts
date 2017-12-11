@@ -11,7 +11,6 @@ const HOST = 'host'
 const HOSTNAME = 'hostname'
 const BASE_URL = 'baseUrl'
 
-
 export interface BrowserPluginProps {
   history: History
 }
