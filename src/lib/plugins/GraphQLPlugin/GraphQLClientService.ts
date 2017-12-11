@@ -4,7 +4,7 @@ import { injectDependency } from '../../core/InjectionClient'
 import { GraphQLClient } from '../../../plugins/graphql'
 
 export function decorateGraphQLClient(): PropertyDecorator {
-  class GraphQLMutationService extends Service implements GraphQLClient {
+  class GraphQLClientService extends Service implements GraphQLClient {
     @injectDependency(ApolloClient)
     private client: ApolloClient<any>
 
@@ -47,7 +47,7 @@ export function decorateGraphQLClient(): PropertyDecorator {
     }
   }
 
-  return decorateServiceProperty(GraphQLMutationService)
+  return decorateServiceProperty(GraphQLClientService)
 }
 
 export type GraphQLResult<T>
