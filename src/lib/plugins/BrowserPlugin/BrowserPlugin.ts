@@ -9,6 +9,8 @@ const HISTORY = 'history'
 const LOCATION = 'location'
 const HOST = 'host'
 const HOSTNAME = 'hostname'
+const BASE_URL = 'baseUrl'
+
 
 export interface BrowserPluginProps {
   history: History
@@ -39,6 +41,19 @@ export function createBrowserPlugin({history}: BrowserPluginProps): PluginConstr
 
     @exportDependency(HOST)
     host = window.location.host
+
+    @exportDependency(BASE_URL)
+    baseUrl = this.constructBaseUrl()
+
+    constructBaseUrl(): string {
+      let baseUrl = window.location.protocol + '//' + window.location.hostname
+      if (window.location.port && window.location.port !== '' &&
+        window.location.port !== '80' && window.location.port !== '443') {
+        baseUrl += ':' + window.location.port
+      }
+
+      return baseUrl
+    }
 
     /** Browser state reducer */
     @declareReducer(LOCATION)
