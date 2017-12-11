@@ -47,12 +47,16 @@ export function createBrowserPlugin({history}: BrowserPluginProps): PluginConstr
 
     constructBaseUrl(): string {
       let baseUrl = window.location.protocol + '//' + window.location.hostname
-      if (window.location.port && window.location.port !== '' &&
-        window.location.port !== '80' && window.location.port !== '443') {
+      if (this.portIsNotHttpOrHttps()) {
         baseUrl += ':' + window.location.port
       }
 
       return baseUrl
+    }
+
+    private portIsNotHttpOrHttps() {
+      return window.location.port && window.location.port !== '' &&
+        window.location.port !== '80' && window.location.port !== '443';
     }
 
     /** Browser state reducer */
