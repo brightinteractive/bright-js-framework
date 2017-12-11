@@ -3,7 +3,7 @@ import {controller, select, StateSelection} from '@brightinteractive/bright-js-f
 import {isLoggedIn} from '@brightinteractive/bright-js-framework/plugins/auth'
 
 @controller()
-export class IsLoggedIn extends React.PureComponent<any,any> {
+export class IsLoggedIn extends React.PureComponent {
 
     @select(isLoggedIn())
     isLoggedIn: StateSelection<boolean>

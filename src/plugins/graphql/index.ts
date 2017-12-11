@@ -1,6 +1,7 @@
 import createGraphQLPlugin from '../../lib/plugins/GraphQLPlugin/GraphQLPlugin'
 import { decorateGraphQLQuery } from '../../lib/plugins/GraphQLPlugin/GraphQLQueryService'
-import { Service } from '../../index'
+import { decorateGraphQLMutation } from '../../lib/plugins/GraphQLPlugin/GraphQLMutationService';
+import { decorateGraphQLClient } from '../../lib/plugins/GraphQLPlugin/GraphQLClientService'
 
 export interface GraphQlPluginOpts {
   /**
@@ -11,7 +12,7 @@ export interface GraphQlPluginOpts {
 
 export default createGraphQLPlugin
 
-export interface GraphQLQuery<T> extends Service {
+export interface GraphQLQuery<T> {
   /**
    * Current selected data for the query.
    *
@@ -29,3 +30,49 @@ export interface GraphQLQuery<T> extends Service {
 export function query(queryDoc: any): PropertyDecorator {
   return decorateGraphQLQuery(queryDoc)
 }
+
+export interface GraphQLMutation<Variables, Result = {}> {
+  /**
+   * Perform the mutation.
+   */
+  perform(variables: Variables): Promise<GraphQLResult<Result>>
+}
+
+/**
+ * Decorate a controller or service property to add a GraphQL mutation.
+ */
+export function mutation(mutationDoc: any): PropertyDecorator {
+  return decorateGraphQLMutation(mutationDoc)
+}
+
+/**
+ * GraphQL client injectable into services.
+ *
+ * In general, you should use either @query or @mutation to interact with GraphQL APIs.
+ * However in some plugins and services, it may be necessary to perform queries and mutations
+ * with an imperative API.
+ */
+export interface GraphQLClient {
+  query<Result, Variables>(queryDoc: any, variables: Variables): Promise<Result>
+  query<Result>(queryDoc: any): Promise<Result>
+
+  performMutation<Variables, Result = {}>(queryDoc: any, variables: Variables): Promise<GraphQLResult<Result>>
+}
+
+/**
+ * Install a GraphQL client.
+ *
+ * In general, you should use either @query or @mutation to interact with GraphQL APIs.
+ * However in some plugins and services, it may be necessary to perform queries and mutations
+ * with an imperative API.
+ */
+export function graphQLClient(): PropertyDecorator {
+  return decorateGraphQLClient()
+}
+
+/**
+ * Result of a GraphQL mutation
+ */
+export type GraphQLResult<T>
+  = { status: 'succeeded', data: T }
+  | { status: 'failed', errors: Error[] }

@@ -1,6 +1,6 @@
 import {expect} from 'chai'
 
-import {isLoggedInInjector} from './AuthTokenPlugin';
+import {isLoggedInInjector} from './AuthTokenPlugin'
 
 describe('isLoggedInInjector', () => {
 
