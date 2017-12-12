@@ -13,6 +13,9 @@ describe('ServiceTestFixture', () => {
     value = 1
   }
 
+  const TEST_STATE_KEY = 'key'
+  const TEST_STATE_VALUE = 'value'
+
   it('Service can access an inject value', async () => {
     class ServiceWithInjectedValue extends Service {
       @inject('value')
@@ -53,12 +56,9 @@ describe('ServiceTestFixture', () => {
         service: SpyService,
       })
 
-      const STATE_KEY = 'key'
-      const STATE_VALUE = 'value'
+      fixture.service.setState({[TEST_STATE_KEY]: TEST_STATE_VALUE})
 
-      fixture.service.setState({[STATE_KEY]: STATE_VALUE})
-
-      expect(fixture.service.state[STATE_KEY]).to.eql(STATE_VALUE)
+      expect(fixture.service.state[TEST_STATE_KEY]).to.eql(TEST_STATE_VALUE)
     })
 
     it('calls supplied callback', async () => {
@@ -66,12 +66,9 @@ describe('ServiceTestFixture', () => {
         service: SpyService,
       })
 
-      const STATE_KEY = 'key'
-      const STATE_VALUE = 'value'
-
       const spyFunction = spy()
 
-      fixture.service.setState({[STATE_KEY]: STATE_VALUE}, spyFunction)
+      fixture.service.setState({[TEST_STATE_KEY]: TEST_STATE_VALUE}, spyFunction)
 
       expect(spyFunction).to.have.been.calledOnce
     })

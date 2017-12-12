@@ -37,12 +37,20 @@ export class ServiceTestFixture<ServiceType extends Service> {
                         hostname = 'example.com', host = 'example.com', protocol = 'http', port = 80
                       }: ServiceTestFixtureProps) {
     this.history.push(location)
-    this.appContext = new ApplicationContext([
-      ...plugins,
-      mountSpy(),
-      createBrowserPlugin({history: this.history, host, hostname, protocol, port})
-    ])
+    this.appContext = this.constructTestContextWithDefaultPlugins(plugins, hostname, host, protocol, port)
     this.serviceConstructor = serviceConstructor
+  }
+
+  private constructTestContextWithDefaultPlugins(plugins: PluginConstructor[],
+                                                 hostname: string | undefined,
+                                                 host: string | undefined,
+                                                 protocol: string | undefined,
+                                                 port: number | undefined) {
+    return new ApplicationContext([
+      mountSpy(),
+      createBrowserPlugin({history: this.history, host, hostname, protocol, port}),
+      ...plugins,
+    ])
   }
 
   private get allServices() {
@@ -83,7 +91,7 @@ export class ServiceTestFixture<ServiceType extends Service> {
   }
 
   getPlugin<T extends PluginConfig>(constructor: PluginConstructor<T>): T {
-    const matches = filter(this.appContext.plugins, (x) => x instanceof constructor) as T[]
+    const matches = filter(this.appContext.plugins, (plugin) => plugin instanceof constructor) as T[]
 
     if (!matches[0]) {
       throw new Error(`Could not find installed plugin of type ${constructor.name}`)
