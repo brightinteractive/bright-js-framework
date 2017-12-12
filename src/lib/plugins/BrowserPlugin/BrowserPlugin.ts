@@ -13,6 +13,10 @@ const BASE_URL = 'baseUrl'
 
 export interface BrowserPluginProps {
   history: History
+  hostname?: string
+  host?: string
+  port?: number
+  protocol?: string
 }
 
 export interface BrowserState extends Location {
@@ -27,7 +31,14 @@ export interface TransitionAction {
 /**
  * Owns and provides access to the application's redux store.
  */
-export function createBrowserPlugin({history}: BrowserPluginProps): PluginConstructor {
+export function createBrowserPlugin(
+  {
+    history,
+    hostname = window.location.hostname,
+    host = window.location.host,
+    port = window.location.port,
+    protocol = window.location.protocol
+  }: BrowserPluginProps): PluginConstructor {
   class BrowserPlugin extends PluginConfig {
     @injectDispatch
     dispatch: Dispatch<TransitionAction>
@@ -36,26 +47,25 @@ export function createBrowserPlugin({history}: BrowserPluginProps): PluginConstr
     history = history
 
     @exportDependency(HOSTNAME)
-    hostname = window.location.hostname
+    hostname = hostname
 
     @exportDependency(HOST)
-    host = window.location.host
+    host = host
 
     @exportDependency(BASE_URL)
     baseUrl = this.constructBaseUrl()
 
     constructBaseUrl(): string {
-      let baseUrl = window.location.protocol + '//' + window.location.hostname
+      let baseUrl = protocol + '//' + hostname
       if (this.portIsNotHttpOrHttps()) {
-        baseUrl += ':' + window.location.port
+        baseUrl += ':' + port
       }
 
       return baseUrl
     }
 
     private portIsNotHttpOrHttps() {
-      return window.location.port && window.location.port !== '' &&
-        window.location.port !== '80' && window.location.port !== '443'
+      return port && port !== '' && port !== '80' && port !== '443'
     }
 
     /** Browser state reducer */
