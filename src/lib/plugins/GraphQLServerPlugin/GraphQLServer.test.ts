@@ -19,7 +19,7 @@ describe('GraphQLServer', () => {
 
   it('should load connectors', () => {
     class Identity extends Connector { }
-    class Basic extends Connector.forResource(class extends ResourceBatchFetcher<string> { }) { }
+    class Basic extends Connector.forResource(class extends ResourceBatchFetcher<string, string> { }) { }
 
     const server = new GraphQLServer({
       connectors: [Basic, Identity],
