@@ -141,7 +141,7 @@ export interface Service<State = {}> {
    *
    * Corresponds to React’s componentDidMount()
    */
-  serviceWillMount?(): void
+  serviceDidMount?(): void
 
   /**
    * Called before a service’s parent controller unmounts. Not called when the component is statically rendered.

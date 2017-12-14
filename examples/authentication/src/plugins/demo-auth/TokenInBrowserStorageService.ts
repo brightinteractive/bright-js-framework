@@ -13,7 +13,7 @@ export class TokenInBrowserStorageService extends Service<any> {
     @authTokenActions()
     authTokenActions: AuthTokenActions
 
-    serviceDidMount = () => {
+    serviceDidMount() {
         const storedBrowserToken = this.getToken()
 
         if (storedBrowserToken) {

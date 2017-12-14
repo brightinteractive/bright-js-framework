@@ -96,8 +96,16 @@ export class GraphQLServer {
    * using the Resolver decorator API.
    */
   private createFieldResolversForTypes(resolverTypes: ResolverConstructor[]): Record<string, Record<string, GraphQLFieldResolver<string, any>>> {
+    const rootTypes = ['Query', 'Mutation']
+
     return fromPairs(resolverTypes.map((ResolverClass) => {
-      const resolveFnMap = fromPairs(Array.from(getResolvers(ResolverClass)).map((key) => [key, this.createFieldResolver(ResolverClass, key)]))
+      const resolveFnMap = fromPairs(
+        Array.from(getResolvers(ResolverClass)).map((key) => [key, this.createFieldResolver(ResolverClass, key)])
+      )
+
+      if (!rootTypes.includes(getSchemaTypename(ResolverClass))) {
+        resolveFnMap.id = (id: string) => id
+      }
 
       return [getSchemaTypename(ResolverClass), resolveFnMap]
     }))
@@ -114,3 +122,4 @@ export class GraphQLServer {
     }
   }
 }
+
