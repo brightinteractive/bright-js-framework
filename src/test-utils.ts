@@ -9,17 +9,8 @@ export interface TestFixtureProps {
   /** Location string used to match route. Defaults to '/' */
   location?: string
 
-  /** Optional stubbed hostname (not including port) */
-  hostname?: string
-
-  /** Optional stubbed host (including port) */
-  host?: string
-
-  /** Optional stubbed protocol (http/https/etc) */
-  protocol?: string
-
-  /** Optional stubbed port */
-  port?: number
+  /** Optional base url provided to application services. Defaults to http://localhost */
+  baseUrl?: string
 }
 
 /**

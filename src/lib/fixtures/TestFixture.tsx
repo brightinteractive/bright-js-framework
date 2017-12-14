@@ -1,29 +1,30 @@
 import * as tslib from 'tslib'
+import * as url from 'url'
 import { Location, createMemoryHistory, History } from 'history'
+import { Store } from 'redux'
 import { filter, uniqueId } from 'lodash'
 import { PluginConstructor, PluginConfig } from '../core/PluginConfig'
 import { ApplicationContext } from '../core/ApplicationContext'
 import { createBrowserPlugin } from '../plugins/BrowserPlugin/BrowserPlugin'
-import { Store } from 'redux';
 
 export interface TestFixtureProps {
   plugins?: PluginConstructor[]
   location?: string
-  hostname?: string
-  host?: string
-  protocol?: string
-  port?: number
+  baseUrl?: string
 }
 
 export abstract class TestFixture<Instance> {
   readonly history: History = createMemoryHistory()
   protected appContext: ApplicationContext
 
-  constructor({ plugins = [], location = '/' }: TestFixtureProps) {
+  constructor({ plugins = [], location = '/', baseUrl = 'http://localhost' }: TestFixtureProps) {
     this.history.push(location)
     this.appContext = new ApplicationContext([
       ...plugins,
-      createBrowserPlugin({ history: this.history })
+      createBrowserPlugin({
+        history: this.history,
+        hostInfo: url.parse(baseUrl)
+      })
     ])
   }
 
