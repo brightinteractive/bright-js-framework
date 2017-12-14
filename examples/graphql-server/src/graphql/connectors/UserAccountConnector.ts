@@ -1,5 +1,5 @@
 import { inject } from '@brightinteractive/bright-js-framework'
-import { Connector, ResourceBatchFetcher } from '@brightinteractive/bright-js-framework/plugins/graphql-server'
+import { Connector, ResourceBatchFetcher, KeyValuePairs } from '@brightinteractive/bright-js-framework/plugins/graphql-server'
 import { HttpClient } from '@brightinteractive/bright-js-framework/plugins/graphql-server/http'
 
 /**
@@ -13,12 +13,12 @@ export interface UserAccount {
 /**
  * Define how to fetch a batch of Users by ID.
  */
-class UserAccountFetcher extends ResourceBatchFetcher<UserAccount> {
+class UserAccountFetcher extends ResourceBatchFetcher<string, UserAccount> {
   @inject(HttpClient)
   http: HttpClient
 
   getMany(ids: string[]) {
-    return this.http.get({
+    return this.http.get<KeyValuePairs<string, UserAccount>>({
       url: {
         baseUrl: process.env.USERS_API!,
         path: '/users',
@@ -34,7 +34,7 @@ class UserAccountFetcher extends ResourceBatchFetcher<UserAccount> {
  * Connector class used by ResolverMap. Exposes additional methods for fetching
  * a user resource by ID
  */
-export class UserAccountConnector extends Connector.forResource<UserAccount>(UserAccountFetcher) {
+export class UserAccountConnector extends Connector.forResource<string, UserAccount>(UserAccountFetcher) {
   @inject(HttpClient)
   http: HttpClient
 

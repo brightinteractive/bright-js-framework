@@ -87,7 +87,7 @@ export interface Connector {
 }
 
 export const Connector: {
-  forResource<T>(Config: new(context: ServiceContext) => ResourceBatchFetcher<T>): new(context: ServiceContext) => ResourceWithIdConnector<T>
+  forResource<IdType, Value>(Config: new(context: ServiceContext) => ResourceBatchFetcher<IdType, Value>): new(context: ServiceContext) => ResourceWithIdConnector<IdType, Value>
 
   new(context: ServiceContext): Connector
 } = _Connector
@@ -98,22 +98,24 @@ export const Connector: {
  *
  * @class Connector.forResource
  */
-export interface ResourceWithIdConnector<T> extends Connector {
+export interface ResourceWithIdConnector<IdType, Value> extends Connector {
   /**
    * Fetch a single instances of the connected resource by id.
    */
-  getOne(id: string): Promise<T | undefined>
+  getOne(id: IdType): Promise<Value | undefined>
 
   /**
    * Fetch multiple single instances of the connected resource by id.
    */
-  getMany(ids: string[]): Promise<Array<T | undefined>>
+  getMany(ids: IdType[]): Promise<Array<Value | undefined>>
 
   /**
    * Fetch an instance of the connected resource by id and return a property of it.
    */
-  getProperty<Key extends keyof T>(id: string, key: Key): Promise<T[Key] | undefined>
+  getProperty<Key extends keyof Value>(id: IdType, key: Key): Promise<Value[Key] | undefined>
 }
+
+export type KeyValuePairs<Id, Value> = Array<[Id, Value]>
 
 /**
  * Batch retriever class describing how to fetch a batch of resources by ID.
@@ -128,11 +130,11 @@ export interface ResourceWithIdConnector<T> extends Connector {
  *
  * @class
  */
-export interface ResourceBatchFetcher<T> {
+export interface ResourceBatchFetcher<IdType, Value> {
   /**
    * Given a list of resource IDs, fetch an instance of each resource and return an object
    * mapping IDs to values.
    */
-  getMany(ids: string[]): Promise<Record<string, T>>
+  getMany(ids: IdType[]): Promise<KeyValuePairs<IdType, Value>>
 }
-export const ResourceBatchFetcher: new<T>(context: ServiceContext) => ResourceBatchFetcher<T> = _ResourceBatchFetcher
+export const ResourceBatchFetcher: new<IdType, Value>(context: ServiceContext) => ResourceBatchFetcher<IdType, Value> = _ResourceBatchFetcher

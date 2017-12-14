@@ -1,5 +1,5 @@
 import { inject } from '@brightinteractive/bright-js-framework'
-import { Connector, ResourceBatchFetcher } from '@brightinteractive/bright-js-framework/plugins/graphql-server'
+import { Connector, ResourceBatchFetcher, KeyValuePairs } from '@brightinteractive/bright-js-framework/plugins/graphql-server'
 import { HttpClient } from '@brightinteractive/bright-js-framework/plugins/graphql-server/http'
 
 export interface UserMetadata {
@@ -7,12 +7,12 @@ export interface UserMetadata {
   name: string
 }
 
-class UserMetadataFetcher extends ResourceBatchFetcher<UserMetadata> {
+class UserMetadataFetcher extends ResourceBatchFetcher<string, UserMetadata> {
   @inject(HttpClient)
   http: HttpClient
 
   getMany(ids: string[]) {
-    return this.http.get({
+    return this.http.get<KeyValuePairs<string, UserMetadata>>({
       url: {
         baseUrl: process.env.USERS_API!,
         path: '/users',
@@ -24,7 +24,7 @@ class UserMetadataFetcher extends ResourceBatchFetcher<UserMetadata> {
   }
 }
 
-export class UserMetadataConnector extends Connector.forResource<UserMetadata>(UserMetadataFetcher) {
+export class UserMetadataConnector extends Connector.forResource<string, UserMetadata>(UserMetadataFetcher) {
   @inject(HttpClient)
   http: HttpClient
 

@@ -28,14 +28,14 @@ export default () => {
           <ul>
             <li><em>Schema:</em> Schemas are written in a <code>.graphql</code>
             schema definition file. They define the GraphQL types, queries and mutations for a particular object.</li>
-            <li><em>ResolverMap:</em> ResolverMaps are objects written as <code>.ts</code> files. They contain a set of resolver functions
+            <li><em>SchemaType:</em> SchemaTypes are objects written as <code>.ts</code> files. They contain a set of resolver functions
             for a specific type from the schema. Each <code>@resolver</code> decorated function within a
-            ResolverMap is equivalent to a GraphQL resolver. As an example, a UserResolverMap would contain resolver functions
+            SchemaType is equivalent to a GraphQL resolver. As an example, a UserSchemaType would contain resolver functions
             for the users forname, surname, email etc. There are three arguments normally passed to a GraphQL resolver: args, obj and context.
-            Two of these are member varibables within the ResolverMap object (obj and context), the final one (args) is still passed to the
+            Two of these are member varibables within the SchemaType object (obj and context), the final one (args) is still passed to the
             individual <code>@resolver</code> decorated functions.</li>
             <li><em>Connector:</em> Connectors are <code>.ts</code> files. Connectors provide implementations for data
-            retrievals that are used by resolver funtions in ResolverMaps (i.e. a UserResolverMap will resolve a users forename by
+            retrievals that are used by resolver funtions in SchemaTypes (i.e. a UserSchemaType will resolve a users forename by
             making a call to UserConnector.getUser() and returning the forename property).</li>
           </ul>
         </p>
@@ -57,16 +57,16 @@ export default () => {
         <p>
           Bright-js-framework encourages you to split your API into modules. This makes it easy to navigate around
           your API schema and implementation. Any directory with a <code>.graphql</code> file in it is considered
-          a module. ResolverMap implementations are picked up from any file in the same directory. In this example,
+          a module. SchemaType implementations are picked up from any file in the same directory. In this example,
           we’ve created the <code>User</code> directory, which contains the schema definition for the <code>User</code>
-          type and its ResolverMap.
+          type and its SchemaType.
         </p>
         <CodeFile path="src/graphql/schema/User/User.graphql">
           {require('raw!../../../../examples/graphql-server/src/graphql/schema/User/User.graphql')}
         </CodeFile>
         <p>
-          For each type in our schema, we create a subclass of ResolverMap and use the <code>@type</code>,
-          <code>@queries</code> and <code>@mutations</code> decorators to associate the resolvers within the ResolverMap
+          For each type in our schema, we create a subclass of SchemaType and use the <code>@type</code>,
+          <code>@queries</code> and <code>@mutations</code> decorators to associate the resolvers within the SchemaType
           with the schema type they resolve.
         </p>
         <p>
@@ -76,12 +76,12 @@ export default () => {
           and <code>@mutations</code> decorators.
         </p>
         <p>
-          When a resolver within a ResolverMap is written for a scalar property (i.e. a string for a users forename), it
+          When a resolver within a SchemaType is written for a scalar property (i.e. a string for a users forename), it
           should return either the scalar value or (more typically) a Promise for the scalar value.
         </p>
         <p>
-          When a resolver within a ResolverMap is written for a relation to another object, it should not fetch the object,
-          but instead return a string ID for that object. This is then provided to that Object's ResolverMap
+          When a resolver within a SchemaType is written for a relation to another object, it should not fetch the object,
+          but instead return a string ID for that object. This is then provided to that Object's SchemaType
           as its <code>id</code> property, which can then be used to fetch data about it from backend services.
           This is important, as it avoids coupling a resolver to a specific backend service, allowing data from
           multiple backend services to be presented to the frontend as a single type.
