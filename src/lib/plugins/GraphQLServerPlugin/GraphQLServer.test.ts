@@ -7,6 +7,8 @@ import { Connector, ResourceBatchFetcher } from './Connector'
 import { ApplicationContext } from '../../core/ApplicationContext'
 import { HttpClient } from './HttpClient'
 
+const rootTypes = ['Query', 'Mutation']
+
 describe('GraphQLServer', () => {
   it('should not throw when not given any modules or typedefs', () => {
     const server = new GraphQLServer({
@@ -57,6 +59,55 @@ describe('GraphQLServer', () => {
 
     const queryType = server.schema!.getTypeMap().Query as GraphQLObjectType
     expect(queryType.getFields()).to.contain.keys('getUser', 'getOrganisation')
+  })
+
+  it('should add id resolver to types', () => {
+    const server = new GraphQLServer({
+      connectors: [],
+      schema: [
+        {
+          typeDefs: UserSchema,
+          resolvers: [
+            UserQuery,
+            UserResolver,
+          ]
+        }
+      ]
+    })
+
+    const userType = server.schema!.getTypeMap().User as GraphQLObjectType
+    expect(userType.getFields()).to.contain.keys('id')
+  })
+
+  rootTypes.forEach((typeName) => {
+    context(`root type (${typeName})`, () => {
+      it('should not add id resolver', () => {
+        @decorateSchemaType(typeName)
+        class TestType extends SchemaType { }
+
+        const server = new GraphQLServer({
+          connectors: [],
+          schema: [
+            {
+              typeDefs: `
+                type Query {
+                  x: String!
+                }
+                type Mutation {
+                  x: String!
+                }
+              `,
+              resolvers: [
+                TestType,
+              ]
+            }
+          ]
+        })
+
+        const userType = server.schema!.getTypeMap()[typeName] as GraphQLObjectType
+        expect(userType.getFields()).to.not.contain.keys('id')
+      })
+    })
   })
 
   it('should return an choose an aribitrary resolver on conflict between resolvers', async () => {
@@ -175,6 +226,7 @@ const UserSchema = `
   }
 
   type User {
+    id: ID!
     name: String
   }
 `
@@ -201,6 +253,7 @@ const OrganisationSchema = `
   }
 
   type Organisation {
+    id: ID!
     orgName: String
   }
 `
