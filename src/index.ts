@@ -121,26 +121,34 @@ export function service(constructor: ServiceConstructor): PropertyDecorator {
  * @class
  */
 export interface Service<State = {}> {
-  /**
-   * Called before a service’s parent controller mounts or before it is statically rendered.
-   *
-   * Corresponds to React’s componentWillMount()
-   */
-  serviceWillMount?: () => void
+    /**
+     * Called recursively on all components that are due to be rendered before any of them is rendered.
+     *
+     * If this method is async (IE if it returns a promise) then serviceWillLoad will not be called on children until
+     * all parents have completed.
+     */
+    serviceWillLoad?(): void | Promise<void>
 
-  /**
-   * Called after a service’s parent controller mounts. Not called when the component is statically rendered.
-   *
-   * Corresponds to React’s componentDidMount()
-   */
-  serviceDidMount?: () => void
+    /**
+     * Called before a service’s parent controller mounts or before it is statically rendered.
+     *
+     * Corresponds to React’s componentWillMount()
+     */
+    serviceWillMount?(): void
 
-  /**
-   * Called before a service’s parent controller unmounts. Not called when the component is statically rendered.
-   *
-   * Corresponds to React’s componentWillUnmount()
-   */
-  serviceWillUnmount?: () => void
+    /**
+     * Called after a service’s parent controller mounts. Not called when the component is statically rendered.
+     *
+     * Corresponds to React’s componentDidMount()
+     */
+    serviceWillMount?(): void
+
+    /**
+     * Called before a service’s parent controller unmounts. Not called when the component is statically rendered.
+     *
+     * Corresponds to React’s componentWillUnmount()
+     */
+    serviceWillUnmount?(): void
 
   readonly state: State
   setState(state: Partial<State>): void
@@ -166,7 +174,7 @@ export interface ServiceContext {
  * @class
  */
 export interface PluginConfig<T = {}> extends Service<T> { }
-export const PluginConfig = _PluginConfig
+export const PluginConfig: new<State = {}>(context: ServiceContext) => PluginConfig<State> = _PluginConfig
 
 export type PluginConstructor<T extends PluginConfig = PluginConfig> = new (context: ServiceContext) => T
 

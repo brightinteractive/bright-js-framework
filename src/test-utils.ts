@@ -1,6 +1,5 @@
 import {TestFixture as _TestFixture} from './lib/entry/TestFixture'
-import {PluginConfig, PluginConstructor, ServiceContext} from './index'
-import {Service} from './lib/core/Service'
+import {PluginConfig, PluginConstructor, ServiceContext, Location, Service} from './index'
 import {ServiceTestFixture as _ServiceTestFixture} from './lib/entry/ServiceTestFixture'
 
 export interface TestFixtureProps {
@@ -45,6 +44,9 @@ export interface TestFixture {
 
   /** Unmount the test case */
   unmount(): void
+
+  /** Current page location */
+  location: Location
 }
 
 export const TestFixture: new (props: TestFixtureProps) => TestFixture = _TestFixture
@@ -70,9 +72,15 @@ export interface ServiceTestFixture<ServiceType extends Service> {
 
   /** Unmount the test case */
   unmount(): void
+
+  /** Return the result of applying a property decorator to the service */
+  get<T>(decorator: PropertyDecorator): T
+
+  /** Current page location */
+  location: Location
 }
 
-export interface ServiceTestFixtureProps<ServiceType extends Service> {
+export interface ServiceTestFixtureProps<ServiceType extends Service<any>> {
   service: new (context: ServiceContext) => ServiceType
   plugins?: PluginConstructor[]
   location?: string
