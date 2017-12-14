@@ -1,4 +1,5 @@
-import createGraphQLPlugin from '../../lib/plugins/GraphQLPlugin/GraphQLPlugin'
+import { PluginConstructor } from '../../index'
+import _createGraphQLPlugin from '../../lib/plugins/GraphQLPlugin/GraphQLPlugin'
 import { decorateGraphQLQuery } from '../../lib/plugins/GraphQLPlugin/GraphQLQueryService'
 import { decorateGraphQLMutation } from '../../lib/plugins/GraphQLPlugin/GraphQLMutationService';
 import { decorateGraphQLClient } from '../../lib/plugins/GraphQLPlugin/GraphQLClientService'
@@ -10,7 +11,9 @@ export interface GraphQlPluginOpts {
   backendUrl?: string
 }
 
-export default createGraphQLPlugin
+export default function createGraphQLPlugin(props: GraphQlPluginOpts): PluginConstructor {
+  return _createGraphQLPlugin(props)
+}
 
 export interface GraphQLQuery<T> {
   /**

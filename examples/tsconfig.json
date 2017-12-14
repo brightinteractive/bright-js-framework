@@ -15,7 +15,8 @@
       "typings"
     ],
     "types": [
-      "mocha"
+      "mocha",
+      "node"
     ],
     "lib": [
       "dom",
