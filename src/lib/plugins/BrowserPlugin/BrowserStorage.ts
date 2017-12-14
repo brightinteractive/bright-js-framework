@@ -19,4 +19,23 @@ export function createBrowserStoragePlugin(): PluginConstructor {
   return BrowserStoragePlugin
 }
 
+export function createInMemoryBrowserStoragePlugin(contents: {}): PluginConstructor {
+  class BrowserStoragePlugin extends PluginConfig {
+    data: Record<string, string | undefined> = { ...contents }
+
+    @exportDependency(BROWSER_STORAGE)
+    browserStorage: BrowserStorageSystem = {
+      get: (key: string) => this.data[key] || null,
+      set: (key: string, value: string) => {
+        this.data[key] = value
+      },
+      clear: () => {
+        this.data = {}
+      }
+    }
+  }
+
+  return BrowserStoragePlugin
+}
+
 export const injectBrowserStorage = inject(BROWSER_STORAGE)
