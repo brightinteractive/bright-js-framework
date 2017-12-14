@@ -2,10 +2,10 @@ import * as React from 'react'
 import gql from 'graphql-tag'
 import { expect } from 'chai'
 import { DocumentNode } from 'graphql'
-import { TestFixture } from '../../entry/TestFixture'
 import { decorateController } from '../../core/Controller'
 import { GraphQLQueryService, decorateGraphQLQuery } from './GraphQLQueryService'
 import { graphQlTestPlugin, GraphQlMocks } from '../GraphQLTestPlugin/GraphQLTestPlugin'
+import { ControllerTestFixture } from '../../fixtures/ControllerTestFixture'
 
 const schema = `
   type Query {
@@ -26,7 +26,7 @@ describe('GraphQLQueryService', () => {
       }
     }
 
-    const fixture = new TestFixture({
+    const fixture = await ControllerTestFixture.create({
       markup: <Example {...opts.varables} />,
       plugins: [
         graphQlTestPlugin({
@@ -36,7 +36,6 @@ describe('GraphQLQueryService', () => {
       ]
     })
 
-    await fixture.load()
     return fixture
   }
 

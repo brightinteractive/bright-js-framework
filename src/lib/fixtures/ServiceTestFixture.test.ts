@@ -22,7 +22,7 @@ describe('ServiceTestFixture', () => {
       value: () => number
     }
 
-    const fixture = await ServiceTestFixture.createMountedService<ServiceWithInjectedValue>({
+    const fixture = await ServiceTestFixture.create<ServiceWithInjectedValue>({
       service: ServiceWithInjectedValue,
       plugins: [TestPlugin]
     })
@@ -31,7 +31,7 @@ describe('ServiceTestFixture', () => {
   })
 
   it('Service can access the value of the plugin', async () => {
-    const fixture = await ServiceTestFixture.createMountedService({
+    const fixture = await ServiceTestFixture.create({
       service: SpyService,
       plugins: [TestPlugin]
     })
@@ -40,7 +40,7 @@ describe('ServiceTestFixture', () => {
   })
 
   it('allows plugins to be accessed and stubbed', async () => {
-    const fixture = await ServiceTestFixture.createMountedService({
+    const fixture = await ServiceTestFixture.create({
       service: SpyService,
       plugins: [TestPlugin],
     })
@@ -52,7 +52,7 @@ describe('ServiceTestFixture', () => {
 
   describe('setState', () => {
     it('should return value afterwards', async () => {
-      const fixture = await ServiceTestFixture.createMountedService({
+      const fixture = await ServiceTestFixture.create({
         service: SpyService,
       })
 
@@ -62,7 +62,7 @@ describe('ServiceTestFixture', () => {
     })
 
     it('calls supplied callback', async () => {
-      const fixture = await ServiceTestFixture.createMountedService({
+      const fixture = await ServiceTestFixture.create({
         service: SpyService,
       })
 
@@ -76,7 +76,7 @@ describe('ServiceTestFixture', () => {
 
   describe('Lifecycle Hooks', () => {
     it('component will mount is called twice (once to load, once for mount)', async () => {
-      const fixture = await ServiceTestFixture.createMountedService({
+      const fixture = await ServiceTestFixture.create({
         service: spyService().SpyService,
       })
 
@@ -84,7 +84,7 @@ describe('ServiceTestFixture', () => {
     })
 
     it('component did mount is called once after will mount', async () => {
-      const fixture = await ServiceTestFixture.createMountedService({
+      const fixture = await ServiceTestFixture.create({
         service: spyService().SpyService,
       })
 
@@ -93,7 +93,7 @@ describe('ServiceTestFixture', () => {
     })
 
     it('component will load and then did load', async () => {
-      const fixture = await ServiceTestFixture.createMountedService({
+      const fixture = await ServiceTestFixture.create({
         service: spyService().SpyService,
       })
 
@@ -102,7 +102,7 @@ describe('ServiceTestFixture', () => {
     })
 
     it('component should be unmounted', async () => {
-      const fixture = await ServiceTestFixture.createMountedService({
+      const fixture = await ServiceTestFixture.create({
         service: spyService().SpyService,
       })
 

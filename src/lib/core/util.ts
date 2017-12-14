@@ -53,7 +53,7 @@ export function loadModule(id: string): any {
 /**
  * Asynchronously invoke a method on all provided objects, if that method exists.  Returns a Promise of all the results.
  */
-export async function asyncInvokeMethodOnAllObjects<T>(objects: T[], method: (obj: T) => any, args?: any) {
+export async function asyncInvokeMethodOnAllObjects<T>(objects: T[], method: (obj: T) => any, ...args: any[]) {
   return await Promise.all(
     objects.filter(method)
       .map((object) => method(object).apply(object, args))

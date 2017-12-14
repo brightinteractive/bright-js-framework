@@ -1,27 +1,43 @@
-import {TestFixture as _TestFixture} from './lib/entry/TestFixture'
-import {PluginConfig, PluginConstructor, ServiceContext, Location, Service} from './index'
-import {ServiceTestFixture as _ServiceTestFixture} from './lib/entry/ServiceTestFixture'
+import { PluginConfig, PluginConstructor, ServiceContext, Location, Service } from './index'
+import { ControllerTestFixture as _ControllerTestFixture } from './lib/fixtures/ControllerTestFixture'
+import { ServiceTestFixture as _ServiceTestFixture } from './lib/fixtures/ServiceTestFixture'
 
 export interface TestFixtureProps {
   /** Array of plugins to provide to the test context */
   plugins?: PluginConstructor[]
 
-  /** Markup describing the component to render */
-  markup: React.ReactElement<{}>
+  /** Location string used to match route. Defaults to '/' */
+  location?: string
+
+  /** Optional stubbed hostname (not including port) */
+  hostname?: string
+
+  /** Optional stubbed host (including port) */
+  host?: string
+
+  /** Optional stubbed protocol (http/https/etc) */
+  protocol?: string
+
+  /** Optional stubbed port */
+  port?: number
 }
 
 /**
- * Utility class for providing the application context to a react component and mounting
- * test components using enzyme.
+ * Utility class for providing the application context to classes that require it.
  *
  * You can optionally provide an array of plugins, which should generally be stub implementations
  * of interfaces used in your applications. These can be stubbed using the `stub()` method.
  *
  * @class
  */
-export interface TestFixture {
-  /** Render the test case into an Enzyme wrapper suitable for performing assertions against */
-  render(): any
+export interface TestFixture<Instance> {
+  /** The subject of the test fixture (component, service, plugin, etc) */
+  readonly instance: Instance
+
+  /**
+   * Apply a property decorator to instance and return the result of the decorated property.
+   */
+  apply<T>(decorator: PropertyDecorator): T
 
   /**
    * Get a plugin of a specified type. If it exists, it will be returned.
@@ -31,17 +47,6 @@ export interface TestFixture {
    */
   getPlugin<T extends PluginConfig>(constructor: PluginConstructor<T>): T
 
-  /**
-   * Get the root object rendered by the component.
-   */
-  getInstance<T = any>(): T
-
-  /**
-   * Return a promise that resolves when a controller of a specific type has finished loading.
-   * Useful for waiting until an async action has completed before making a test assertion.
-   */
-  waitForController(type: React.ComponentClass): Promise<void>
-
   /** Unmount the test case */
   unmount(): void
 
@@ -49,7 +54,36 @@ export interface TestFixture {
   location: Location
 }
 
-export const TestFixture: new (props: TestFixtureProps) => TestFixture = _TestFixture
+export interface ControllerTestFixtureProps extends TestFixtureProps {
+  /** Markup to render in the specified fixture’s context */
+  markup: React.ReactElement<{}>
+}
+
+/**
+ * Utility class for providing the application context to a react component and mounting
+ * test components using enzyme.
+ *
+ * @class
+ */
+export interface ControllerTestFixture<T> extends TestFixture<T> {
+  /** Render the test case into an Enzyme wrapper suitable for performing assertions against */
+  render(): any
+
+  /**
+   * Return a promise that resolves when a controller of a specific type has finished loading.
+   * Useful for waiting until an async action has completed before making a test assertion.
+   */
+  waitForController(type: React.ComponentClass): Promise<void>
+}
+
+export function controllerTestFixture<Controller extends React.Component>(props: ControllerTestFixtureProps): Promise<ControllerTestFixture<Controller>> {
+  return _ControllerTestFixture.create(props)
+}
+
+export interface ServiceTestFixtureProps<ServiceType extends Service<any>> extends TestFixtureProps {
+  /** Tested service */
+  service: new (context: ServiceContext) => ServiceType
+}
 
 /**
  * Utility class for providing the application context to a service, including lifecycle hooks and injecting all dependencies
@@ -59,7 +93,7 @@ export const TestFixture: new (props: TestFixtureProps) => TestFixture = _TestFi
  *
  * @class
  */
-export interface ServiceTestFixture<ServiceType extends Service> {
+export interface ServiceTestFixture<ServiceType extends Service> extends TestFixture<ServiceType> {
   readonly service: ServiceType
 
   /**
@@ -73,25 +107,10 @@ export interface ServiceTestFixture<ServiceType extends Service> {
   /** Unmount the test case */
   unmount(): void
 
-  /** Return the result of applying a property decorator to the service */
-  get<T>(decorator: PropertyDecorator): T
-
   /** Current page location */
   location: Location
 }
 
-export interface ServiceTestFixtureProps<ServiceType extends Service<any>> {
-  service: new (context: ServiceContext) => ServiceType
-  plugins?: PluginConstructor[]
-  location?: string
-  hostname?: string
-  host?: string
-  port?: number
-  protocol?: string
+export function serviceTestFixture<ServiceType extends Service>(props: ServiceTestFixtureProps<ServiceType>): Promise<ServiceTestFixture<ServiceType>> {
+  return _ServiceTestFixture.create(props)
 }
-
-export interface ServiceTestFixtureConstructor {
-  createMountedService<ServiceType extends Service>(props: ServiceTestFixtureProps<ServiceType>): Promise<ServiceTestFixture<ServiceType>>
-}
-
-export const ServiceTestFixture: ServiceTestFixtureConstructor = _ServiceTestFixture

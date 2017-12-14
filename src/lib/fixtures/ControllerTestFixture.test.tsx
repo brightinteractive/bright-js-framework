@@ -3,7 +3,7 @@ import * as React from 'react'
 import { decorateController } from '../core/Controller'
 import { injectDependency } from '../core/InjectionClient'
 import { exportDependency, PluginConfig } from '../core/PluginConfig'
-import { TestFixture } from './TestFixture'
+import { ControllerTestFixture } from './ControllerTestFixture'
 
 describe('TestFixture', () => {
   class TestPlugin extends PluginConfig {
@@ -27,16 +27,16 @@ describe('TestFixture', () => {
     }
   }
 
-  it('should work without plugins being provided', () => {
-    const fixture = new TestFixture({
+  it('should work without plugins being provided', async () => {
+    const fixture = await ControllerTestFixture.create({
       markup: <div />
     })
 
     fixture.render()
   })
 
-  it('should work allow multiple renders', () => {
-    const fixture = new TestFixture({
+  it('should work allow multiple renders', async () => {
+    const fixture = await ControllerTestFixture.create({
       markup: <div />
     })
 
@@ -44,8 +44,8 @@ describe('TestFixture', () => {
     fixture.render()
   })
 
-  it('allows dependencies to be injected', () => {
-    const fixture = new TestFixture({
+  it('allows dependencies to be injected', async () => {
+    const fixture = await ControllerTestFixture.create({
       plugins: [TestPlugin],
       markup: <PluginConsumer />
     })
@@ -53,8 +53,8 @@ describe('TestFixture', () => {
     expect(fixture.render()).to.have.text('value=1')
   })
 
-  it('allows plugins to be accessed and stubbed', () => {
-    const fixture = new TestFixture({
+  it('allows plugins to be accessed and stubbed', async () => {
+    const fixture = await ControllerTestFixture.create({
       plugins: [TestPlugin],
       markup: <PluginConsumer />
     })
@@ -62,14 +62,5 @@ describe('TestFixture', () => {
     fixture.getPlugin(TestPlugin).value = 5
 
     expect(fixture.render()).to.have.text('value=5')
-  })
-
-  it('exposes store', () => {
-    const fixture = new TestFixture({
-      plugins: [TestPlugin],
-      markup: <PluginConsumer />
-    })
-
-    expect(fixture.store.dispatch).to.be.a('function')
   })
 })
