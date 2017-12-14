@@ -1,6 +1,7 @@
+import * as tslib from 'tslib'
 import {Store} from 'redux'
 import {createMemoryHistory, History, Location} from 'history'
-import {filter} from 'lodash'
+import {filter, uniqueId} from 'lodash'
 import {PluginConfig, PluginConstructor} from '../core/PluginConfig'
 import {ApplicationContext} from '../core/ApplicationContext'
 import {loadService} from '../core/load'
@@ -98,6 +99,15 @@ export class ServiceTestFixture<ServiceType extends Service> {
     }
 
     return matches[0]
+  }
+
+  get<T>(decorator: PropertyDecorator): T {
+    const result: PropertyDescriptor = tslib.__decorate([decorator], this.service, uniqueId('decoratedProperty'))
+    if (!result || !result.get) {
+      throw new Error('Invalid decorator')
+    }
+
+    return result.get.call(this.service)
   }
 
   unmount() {
