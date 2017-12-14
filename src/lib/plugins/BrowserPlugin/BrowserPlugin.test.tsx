@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { expect } from 'chai'
 import { Location } from 'history'
-import { TestFixture } from '../../entry/TestFixture'
+import { ControllerTestFixture } from '../../fixtures/ControllerTestFixture'
 import { decorateController } from '../../core/Controller'
 import { locationSelect } from './BrowserPlugin'
 import { createSelectService, StateSelector } from '../StorePlugin/SelectService'
@@ -22,70 +22,70 @@ describe('BrowserPlugin', () => {
     }
   }
 
-  it('should provide location to controllers', () => {
-    const fixture = new TestFixture({
+  it('should provide location to controllers', async () => {
+    const fixture = await ControllerTestFixture.create<LocationView>({
       markup: <LocationView />,
       location: '/1'
     })
 
-    expect(fixture.getInstance<LocationView>().location.value.pathname).to.eql('/1')
+    expect(fixture.instance.location.value.pathname).to.eql('/1')
   })
 
-  it('should push browser location', () => {
-    const fixture = new TestFixture({
+  it('should push browser location', async () => {
+    const fixture = await ControllerTestFixture.create<LocationView>({
       markup: <LocationView />,
       location: '/1'
     })
 
-    fixture.getInstance<LocationView>().actions.pushLocation('/2')
-    expect(fixture.getInstance<LocationView>().location.value.pathname).to.eql('/2')
+    fixture.instance.actions.pushLocation('/2')
+    expect(fixture.instance.location.value.pathname).to.eql('/2')
     expect(fixture.location.pathname).to.eql('/2')
   })
 
-  it('should replace browser location', () => {
-    const fixture = new TestFixture({
+  it('should replace browser location', async () => {
+    const fixture = await ControllerTestFixture.create<LocationView>({
       markup: <LocationView />,
       location: '/1'
     })
 
-    fixture.getInstance<LocationView>().actions.replaceLocation('/2')
-    expect(fixture.getInstance<LocationView>().location.value.pathname).to.eql('/2')
+    fixture.instance.actions.replaceLocation('/2')
+    expect(fixture.instance.location.value.pathname).to.eql('/2')
     expect(fixture.location.pathname).to.eql('/2')
   })
 
-  it('should replace browser location', () => {
-    const fixture = new TestFixture({
+  it('should replace browser location', async () => {
+    const fixture = await ControllerTestFixture.create<LocationView>({
       markup: <LocationView />,
       location: '/1'
     })
 
-    fixture.getInstance<LocationView>().actions.replaceLocation('/2')
-    expect(fixture.getInstance<LocationView>().location.value.pathname).to.eql('/2')
+    fixture.instance.actions.replaceLocation('/2')
+    expect(fixture.instance.location.value.pathname).to.eql('/2')
     expect(fixture.location.pathname).to.eql('/2')
   })
 
-  it('should go back', () => {
-    const fixture = new TestFixture({
+  it('should go back', async () => {
+    const fixture = await ControllerTestFixture.create<LocationView>({
       markup: <LocationView />,
       location: '/1'
     })
 
-    fixture.getInstance<LocationView>().actions.pushLocation('/2')
-    fixture.getInstance<LocationView>().actions.goBack()
-    expect(fixture.getInstance<LocationView>().location.value.pathname).to.eql('/1')
+    fixture.instance.actions.pushLocation('/2')
+    fixture.instance.actions.goBack()
+    expect(fixture.instance.location.value.pathname).to.eql('/1')
     expect(fixture.location.pathname).to.eql('/1')
   })
 
-  it('should go forward', () => {
-    const fixture = new TestFixture({
+  it('should go forward', async () => {
+    const fixture = await ControllerTestFixture.create<LocationView>({
       markup: <LocationView />,
       location: '/1'
     })
 
-    fixture.getInstance<LocationView>().actions.pushLocation('/2')
-    fixture.getInstance<LocationView>().actions.goBack()
-    fixture.getInstance<LocationView>().actions.goForward()
-    expect(fixture.getInstance<LocationView>().location.value.pathname).to.eql('/2')
+    fixture.instance.actions.pushLocation('/2')
+    fixture.instance.actions.goBack()
+    fixture.instance.actions.goForward()
+    expect(fixture.instance.location.value.pathname).to.eql('/2')
     expect(fixture.location.pathname).to.eql('/2')
   })
 })

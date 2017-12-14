@@ -2,6 +2,7 @@ import {PluginConstructor} from '../../index'
 import {
   createBrowserStoragePlugin,
   injectBrowserStorage,
+  createInMemoryBrowserStoragePlugin,
 } from '../../lib/plugins/BrowserPlugin/BrowserStorage'
 
 export interface BrowserStorageSystem {
@@ -30,11 +31,17 @@ export interface BrowserStoragePluginProps {
 
 /**
  * Constructs a plugin that allows access to browser-scoped storage
- *
- * (Defaults to using localStorage if no props are provided)
  */
 export default function browserStoragePlugin(): PluginConstructor {
   return createBrowserStoragePlugin()
+}
+
+/**
+ * Constructs a plugin that provides an in-memory implementation of browser storage
+ * for tests
+ */
+export function inMemoryBrowserStoragePlugin(contents: {} = {}): PluginConstructor {
+  return createInMemoryBrowserStoragePlugin(contents)
 }
 
 /**

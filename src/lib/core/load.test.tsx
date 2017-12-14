@@ -6,7 +6,7 @@ import { spyController } from './mocks/SpyController'
 import { spyService } from './mocks/SpyService'
 import { Service, decorateServiceProperty } from './Service'
 import { decorateController } from './Controller'
-import { TestFixture } from '../entry/TestFixture'
+import { ControllerTestFixture } from '../fixtures/ControllerTestFixture';
 
 describe('load()', () => {
   it('should descend shallowly through primitive element types', async () => {
@@ -247,12 +247,11 @@ describe('load()', () => {
     it('should not render the child initially', async () => {
       const { Parent, Child } = setup()
 
-      const fixture = new TestFixture({
+      const fixture = await ControllerTestFixture.create({
         markup: <Parent />
       })
 
-      await fixture.load()
-      fixture.getInstance().setState({
+      fixture.instance.setState({
         child: <Child />
       })
 
@@ -262,12 +261,11 @@ describe('load()', () => {
     it('should load data and render once fetched', async () => {
       const { Parent, Child } = setup()
 
-      const fixture = new TestFixture({
+      const fixture = await ControllerTestFixture.create({
         markup: <Parent />
       })
 
-      await fixture.load()
-      fixture.getInstance().setState({
+      fixture.instance.setState({
         child: <Child />
       })
 

@@ -11,5 +11,8 @@
     "gatsby"
   ],
   "license": "MIT",
-  "scripts": {}
+  "scripts": {},
+  "devDependencies": {
+    "@types/node": "^8.5.1"
+  }
 }

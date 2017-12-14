@@ -4,7 +4,7 @@ import * as React from 'react'
 import { decorateController, isController } from './Controller'
 import { Service, decorateServiceProperty, ServiceConstructor } from './Service'
 import { SpyService } from './mocks/SpyService'
-import { TestFixture } from '../entry/TestFixture'
+import { ControllerTestFixture } from '../fixtures/ControllerTestFixture';
 
 describe('Controller', () => {
   describe('isController()', () => {
@@ -25,7 +25,7 @@ describe('Controller', () => {
   })
 
   context('when mounted into dom', () => {
-    context('and lifecycle hooks are implemented', () => {
+    context('and lifecycle hooks are implemented', async () => {
       async function setup(serviceConstructor: ServiceConstructor<Service> = SpyService) {
         @decorateController
         class TestController extends React.Component {
@@ -37,15 +37,14 @@ describe('Controller', () => {
           }
         }
 
-        const fixture = new TestFixture({
+        const fixture = await ControllerTestFixture.create<TestController>({
           markup: <TestController />
         })
 
-        await fixture.load()
         fixture.render()
 
         return {
-          service: fixture.getInstance<TestController>().myService,
+          service: fixture.instance.myService,
           fixture
         }
       }

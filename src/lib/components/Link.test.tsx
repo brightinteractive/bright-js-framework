@@ -1,12 +1,12 @@
 import { expect } from 'chai'
 import * as React from 'react'
 import { spy } from 'sinon'
-import { TestFixture } from '../entry/TestFixture'
+import { ControllerTestFixture } from '../fixtures/ControllerTestFixture'
 import { Link } from './Link'
 
 describe('<Link />', () => {
-  it('should transition on click', () => {
-    const fixture = new TestFixture({
+  it('should transition on click', async () => {
+    const fixture = await ControllerTestFixture.create({
       markup: <Link href="/foo" />
     })
 
@@ -16,8 +16,8 @@ describe('<Link />', () => {
     expect(evt.defaultPrevented).to.be.true
   })
 
-  it('should use default behavior for right click', () => {
-    const fixture = new TestFixture({
+  it('should use default behavior for right click', async () => {
+    const fixture = await ControllerTestFixture.create({
       markup: <Link href="/foo" />
     })
 
@@ -29,8 +29,8 @@ describe('<Link />', () => {
 
   const keys: Array<Partial<keyof React.MouseEvent<{}>>> = ['metaKey', 'altKey', 'ctrlKey', 'shiftKey']
   keys.forEach((key) => {
-    it(`should use default behavior for ${key} click`, () => {
-      const fixture = new TestFixture({
+    it(`should use default behavior for ${key} click`, async () => {
+      const fixture = await ControllerTestFixture.create({
         markup: <Link href="/foo" />
       })
 
@@ -44,10 +44,10 @@ describe('<Link />', () => {
     })
   })
 
-  it('should transition and call onClick handler when provided', () => {
+  it('should transition and call onClick handler when provided', async () => {
     const onClick = spy()
 
-    const fixture = new TestFixture({
+    const fixture = await ControllerTestFixture.create({
       markup: <Link href="/foo" onClick={onClick} />
     })
 
@@ -59,12 +59,12 @@ describe('<Link />', () => {
     expect(onClick).to.have.been.calledOnce
   })
 
-  it('should not transition or perform default behavior when onClick prevents default', () => {
+  it('should not transition or perform default behavior when onClick prevents default', async () => {
     const onClick = (e: React.MouseEvent<{}>) => {
       e.preventDefault()
     }
 
-    const fixture = new TestFixture({
+    const fixture = await ControllerTestFixture.create({
       markup: <Link href="/foo" onClick={onClick} />
     })
 

@@ -13,7 +13,7 @@ const distFiles = require('./package.json').files
 const SOURCE_FILES = ["./src/*.ts", "./src/*.tsx"]
 const TEST_FILES = ["./src/**/*.test.ts", "./src/**/*.test.tsx"]
 const PUBLIC_SOURCE_FILES = ["./src/*.ts", "./src/*.tsx", "./src/plugins/**/*.ts", "./src/plugins/**/*.tsx"]
-const PRIVATE_INTERFACE_FILES = ["./src/lib/**/*.d.ts", "./src/cli/**/*.d.ts"]
+const PRIVATE_INTERFACE_FILES = ["./lib/**/*.d.ts", "./cli/**/*.d.ts"]
 
 /** Test / Lint */
 

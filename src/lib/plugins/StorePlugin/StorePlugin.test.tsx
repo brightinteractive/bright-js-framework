@@ -1,13 +1,13 @@
 import { expect } from 'chai'
 import { spy } from 'sinon'
 import { PluginConfig } from '../../core/PluginConfig'
-import { TestFixture } from '../../entry/TestFixture'
 import { declareReducer } from '../../core/declareReducer'
 import { decorateController } from '../../core/Controller'
 import * as React from 'react'
 import { createSelectService, StateSelector } from './SelectService'
 import { Dispatch } from 'redux'
 import { injectDispatch, createStorePlugin } from './StorePlugin'
+import { ControllerTestFixture } from '../../fixtures/ControllerTestFixture';
 
 describe('StorePlugin', () => {
   class CounterPlugin extends PluginConfig {
@@ -36,48 +36,47 @@ describe('StorePlugin', () => {
     }
   }
 
-  it('should provide initial state to controllers', () => {
-    const fixture = new TestFixture({
+  it('should provide initial state to controllers', async () => {
+    const fixture = await ControllerTestFixture.create<CounterView>({
       plugins: [CounterPlugin],
       markup: <CounterView />
     })
 
-    expect(fixture.getInstance<CounterView>().counter.value).to.eql(0)
+    expect(fixture.instance.counter.value).to.eql(0)
   })
 
-  it('should update controller state when actions are dispatched to change state', () => {
-    const fixture = new TestFixture({
+  it('should update controller state when actions are dispatched to change state', async () => {
+    const fixture = await ControllerTestFixture.create<CounterView>({
       plugins: [CounterPlugin],
       markup: <CounterView />
     })
 
-    const instance = fixture.getInstance<CounterView>()
+    const instance = fixture.instance
     instance.dispatch({ type: 'increment' })
 
-    expect(fixture.getInstance<CounterView>().counter.value).to.eql(1)
+    expect(fixture.instance.counter.value).to.eql(1)
   })
 
-  it('should unsubscribe from store updates when unmounted', () => {
-    const fixture = new TestFixture({
+  it('should unsubscribe from store updates when unmounted', async () => {
+    const fixture = await ControllerTestFixture.create<CounterView>({
       plugins: [CounterPlugin],
       markup: <CounterView />
     })
 
     const unsubscribe = spy()
     fixture.store.subscribe = () => unsubscribe
-
     fixture.render().unmount()
 
     expect(unsubscribe).to.have.been.calledOnce
   })
 
-  it('should pass controller props through to selector', () => {
-    const fixture = new TestFixture({
+  it('should pass controller props through to selector', async () => {
+    const fixture = await ControllerTestFixture.create<CounterView>({
       plugins: [CounterPlugin],
       markup: <CounterView overrideValue={123} />
     })
 
-    expect(fixture.getInstance<CounterView>().counter.value).to.eql(123
+    expect(fixture.instance.counter.value).to.eql(123
     )
   })
 
