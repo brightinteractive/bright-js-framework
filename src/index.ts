@@ -15,6 +15,7 @@ import { BrowserActions as _BrowserActions } from './lib/plugins/BrowserPlugin/B
 import { createSelectService } from './lib/plugins/StorePlugin/SelectService'
 import { declareReducer } from './lib/core/declareReducer'
 import { locationSelect } from './lib/plugins/BrowserPlugin/BrowserPlugin'
+import { HostInfoService } from './lib/plugins/BrowserPlugin/HostInfoService'
 
 /**
  * Declare a component as a route and associate a path with it.
@@ -309,3 +310,17 @@ export const BrowserActions: ServiceConstructor<BrowserActions> = _BrowserAction
  * Select the current page location
  */
 export const location: SelectFn<Location> = locationSelect
+
+/** Service providing information about the host */
+export interface HostInfo {
+  hostname: string
+  host: string
+  protocol: string
+  port?: string
+  baseUrl: string
+}
+
+/** Service providing information about the host */
+export function hostInfo(): PropertyDecorator {
+  return decorateServiceProperty(HostInfoService)
+}

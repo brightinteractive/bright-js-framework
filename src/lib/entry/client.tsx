@@ -33,7 +33,8 @@ export default async function clientEntry(modules: { pages: RequireList, plugins
     return new ApplicationContext([
       ...pluginConfigs,
       createBrowserPlugin({
-        history: getHistory()
+        history: getHistory(),
+        hostInfo: window.location
       })
     ])
   })

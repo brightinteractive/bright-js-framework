@@ -2,21 +2,21 @@ import {loadService} from '../core/load'
 import {gatherServices, Service, ServiceConstructor} from '../core/Service'
 import {TestFixture, TestFixtureProps} from './TestFixture'
 
-export interface ServiceTestFixtureProps extends TestFixtureProps {
-  service: ServiceConstructor
+export interface ServiceTestFixtureProps<ServiceType extends Service> extends TestFixtureProps {
+  service: ServiceConstructor<ServiceType>
 }
 
 export class ServiceTestFixture<ServiceType extends Service> extends TestFixture<ServiceType>  {
   readonly serviceConstructor: ServiceConstructor
   service: ServiceType
 
-  static async create<ServiceType extends Service>(props: ServiceTestFixtureProps): Promise<ServiceTestFixture<ServiceType>> {
+  static async create<ServiceType extends Service>(props: ServiceTestFixtureProps<ServiceType>): Promise<ServiceTestFixture<ServiceType>> {
     const instance = new ServiceTestFixture<ServiceType>(props)
     await instance.load()
     return instance
   }
 
-  private constructor({ service, ...superProps }: ServiceTestFixtureProps) {
+  private constructor({ service, ...superProps }: ServiceTestFixtureProps<ServiceType>) {
     super(superProps)
     this.serviceConstructor = service
   }

@@ -5,18 +5,20 @@ import {injectDependency} from '../../core/InjectionClient'
 import {declareReducer} from '../../core/declareReducer'
 import {injectDispatch, Selector} from '../StorePlugin/StorePlugin'
 
-const HISTORY = 'history'
-const LOCATION = 'location'
-const HOST = 'host'
-const HOSTNAME = 'hostname'
-const BASE_URL = 'baseUrl'
+export const HISTORY = 'history'
+export const LOCATION = 'location'
+export const HOST_INFO = 'hostinfo'
+
+export interface HostInfo {
+  hostname?: string
+  host?: string
+  protocol?: string
+  port?: string
+}
 
 export interface BrowserPluginProps {
   history: History
-  hostname?: string
-  host?: string
-  port?: number
-  protocol?: string
+  hostInfo: HostInfo
 }
 
 export interface BrowserState extends Location {
@@ -31,14 +33,7 @@ export interface TransitionAction {
 /**
  * Owns and provides access to the application's redux store.
  */
-export function createBrowserPlugin(
-  {
-    history,
-    hostname = window.location.hostname,
-    host = window.location.host,
-    port = window.location.port,
-    protocol = window.location.protocol
-  }: BrowserPluginProps): PluginConstructor {
+export function createBrowserPlugin({ history, hostInfo }: BrowserPluginProps): PluginConstructor {
   class BrowserPlugin extends PluginConfig {
     @injectDispatch
     dispatch: Dispatch<TransitionAction>
@@ -46,27 +41,8 @@ export function createBrowserPlugin(
     @exportDependency(HISTORY)
     history = history
 
-    @exportDependency(HOSTNAME)
-    hostname = hostname
-
-    @exportDependency(HOST)
-    host = host
-
-    @exportDependency(BASE_URL)
-    baseUrl = this.constructBaseUrl()
-
-    constructBaseUrl(): string {
-      let baseUrl = protocol + '//' + hostname
-      if (this.portIsNotHttpOrHttps()) {
-        baseUrl += ':' + port
-      }
-
-      return baseUrl
-    }
-
-    private portIsNotHttpOrHttps() {
-      return port && port !== '' && port !== '80' && port !== '443'
-    }
+    @exportDependency(HOST_INFO)
+    hostInfo = hostInfo
 
     /** Browser state reducer */
     @declareReducer(LOCATION)
