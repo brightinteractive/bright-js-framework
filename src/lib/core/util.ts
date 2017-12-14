@@ -56,6 +56,6 @@ export function loadModule(id: string): any {
 export async function asyncInvokeMethodOnAllObjects<T>(objects: T[], method: (obj: T) => any, args?: any) {
   return await Promise.all(
     objects.filter(method)
-      .map((object) => method(object)(args))
+      .map((object) => method(object).apply(object, args))
   )
 }
