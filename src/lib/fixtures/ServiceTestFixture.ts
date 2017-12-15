@@ -4,10 +4,12 @@ import {TestFixture, TestFixtureProps} from './TestFixture'
 
 export interface ServiceTestFixtureProps<ServiceType extends Service> extends TestFixtureProps {
   service: ServiceConstructor<ServiceType>
+  props?: any
 }
 
 export class ServiceTestFixture<ServiceType extends Service> extends TestFixture<ServiceType>  {
   readonly serviceConstructor: ServiceConstructor
+  readonly serviceProps?: any
   service: ServiceType
 
   static async create<ServiceType extends Service>(props: ServiceTestFixtureProps<ServiceType>): Promise<ServiceTestFixture<ServiceType>> {
@@ -16,9 +18,10 @@ export class ServiceTestFixture<ServiceType extends Service> extends TestFixture
     return instance
   }
 
-  private constructor({ service, ...superProps }: ServiceTestFixtureProps<ServiceType>) {
+  private constructor({ service, props, ...superProps }: ServiceTestFixtureProps<ServiceType>) {
     super(superProps)
     this.serviceConstructor = service
+    this.serviceProps = props
   }
 
   get instance() {
@@ -57,6 +60,8 @@ export class ServiceTestFixture<ServiceType extends Service> extends TestFixture
 
   private initializeService = (service: any) => {
     service.state = {}
+
+    service.controllerProps = this.serviceProps
 
     service.setState = (state: any, callback?: () => void) => {
       service.state = {...service.state, ...state}

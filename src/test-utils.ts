@@ -74,6 +74,7 @@ export function controllerTestFixture<Controller extends React.Component>(props:
 export interface ServiceTestFixtureProps<ServiceType extends Service<any>> extends TestFixtureProps {
   /** Tested service */
   service: new (context: ServiceContext) => ServiceType
+  props?: any
 }
 
 /**
