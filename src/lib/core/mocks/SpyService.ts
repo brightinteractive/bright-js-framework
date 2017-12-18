@@ -4,8 +4,8 @@ import {InjectionContext} from '../InjectionClient'
 import {attachServices} from './SpyController'
 
 export class SpyService extends Service<any> {
-  constructor(ctx: InjectionContext) {
-    super(ctx)
+  constructor(ctx: InjectionContext, parent: {}) {
+    super(ctx, parent)
     this.serviceWillMount = spy()
     this.serviceDidMount = spy()
     this.serviceWillUnmount = spy()
@@ -29,8 +29,8 @@ export function spyService(children: ServiceConstructor[] = []): SpyServiceResul
   const serviceWillUnmount = spy()
 
   class SpyServiceClass extends Service {
-    constructor(context: any) {
-      super(context)
+    constructor(context: any, parent: {}) {
+      super(context, parent)
 
       this.serviceWillMount = serviceWillMount
       this.serviceDidMount = serviceDidMount

@@ -155,8 +155,8 @@ describe('load()', () => {
 
   it('should provide context to services', async () => {
     class MyService extends Service {
-      constructor(context: any) {
-        super(context)
+      constructor(context: any, parent: {}) {
+        super(context, parent)
         expect(context).to.exist
       }
     }

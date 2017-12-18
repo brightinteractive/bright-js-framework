@@ -12,7 +12,7 @@ describe('Service', () => {
   describe('isService()', () => {
     it('should return true for instances of Service subclass', () => {
       class MyService extends Service {}
-      const myService = new MyService(anyContext())
+      const myService = new MyService(anyContext(), {})
 
       expect(isService(myService)).to.be.true
     })
@@ -35,13 +35,13 @@ describe('Service', () => {
       expect(new Parent({}).service).to.be.instanceOf(Service)
     })
 
-    it('should instantiate service when attached to service', () => {
+    it('should attach parent when creating service', () => {
       class Parent extends Service {
         @decorateServiceProperty(Service)
         service: Service
       }
 
-      expect(new Parent(anyContext()).service).to.be.instanceOf(Service)
+      expect(new Parent(anyContext(), {}).service.parent).to.be.instanceOf(Parent)
     })
 
     it('should throw error when attached to non-controller class', () => {

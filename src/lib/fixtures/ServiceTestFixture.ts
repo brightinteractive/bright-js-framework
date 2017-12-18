@@ -42,10 +42,10 @@ export class ServiceTestFixture<ServiceType extends Service> extends TestFixture
 
   private async load() {
     await loadService(
-      new this.serviceConstructor({'@appContext': this.appContext})
+      new this.serviceConstructor({ '@appContext': this.appContext }, {})
     )
 
-    this.service = new this.serviceConstructor({'@appContext': this.appContext}) as ServiceType
+    this.service = new this.serviceConstructor({'@appContext': this.appContext}, {}) as ServiceType
 
     this.allServices
       .forEach(this.initializeService)

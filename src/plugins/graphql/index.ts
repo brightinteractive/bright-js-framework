@@ -25,13 +25,25 @@ export interface GraphQLQuery<T> {
   readonly data: T
 }
 
+export interface GraphQLQueryOpts {
+  /**
+   * Function mapping from the controller or service that a query is added to to an object
+   * containing props for the query.
+   *
+   * By default, the query will use any relevant props provided to the parent, however you
+   * may wish to take props from other services or perform some kind of calculation or remapping
+   * on them.
+   */
+  props?: (parent: any) => {}
+}
+
 /**
  * Decorate a controller or service property to add a GraphQL data dependency.
  *
  * The data will be installed on the property as type GraphQLQuery.
  */
-export function query(queryDoc: any): PropertyDecorator {
-  return decorateGraphQLQuery(queryDoc)
+export function query(queryDoc: any, opts?: GraphQLQueryOpts): PropertyDecorator {
+  return decorateGraphQLQuery(queryDoc, opts)
 }
 
 export interface GraphQLMutation<Variables, Result = {}> {
