@@ -1,5 +1,5 @@
 import 'isomorphic-fetch'
-import { forEach, toPairs } from 'lodash'
+import { forEach } from 'lodash'
 import * as qs from 'querystring'
 import { InjectionContext, InjectionClient } from '../../core/InjectionClient'
 
@@ -95,11 +95,11 @@ export class HttpClient extends InjectionClient {
     const res = await this.fetch(formatUrl(opts.url), {
       method,
       body: bodyType.convert(body),
-      headers: toPairs({
+      headers: {
         ...bodyType.headers,
         ...responseType.headers,
         ...(headers || {}),
-      })
+      } as any
     })
 
     if (!res.ok) {

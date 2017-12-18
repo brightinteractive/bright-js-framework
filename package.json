@@ -1,6 +1,6 @@
 {
   "name": "@brightinteractive/bright-js-framework",
-  "version": "5.2.0",
+  "version": "5.2.1",
   "description": "React at the speed of ⚡️",
   "devDependencies": {
     "@types/apollo-codegen": "^0.16.0",
