@@ -5,14 +5,16 @@ import { InjectionClient, InjectionContext } from './InjectionClient'
 const SERVICE_IDENTIFIER = '__luminant__isService'
 const SERVICE_UID = '__luminant__serviceUid'
 
-export type ServiceConstructor<T extends Service = Service> = new(context: InjectionContext) => T
+export type ServiceConstructor<T extends Service = Service> = new(context: InjectionContext, parent: {}) => T
 
 export class Service<State = any> implements InjectionClient {
-  constructor(context: InjectionContext) {
+  constructor(context: InjectionContext, parent: {}) {
     this.context = context
+    this.parent = parent
   }
 
   readonly controllerProps: {}
+  readonly parent: {}
 
   readonly state: State
   setState(state: Partial<State>, nextFn?: () => void): void {}
@@ -60,7 +62,7 @@ export function decorateServiceProperty<T extends Service>(Constructor: ServiceC
         }
 
         if (!this[cacheKey]) {
-          this[cacheKey] = new Constructor(this.context)
+          this[cacheKey] = new Constructor(this.context, this)
         }
 
         return this[cacheKey]

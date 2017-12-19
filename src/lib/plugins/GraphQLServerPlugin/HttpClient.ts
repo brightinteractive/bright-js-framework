@@ -5,13 +5,17 @@ import { InjectionContext, InjectionClient } from '../../core/InjectionClient'
 
 export class HttpError implements Error {
   readonly status: number
+  readonly method: string
+  readonly url: string
 
-  constructor(status: number) {
+  constructor(status: number, method: string, url: string) {
     this.status = status
+    this.method = method
+    this.url = url
   }
 
   get message() {
-    return `Http ${this.status}`
+    return `${this.method} ${this.url} -> ${this.status}`
   }
 
   get name() {
@@ -103,7 +107,7 @@ export class HttpClient extends InjectionClient {
     })
 
     if (!res.ok) {
-      throw new HttpError(res.status)
+      throw new HttpError(res.status, method, formatUrl(opts.url))
     }
 
     return responseType.convert(res)

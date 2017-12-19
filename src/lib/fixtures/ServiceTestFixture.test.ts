@@ -16,7 +16,7 @@ describe('ServiceTestFixture', () => {
   const TEST_STATE_KEY = 'key'
   const TEST_STATE_VALUE = 'value'
 
-  it('Service can access an inject value', async () => {
+  it('can access an inject value', async () => {
     class ServiceWithInjectedValue extends Service {
       @inject('value')
       value: () => number
@@ -30,13 +30,26 @@ describe('ServiceTestFixture', () => {
     expect(fixture.service.value()).to.eql(1)
   })
 
-  it('Service can access the value of the plugin', async () => {
+  it('Receives specified controller props', async () => {
     const fixture = await ServiceTestFixture.create({
       service: SpyService,
       plugins: [TestPlugin]
     })
 
     expect(fixture.service.context['@appContext'].getInjectedObject('value')()).to.eql(1)
+  })
+
+  it('Can access the value of the plugin', async () => {
+    const fixture = await ServiceTestFixture.create({
+      service: SpyService,
+      plugins: [TestPlugin],
+      props: {
+        foo: 'bar'
+      }
+    })
+
+    const { foo } = fixture.instance.controllerProps as any
+    expect(foo).to.eql('bar')
   })
 
   it('allows plugins to be accessed and stubbed', async () => {

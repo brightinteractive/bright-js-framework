@@ -14,6 +14,10 @@ export interface GraphQLQueryService<Result> extends Service {
   readonly optionalData: Result | undefined
 }
 
+export interface GraphQLQueryProps {
+  props?: (parent: any) => {}
+}
+
 export interface GraphQLQueryServiceState {
   data?: any
   stale?: boolean
@@ -21,7 +25,7 @@ export interface GraphQLQueryServiceState {
   errors?: GraphQLError[]
 }
 
-export function decorateGraphQLQuery(query: DocumentNode) {
+export function decorateGraphQLQuery(query: DocumentNode, opts: GraphQLQueryProps = {}) {
   class GraphQLQueryServiceImpl<Result> extends Service<GraphQLQueryServiceState> {
     private queryObserver: Subscription
 
@@ -73,8 +77,12 @@ export function decorateGraphQLQuery(query: DocumentNode) {
       return this.state.loading || false
     }
 
+    get variables() {
+      return opts.props ? opts.props(this.parent) : this.controllerProps
+    }
+
     get queryConfig(): WatchQueryOptions {
-      const { controllerProps: variables } = this
+      const { variables } = this
       return { query, variables, errorPolicy: 'all' }
     }
 
@@ -86,16 +94,20 @@ export function decorateGraphQLQuery(query: DocumentNode) {
               this.dispatch({
                 type: 'graphql:error',
                 query,
-                variables: this.controllerProps,
+                variables: this.variables,
                 errors
               })
             }
 
-            subscription.unsubscribe()
+            if (subscription) {
+              subscription.unsubscribe()
+            }
             resolve()
           },
           error: (errorValue) => {
-            subscription.unsubscribe()
+            if (subscription) {
+              subscription.unsubscribe()
+            }
             resolve()
           }
         })

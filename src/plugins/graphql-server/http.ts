@@ -95,7 +95,7 @@ export interface HttpError extends Error {
   /** Status code returned by the request */
   readonly status: number
 }
-export const HttpError: new(status: number) => HttpError = _HttpError
+export const HttpError: new(status: number, method: string, url: string) => HttpError = _HttpError
 
 /**
  * Convenience interface for passing URL components to an http request.

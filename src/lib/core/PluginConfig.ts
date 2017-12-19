@@ -9,6 +9,10 @@ const REQUEST_HANDLERS = '__luminant__requestHandlerKeys'
 
 export class PluginConfig<T = {}> extends Service<T> {
   pageWillTransition?(location: Location): void | Promise<any>
+
+  constructor(context: InjectionContext) {
+    super(context, {})
+  }
 }
 
 export interface DependencyExport {
