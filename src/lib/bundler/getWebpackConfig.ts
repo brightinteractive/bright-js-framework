@@ -2,6 +2,7 @@ import * as autoprefixer from 'autoprefixer'
 import * as path from 'path'
 import * as webpack from 'webpack'
 import * as ExtractText from 'extract-text-webpack-plugin'
+import ImageMin from 'imagemin-webpack-plugin'
 import nodeExternals  = require('webpack-node-externals')
 import { entrypointLoader } from './entrypointLoader'
 import { getPluginEntrypoints } from './PluginLoader'
@@ -129,6 +130,7 @@ export function getWebpackConfig({ pages, plugins, devServer }: WebpackConfigOpt
           'process.env.NODE_ENV': JSON.stringify('production'),
         }),
         new webpack.optimize.UglifyJsPlugin(),
+        new ImageMin()
       )
     ],
   }

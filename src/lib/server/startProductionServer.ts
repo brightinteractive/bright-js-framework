@@ -1,5 +1,6 @@
 import * as express from 'express'
 import * as path from 'path'
+import * as compression from 'compression'
 import { pick } from 'lodash'
 import { renderHtmlWrapper } from './renderHtmlWrapper'
 import { Config } from './Config'
@@ -15,6 +16,7 @@ export async function startProductionServer({ port, config }: DevServerOpts) {
   const pluginMiddleware = require(path.resolve('build/server/bundle.js'))
 
   app.use(enforceCustomerFacingHttps)
+  app.use(compression())
   app.use(express.static('build/public'))
   app.use(pluginMiddleware())
 
