@@ -21,7 +21,8 @@ export interface DevServerOpts {
 export async function startDevserver({ port, plugins, config }: DevServerOpts) {
   const webpackConfig = getWebpackConfig({
     pages: getEntrypointFiles(),
-    plugins
+    plugins,
+    devServer: true
   })
 
   const bundler = webpack(webpackConfig)

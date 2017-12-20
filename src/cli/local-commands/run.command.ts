@@ -13,13 +13,13 @@ export interface RunCommandOpts {
 
 export const command = 'run'
 export const builder = {
-  port: {
+  'port': {
     alias: 'p',
     type: 'number',
     description: 'Port to start server on',
     default: Number(process.env.PORT || 8000),
   },
-  devServer: {
+  'dev-server': {
     alias: 'd',
     type: 'boolean',
     description: 'Start in development mode',

@@ -17,6 +17,7 @@ export function renderHtmlWrapper({ config, devserver }: RenderHtmlWrapperOpts) 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script dangerouslySetInnerHTML={{ __html: configScript }} />
         <script defer src={devserver ? '/public/bundle.js' : '/bundle.js'} />
+        {!devserver && <link rel="stylesheet" href="/style.css" />}
       </head>
       <body>
         <div id="app" />

@@ -1,6 +1,7 @@
 import * as autoprefixer from 'autoprefixer'
 import * as path from 'path'
 import * as webpack from 'webpack'
+import * as ExtractText from 'extract-text-webpack-plugin'
 import nodeExternals  = require('webpack-node-externals')
 import { entrypointLoader } from './entrypointLoader'
 import { getPluginEntrypoints } from './PluginLoader'
@@ -27,11 +28,13 @@ export interface WebpackConfigOpts {
 
   /** List of plugin configs */
   plugins: any
+
+  devServer: boolean
 }
 
-export function getWebpackConfig({ pages, plugins }: WebpackConfigOpts): webpack.Configuration[] {
+export function getWebpackConfig({ pages, plugins, devServer }: WebpackConfigOpts): webpack.Configuration[] {
   const sharedConfig: Partial<webpack.Configuration> = {
-    devtool: 'cheap-module-source-map',
+    devtool: devServer ? 'cheap-module-source-map' : undefined,
 
     module: {
       rules: [
@@ -60,8 +63,7 @@ export function getWebpackConfig({ pages, plugins }: WebpackConfigOpts): webpack
         },
         {
           test: /\.scss$/,
-          use: [
-            require.resolve('style-loader'),
+          use: styleLoader(
             {
               loader: require.resolve('css-loader'),
               options: {
@@ -80,12 +82,11 @@ export function getWebpackConfig({ pages, plugins }: WebpackConfigOpts): webpack
               },
             },
             require.resolve('sass-loader'),
-          ],
+          ),
         },
         {
           test: /\.css$/,
-          use: [
-            require.resolve('style-loader'),
+          use: styleLoader(
             require.resolve('css-loader'),
             {
               loader: 'postcss-loader',
@@ -95,7 +96,7 @@ export function getWebpackConfig({ pages, plugins }: WebpackConfigOpts): webpack
                 ],
               },
             },
-          ],
+          ),
         },
         {
           test: /\.(eot|ttf|woff|woff2|jpg|jpeg|png|svg)$/,
@@ -132,17 +133,26 @@ export function getWebpackConfig({ pages, plugins }: WebpackConfigOpts): webpack
         extensions: clientExtensions
       },
 
+      plugins: [
+        ...sharedConfig.plugins || [],
+        ...ifProduction(
+          new ExtractText({ filename: 'style.css' })
+        )
+      ],
+
       output: {
         path: path.join(process.cwd(), 'build', 'public'),
         filename: 'bundle.js',
       },
 
       entry: [
-        require.resolve('react-error-overlay'),
-        require.resolve('../entry/errorDisplay'),
-        'webpack-hot-middleware/client?path=/_hot&reload=true&timeout=2000&overlay=false',
         'core-js/shim',
         'whatwg-fetch',
+        ...ifDevelopment(
+          require.resolve('react-error-overlay'),
+          require.resolve('../entry/errorDisplay'),
+          'webpack-hot-middleware/client?path=/_hot&reload=true&timeout=2000&overlay=false',
+        ),
         entrypointLoader({
           entry: require.resolve('../entry/client'),
           topLevelModules: {
@@ -196,4 +206,20 @@ export function getWebpackConfig({ pages, plugins }: WebpackConfigOpts): webpack
       }),
     }
   ]
+
+  function ifDevelopment<T>(...xs: T[]): T[] {
+    return devServer ? xs : []
+  }
+
+  function ifProduction<T>(...xs: T[]): T[] {
+    return !devServer ? xs : []
+  }
+
+  function styleLoader(...loaders: webpack.Loader[]) {
+    if (devServer) {
+      return [require.resolve('style-loader'), ...loaders]
+    }
+
+    return ExtractText.extract(loaders)
+  }
 }

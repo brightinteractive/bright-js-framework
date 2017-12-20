@@ -6,7 +6,7 @@ import { getConfig } from '../../lib/server/getConfig'
 import getImplicitProjectPluginConfigurationsFromFilepaths from '../../lib/server/getProjectPluginConfigs'
 import { stage } from '../status'
 import { runPluginLoaderHook } from '../../lib/bundler/PluginLoader'
-import { getWebpackConfig } from '../../lib/bundler/getWebpackConfig';
+import { getWebpackConfig } from '../../lib/bundler/getWebpackConfig'
 
 export const command = 'build'
 export const builder = {}
@@ -24,7 +24,8 @@ export async function handler() {
     await runPluginLoaderHook(plugins, (loader) => loader.applicationWillBuild())
     const compiler = webpack(getWebpackConfig({
       pages: getEntrypointFiles(),
-      plugins
+      plugins,
+      devServer: false
     }))
 
     await runCompiler(compiler)
