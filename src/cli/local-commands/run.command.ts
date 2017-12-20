@@ -4,6 +4,7 @@ import { runPluginLoaderHook } from '../../lib/bundler/PluginLoader'
 import { getConfig } from '../../lib/server/getConfig'
 import getImplicitProjectPluginConfigurationsFromFilepaths from '../../lib/server/getProjectPluginConfigs'
 import { startDevserver } from '../../lib/server/startDevServer'
+import { startProductionServer } from '../../lib/server/startProductionServer'
 
 export interface RunCommandOpts {
   devServer: boolean
@@ -37,11 +38,18 @@ export async function handler({ port, devServer }: RunCommandOpts) {
 
   await runPluginLoaderHook(plugins, (loader) => loader.applicationWillStart())
 
-  startDevserver({
-    config: appConfig,
-    plugins,
-    port
-  })
+  if (devServer) {
+    startDevserver({
+      config: appConfig,
+      plugins,
+      port
+    })
+  } else {
+    startProductionServer({
+      config: appConfig,
+      port
+    })
+  }
 
   function loadEnvironment() {
     dotenv.config()
