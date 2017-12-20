@@ -71,6 +71,7 @@ export function getWebpackConfig({ pages, plugins, devServer }: WebpackConfigOpt
                 localIdentName: '[local]__[name]',
                 modules: true,
                 sourceMap: true,
+                minimize: !devServer
               },
             },
             {
@@ -87,7 +88,12 @@ export function getWebpackConfig({ pages, plugins, devServer }: WebpackConfigOpt
         {
           test: /\.css$/,
           use: styleLoader(
-            require.resolve('css-loader'),
+            {
+              loader: require.resolve('css-loader'),
+              options: {
+                minimize: !devServer
+              }
+            },
             {
               loader: 'postcss-loader',
               options: {
@@ -111,11 +117,19 @@ export function getWebpackConfig({ pages, plugins, devServer }: WebpackConfigOpt
     },
 
     plugins: [
-      new webpack.NamedModulesPlugin(),
-      new webpack.HotModuleReplacementPlugin({
-        requestTimeout: 2000
-      }),
-      new webpack.NoEmitOnErrorsPlugin(),
+      ...ifDevelopment(
+        new webpack.NamedModulesPlugin(),
+        new webpack.HotModuleReplacementPlugin({
+          requestTimeout: 2000
+        }),
+        new webpack.NoEmitOnErrorsPlugin(),
+      ),
+      ...ifProduction(
+        new webpack.DefinePlugin({
+          'process.env.NODE_ENV': JSON.stringify('production'),
+        }),
+        new webpack.optimize.UglifyJsPlugin(),
+      )
     ],
   }
 
