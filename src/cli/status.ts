@@ -1,10 +1,10 @@
 import 'colors'
 
-export function stage<T>(description: string, fn: () => T): T {
+export async function stage<T>(description: string, fn: () => T): Promise<T> {
   process.stderr.write((description + '...').grey)
 
   try {
-    const result = fn()
+    const result = await fn()
     process.stderr.write(' [OK]\n'.green)
     return result
 
