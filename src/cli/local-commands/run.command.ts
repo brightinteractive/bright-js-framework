@@ -71,7 +71,7 @@ export async function handler({ port }: RunCommandOpts) {
 
   app.get('*', (req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/html' })
-    res.write(renderHtmlWrapper({ config: getFrontendEnvironment() }))
+    res.write(renderHtmlWrapper({ config: getFrontendEnvironment(), devserver: true }))
     res.end()
   })
 

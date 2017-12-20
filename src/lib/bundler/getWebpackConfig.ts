@@ -133,7 +133,7 @@ export function getWebpackConfig({ pages, plugins }: WebpackConfigOpts): webpack
       },
 
       output: {
-        path: path.join(process.cwd(), 'build'),
+        path: path.join(process.cwd(), 'build', 'public'),
         filename: 'bundle.js',
       },
 
@@ -182,8 +182,8 @@ export function getWebpackConfig({ pages, plugins }: WebpackConfigOpts): webpack
       },
 
       output: {
-        path: path.join(process.cwd(), 'build'),
-        filename: 'server.js',
+        path: path.join(process.cwd(), 'build', 'server'),
+        filename: 'bundle.js',
         libraryTarget: 'commonjs2',
       },
 
