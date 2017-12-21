@@ -50,12 +50,6 @@ export default async function clientEntry(modules: { pages: RequireList, plugins
     />
   ))
 
-  /** Fetch data required for the first render before loading */
-  async function prefetchData() {
-    await getAppContext().loadPlugins()
-    await load(renderApp())
-  }
-
   /** Get bundled routes and return configuration array for the router */
   function getRoutes(): RouteConfig[] {
     const routeComponents = getEntrypointExports(modules.pages, isRouteComponent)
@@ -67,7 +61,12 @@ export default async function clientEntry(modules: { pages: RequireList, plugins
   }
 
   restoreProcessEnv()
-  await prefetchData()
+
+  getAppContext().applicationWillMount()
+  await getAppContext().applicationWillLoad()
+  await load(renderApp())
 
   ReactDOM.render(renderApp(), document.getElementById('app'))
+
+  getAppContext().applicationDidMount()
 }

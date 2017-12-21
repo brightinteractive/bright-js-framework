@@ -1,5 +1,5 @@
 import {loadService} from '../core/load'
-import {gatherServices, Service, ServiceConstructor} from '../core/Service'
+import {gatherServices, Service, ServiceConstructor, initializeService, ServiceContainer} from '../core/Service'
 import {TestFixture, TestFixtureProps} from './TestFixture'
 
 export interface ServiceTestFixtureProps<ServiceType extends Service> extends TestFixtureProps {
@@ -41,40 +41,36 @@ export class ServiceTestFixture<ServiceType extends Service> extends TestFixture
   }
 
   private async load() {
+    this.appContext.applicationWillMount()
+    await this.appContext.applicationWillLoad()
+
     await loadService(
       new this.serviceConstructor({ '@appContext': this.appContext }, {})
     )
 
     this.service = new this.serviceConstructor({'@appContext': this.appContext}, {}) as ServiceType
 
-    this.allServices
-      .forEach(this.initializeService)
+    this.allServices.forEach(this.initializeService)
 
-    this.allServices
-      .forEach((service) => {
-        if (service.serviceWillMount) {
-          service.serviceWillMount()
-        }
-      })
+    this.allServices.forEach((service) => {
+      if (service.serviceWillMount) {
+        service.serviceWillMount()
+      }
+    })
 
-    this.allServices
-      .forEach((service) => {
-        if (service.serviceDidMount) {
-          service.serviceDidMount()
-        }
-      })
+    this.allServices.forEach((service) => {
+      if (service.serviceDidMount) {
+        service.serviceDidMount()
+      }
+    })
+
+    this.appContext.applicationDidMount()
   }
 
-  private initializeService = (service: any) => {
-    service.state = {}
+  private initializeService = (service: Service) => {
+    const container = new ServiceContainer()
+    container.props = this.serviceProps
 
-    service.controllerProps = this.serviceProps
-
-    service.setState = (state: any, callback?: () => void) => {
-      service.state = {...service.state, ...state}
-      if (callback) {
-        callback()
-      }
-    }
+    initializeService(service, container)
   }
 }

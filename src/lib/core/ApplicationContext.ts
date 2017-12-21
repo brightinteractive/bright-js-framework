@@ -2,7 +2,7 @@ import { Store } from 'redux'
 import { createStorePlugin, getStoreFromContext } from '../plugins/StorePlugin/StorePlugin'
 import { InjectionContext } from './InjectionClient'
 import { PluginConstructor, ContextValueMap, getPluginCreationOrder, getExportedDependencies, PluginConfig } from './PluginConfig'
-import { gatherServices, ServiceContainer, initializeService } from './Service';
+import { gatherServices, ServiceContainer, initializeService } from './Service'
 
 export class ApplicationContext {
   readonly plugins: PluginConfig[] = []
@@ -30,7 +30,7 @@ export class ApplicationContext {
     orderedConstructors.forEach((constructor) => this.constructPlugin(constructor))
   }
 
-  async loadPlugins() {
+  async applicationWillLoad() {
     for (const plugin of this.plugins) {
       const services = [plugin, ...gatherServices(plugin)]
 
@@ -39,6 +39,30 @@ export class ApplicationContext {
           await service.serviceWillLoad()
         }
       }))
+    }
+  }
+
+  applicationWillMount() {
+    for (const plugin of this.plugins) {
+      const services = [plugin, ...gatherServices(plugin)]
+
+      for (const service of services) {
+        if (service.serviceWillMount) {
+          service.serviceWillMount()
+        }
+      }
+    }
+  }
+
+  applicationDidMount() {
+    for (const plugin of this.plugins) {
+      const services = [plugin, ...gatherServices(plugin)]
+
+      for (const service of services) {
+        if (service.serviceDidMount) {
+          service.serviceDidMount()
+        }
+      }
     }
   }
 
@@ -66,5 +90,10 @@ export class ApplicationContext {
     getExportedDependencies(PluginType).forEach(({ dependencyId, propertyKey }) => {
       this.injectedObjects.set(dependencyId, (instance as any)[propertyKey])
     })
+
+    const services = [instance, ...gatherServices(instance)]
+    const container = new ServiceContainer()
+
+    services.forEach((service) => initializeService(service, container))
   }
 }
