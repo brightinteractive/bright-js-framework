@@ -1,11 +1,25 @@
 import { uniqueId } from 'lodash'
 import { isController } from './Controller'
 import { InjectionClient, InjectionContext } from './InjectionClient'
+import { patchProperty, patchMethod } from './util'
 
 const SERVICE_IDENTIFIER = '__luminant__isService'
 const SERVICE_UID = '__luminant__serviceUid'
 
 export type ServiceConstructor<T extends Service = Service> = new(context: InjectionContext, parent: {}) => T
+
+export class ServiceContainer<Props = {}, State = {}> {
+  props: Props
+  state: State
+
+  setState(nextState: Partial<State>, nextFn?: () => void): void {
+    this.state = { ...this.state as any, ...nextState as any}
+
+    if (nextFn) {
+      nextFn()
+    }
+  }
+}
 
 export class Service<State = any> implements InjectionClient {
   constructor(context: InjectionContext, parent: {}) {
@@ -16,7 +30,7 @@ export class Service<State = any> implements InjectionClient {
   readonly controllerProps: {}
   readonly parent: {}
 
-  readonly state: State
+  state: State
   setState(state: Partial<State>, nextFn?: () => void): void {}
 
   context: InjectionContext
@@ -33,7 +47,6 @@ export interface Service {
   serviceWillMount?(): void
   serviceDidMount?(): void
   serviceWillLoad?(): void | Promise<any>
-  serviceDidLoad?(): void | Promise<any>
   serviceWillUnmount?(): void
 }
 
@@ -100,13 +113,16 @@ export function gatherServices(parent: any, opts: { recursive?: boolean } = {}):
   return services
 }
 
-export function initializeService(service: Service): void
-export function initializeService(service: any) {
+export function initializeService(service: Service, container: ServiceContainer): void
+export function initializeService(service: any, container: ServiceContainer) {
   if (service[SERVICE_UID]) {
     throw new Error(`Attempt to initialize service ${service.constructor.name} twice`)
   }
 
   service[SERVICE_UID] = uniqueId(service.constructor.name)
+
+  bindProps(container, service)
+  bindState(container, service)
 }
 
 export function getServiceUid(service: Service): string
@@ -116,4 +132,36 @@ export function getServiceUid(service: any) {
   }
 
   return service[SERVICE_UID]
+}
+
+/** Override service’s state methods to store state in controller */
+export function bindState(controller: ServiceContainer, service: Service) {
+  controller.setState({[getServiceUid(service)]: service.state})
+
+  patchProperty(service, 'state', function(this: Service) {
+    return getState(getServiceUid(this))
+  })
+
+  patchMethod(service, 'setState', function(this: Service, deltaState: any, cb: () => void) {
+    const prevState = getState(getServiceUid(this))
+
+    controller.setState({
+      [getServiceUid(this)]: {
+        ...prevState,
+        ...deltaState
+      }
+    }, cb)
+  })
+
+  function getState(uid: string) {
+    const controllerState: any = controller.state || {}
+    return controllerState[uid] || {}
+  }
+}
+
+/** Override service’s props to take props from controller */
+export function bindProps(controller: ServiceContainer, service: Service) {
+  patchProperty(service, 'controllerProps', function(this: Service) {
+    return controller.props
+  })
 }

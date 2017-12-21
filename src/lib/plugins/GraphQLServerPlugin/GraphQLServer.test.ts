@@ -110,6 +110,20 @@ describe('GraphQLServer', () => {
     })
   })
 
+  it('should generate stub schema when missing a resolve', () => {
+    const server = new GraphQLServer({
+      connectors: [],
+      schema: [
+        {
+          resolvers: [],
+          typeDefs: UserSchema
+        }
+      ]
+    })
+
+    expect(server.schema!.getTypeMap()).to.contain.keys('User')
+  })
+
   it('should return an choose an aribitrary resolver on conflict between resolvers', async () => {
     @decorateSchemaType('Query')
     class QueryResolver1 extends SchemaType {

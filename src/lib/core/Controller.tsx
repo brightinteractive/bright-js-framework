@@ -4,8 +4,8 @@ import * as PropTypes from 'prop-types'
 import { InjectionContext } from './InjectionClient'
 import { LoadContext } from './load'
 import { ControllerSubtreeLoadingService } from './ControllerSubtreeLoadingService'
-import { gatherServices, Service, initializeService, getServiceUid } from './Service'
-import { patchMethod, patchProperty, patchReturnMethod } from './util'
+import { gatherServices, initializeService } from './Service'
+import { patchMethod, patchReturnMethod } from './util'
 import { controllerSubtreeLoadingService } from './ControllerSubtreeLoadingService'
 import { injectDependency } from './InjectionClient'
 import { ControllerMountSpy } from '../plugins/ControllerMountSpyPlugin/ControllerMountSpyPlugin'
@@ -72,10 +72,7 @@ export function injectControllerBehavior(ComponentClass: React.ComponentClass) {
 
   patchMethod(ComponentClass.prototype, 'componentWillMount', function(this: Controller) {
     const services = gatherServices(this)
-    services.forEach(initializeService)
-
-    bindProps(this, services)
-    bindState(this, services)
+    services.forEach((service) => initializeService(service, this))
 
     services.forEach((service) => {
       if (service.serviceWillMount) {
@@ -119,42 +116,6 @@ export function injectControllerBehavior(ComponentClass: React.ComponentClass) {
   patchReturnMethod(ComponentClass.prototype, 'getChildContext', function(this: Controller, prev?: any) {
     const { childLoadContext } = this['@subtreeLoader']
     return childLoadContext && { ...prev, ...childLoadContext } || prev || {}
-  })
-}
-
-/** Override service’s state methods to store state in controller */
-function bindState(controller: React.Component, services: Service[]) {
-  services.forEach((service) => {
-    controller.setState({[getServiceUid(service)]: service.state})
-
-    patchProperty(service, 'state', function(this: Service) {
-      return getState(getServiceUid(this))
-    })
-
-    patchMethod(service, 'setState', function(this: Service, deltaState: any, cb: () => void) {
-      const prevState = getState(getServiceUid(this))
-
-      controller.setState({
-        [getServiceUid(this)]: {
-          ...prevState,
-          ...deltaState
-        }
-      }, cb)
-    })
-  })
-
-  function getState(uid: string) {
-    const controllerState: any = controller.state || {}
-    return controllerState[uid] || {}
-  }
-}
-
-/** Override service’s props to take props from controller */
-function bindProps(controller: React.Component, services: Service[]) {
-  services.forEach((service) => {
-    patchProperty(service, 'controllerProps', function(this: Service) {
-      return controller.props
-    })
   })
 }
 

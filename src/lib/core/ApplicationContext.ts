@@ -2,6 +2,7 @@ import { Store } from 'redux'
 import { createStorePlugin, getStoreFromContext } from '../plugins/StorePlugin/StorePlugin'
 import { InjectionContext } from './InjectionClient'
 import { PluginConstructor, ContextValueMap, getPluginCreationOrder, getExportedDependencies, PluginConfig } from './PluginConfig'
+import { gatherServices, ServiceContainer, initializeService } from './Service';
 
 export class ApplicationContext {
   readonly plugins: PluginConfig[] = []
@@ -27,6 +28,18 @@ export class ApplicationContext {
     ])
 
     orderedConstructors.forEach((constructor) => this.constructPlugin(constructor))
+  }
+
+  async loadPlugins() {
+    for (const plugin of this.plugins) {
+      const services = [plugin, ...gatherServices(plugin)]
+
+      await Promise.all(services.map(async (service) => {
+        if (service.serviceWillLoad) {
+          await service.serviceWillLoad()
+        }
+      }))
+    }
   }
 
   findPluginOfType<T>(type: new (...args: any[]) => T): T {

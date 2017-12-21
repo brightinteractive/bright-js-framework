@@ -6,6 +6,9 @@ import { filter, uniqueId } from 'lodash'
 import { PluginConstructor, PluginConfig } from '../core/PluginConfig'
 import { ApplicationContext } from '../core/ApplicationContext'
 import { createBrowserPlugin } from '../plugins/BrowserPlugin/BrowserPlugin'
+import { ServiceConstructor, Service, decorateServiceProperty } from '../core/Service'
+import { createSelectService, StateSelector } from '../plugins/StorePlugin/SelectService'
+import { createSelectSpyService, SelectSpy } from '../plugins/StorePlugin/SelectorSpyService'
 
 export interface TestFixtureProps {
   plugins?: PluginConstructor[]
@@ -45,6 +48,22 @@ export abstract class TestFixture<Instance> {
     }
 
     return result.get.call(this.instance)
+  }
+
+  applyService<S extends Service>(serviceType: ServiceConstructor<S>): S {
+    return this.apply(decorateServiceProperty(serviceType))
+  }
+
+  applySelector<T, Props>(selectFn: (x: any, props?: Props) => T, props?: Props): T {
+    return this.apply<StateSelector<T>>(createSelectService(selectFn, () => props)).value
+  }
+
+  spySelector<T, Props>(selectFn: (x: any, props?: Props) => T, props?: Props): T[] {
+    return this.apply<SelectSpy<T>>(createSelectSpyService(selectFn, () => props)).values
+  }
+
+  nextSelectorValue<T, Props>(selectFn: (x: any, props?: Props) => T, props?: Props): Promise<T> {
+    return this.apply<SelectSpy<T>>(createSelectSpyService(selectFn, () => props)).nextValue()
   }
 
   abstract get instance(): Instance

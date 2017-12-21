@@ -17,13 +17,11 @@ export interface SpyPluginResult {
   serviceWillMount: SinonSpy,
   serviceDidMount: SinonSpy,
   serviceWillLoad: SinonSpy,
-  serviceDidLoad: SinonSpy,
   pageWillTransition: SinonSpy,
 }
 
 export function spyPlugin(): SpyPluginResult {
   const serviceWillLoad = spy()
-  const serviceDidLoad = spy()
   const serviceWillMount = spy()
   const serviceDidMount = spy()
   const pageWillTransition = spy()
@@ -33,7 +31,6 @@ export function spyPlugin(): SpyPluginResult {
       super(context)
 
       this.serviceWillLoad = serviceWillLoad
-      this.serviceDidLoad = serviceDidLoad
       this.serviceWillMount = serviceWillMount
       this.serviceDidMount = serviceDidMount
       this.pageWillTransition = pageWillTransition
@@ -43,7 +40,6 @@ export function spyPlugin(): SpyPluginResult {
   return {
     SpyPlugin: SpyPluginConfigClass,
     serviceWillLoad,
-    serviceDidLoad,
     serviceWillMount,
     serviceDidMount,
     pageWillTransition

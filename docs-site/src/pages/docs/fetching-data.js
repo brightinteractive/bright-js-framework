@@ -51,8 +51,7 @@ export default () => {
           additional hooks. These differ from React lifecycle hooks, in that they can be asynchronous.
         </p>
         <p>
-          If a service implements <code>serviceWillLoad</code> and/or <code>serviceDidLoad</code>, these will be called in
-          order whenever:
+          If a service implements <code>serviceWillLoad</code>, this will be called whenever:
         </p>
         <ul>
           <li>

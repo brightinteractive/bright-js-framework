@@ -78,9 +78,6 @@ export class GraphQLServer {
    */
   private createSchemaModule(config: { typeDefs: DocumentNode | string, resolvers: Array<typeof SchemaType> }): GraphQLSchema | undefined {
     const resolverTypes = config.resolvers
-    if (resolverTypes.length === 0) {
-      return undefined
-    }
 
     const resolvers = this.createFieldResolversForTypes(resolverTypes)
 
@@ -122,4 +119,3 @@ export class GraphQLServer {
     }
   }
 }
-

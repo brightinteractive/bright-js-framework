@@ -17,7 +17,6 @@ export interface SpyServiceResult {
   serviceWillMount: SinonSpy,
   serviceDidMount: SinonSpy,
   serviceWillLoad: SinonSpy,
-  serviceDidLoad: SinonSpy,
   serviceWillUnmount: SinonSpy,
 }
 
@@ -25,7 +24,6 @@ export function spyService(children: ServiceConstructor[] = []): SpyServiceResul
   const serviceWillMount = spy()
   const serviceDidMount = spy()
   const serviceWillLoad = spy()
-  const serviceDidLoad = spy()
   const serviceWillUnmount = spy()
 
   class SpyServiceClass extends Service {
@@ -35,7 +33,6 @@ export function spyService(children: ServiceConstructor[] = []): SpyServiceResul
       this.serviceWillMount = serviceWillMount
       this.serviceDidMount = serviceDidMount
       this.serviceWillLoad = serviceWillLoad
-      this.serviceDidLoad = serviceDidLoad
       this.serviceWillUnmount = serviceWillUnmount
     }
   }
@@ -47,7 +44,6 @@ export function spyService(children: ServiceConstructor[] = []): SpyServiceResul
     serviceWillMount,
     serviceDidMount,
     serviceWillLoad,
-    serviceDidLoad,
     serviceWillUnmount,
   }
 }

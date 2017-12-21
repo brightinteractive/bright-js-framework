@@ -52,6 +52,13 @@ export class ServiceTestFixture<ServiceType extends Service> extends TestFixture
 
     this.allServices
       .forEach((service) => {
+        if (service.serviceWillMount) {
+          service.serviceWillMount()
+        }
+      })
+
+    this.allServices
+      .forEach((service) => {
         if (service.serviceDidMount) {
           service.serviceDidMount()
         }
@@ -68,10 +75,6 @@ export class ServiceTestFixture<ServiceType extends Service> extends TestFixture
       if (callback) {
         callback()
       }
-    }
-
-    if (service.serviceWillMount) {
-      service.serviceWillMount()
     }
   }
 }
