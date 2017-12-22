@@ -276,7 +276,7 @@ export function state(key: string): PropertyDecorator {
  * ```
  */
 export function select<T, Props = {}>(selectFn: SelectFn<T, Props>, props?: (x: {}) => Props): PropertyDecorator {
-  return createSelectService(selectFn)
+  return decorateServiceProperty(createSelectService(selectFn, props))
 }
 
 /**

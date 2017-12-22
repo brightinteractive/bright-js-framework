@@ -1,5 +1,5 @@
 import {Store} from 'redux'
-import {decorateServiceProperty, Service, ServiceConstructor} from '../../core/Service'
+import {Service, ServiceConstructor} from '../../core/Service'
 import {injectStore} from './StorePlugin'
 
 export interface StateSelector<T> extends Service {
@@ -8,7 +8,7 @@ export interface StateSelector<T> extends Service {
 
 export type SelectServiceConstructor<T> = ServiceConstructor<StateSelector<T>>
 
-export function createSelectService(selector: (x: any, props?: any) => any, getProps?: (x: any) => any): any {
+export function createSelectService(selector: (x: any, props?: any) => any, getProps?: (x: any) => any): SelectServiceConstructor<any> {
   class SelectService extends Service<{ value: any }> {
     state = {value: undefined}
 
@@ -46,5 +46,5 @@ export function createSelectService(selector: (x: any, props?: any) => any, getP
     }
   }
 
-  return decorateServiceProperty(SelectService)
+  return SelectService
 }

@@ -26,13 +26,15 @@ export interface GraphQLQueryServiceState {
 }
 
 export function decorateGraphQLQuery(query: DocumentNode, opts: GraphQLQueryProps = {}) {
+  const errorSelector = (state: any, props: {}) => GraphQLPlugin.selectErrors({ variables: props, query })(state)
+
   class GraphQLQueryServiceImpl<Result> extends Service<GraphQLQueryServiceState> {
     private queryObserver: Subscription
 
     @injectDependency(ApolloClient)
     client: ApolloClient<any>
 
-    @createSelectService((state, props) => GraphQLPlugin.selectErrors({ variables: props, query })(state))
+    @decorateServiceProperty(createSelectService(errorSelector))
     errors: StateSelector<GraphQLError[]>
 
     @injectDispatch

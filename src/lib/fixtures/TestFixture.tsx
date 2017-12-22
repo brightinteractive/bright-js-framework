@@ -7,7 +7,7 @@ import { PluginConstructor, PluginConfig } from '../core/PluginConfig'
 import { ApplicationContext } from '../core/ApplicationContext'
 import { createBrowserPlugin } from '../plugins/BrowserPlugin/BrowserPlugin'
 import { ServiceConstructor, Service, decorateServiceProperty } from '../core/Service'
-import { createSelectService, StateSelector } from '../plugins/StorePlugin/SelectService'
+import { createSelectService } from '../plugins/StorePlugin/SelectService'
 import { createSelectSpyService, SelectSpy } from '../plugins/StorePlugin/SelectorSpyService'
 
 export interface TestFixtureProps {
@@ -71,7 +71,7 @@ export abstract class TestFixture<Instance> {
   }
 
   async applySelector<T, Props>(selectFn: (x: any, props?: Props) => T, props?: Props): Promise<T> {
-    const selector = await this.apply<StateSelector<T>>(createSelectService(selectFn, () => props))
+    const selector = await this.applyService(createSelectService(selectFn, () => props))
     return selector.value
   }
 
