@@ -39,11 +39,16 @@ export interface GraphQlMockTypeDefinition {
   (id: string, params: any): GraphQlMockObjectTypeDefinition
 }
 
+export type GraphQLValue
+  = GraphQLPrimitiveValue
+  | GraphQLPrimitiveValue[]
+
 export type GraphQLPrimitiveValue
   = string
   | number
   | undefined
   | null
+  | object
 
 /**
  * Mock implementation of a GraphQL object type.
@@ -51,5 +56,5 @@ export type GraphQLPrimitiveValue
  * Mapping from object fields to GraphQL mock values.
  */
 export interface GraphQlMockObjectTypeDefinition {
-  [key: string]: GraphQLPrimitiveValue | GraphQlMockTypeDefinition
+  [key: string]: GraphQLValue | GraphQlMockTypeDefinition
 }

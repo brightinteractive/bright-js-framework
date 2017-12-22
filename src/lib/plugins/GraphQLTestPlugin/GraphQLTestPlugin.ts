@@ -18,7 +18,7 @@ export interface GraphQlPluginProps {
 }
 
 export type GraphQlMocks = Record<string, (id: string, params: any) => GraphQlMockType>
-export type GraphQlMockType = Record<string, string | number | undefined | null | GraphQLFieldResolver<string, any>>
+export type GraphQlMockType = Record<string, object | string | number | undefined | null | GraphQLFieldResolver<string, any>>
 
 export function graphQlTestPlugin({ schema, mocks }: GraphQlPluginProps): PluginConstructor {
   const executableSchema = (
