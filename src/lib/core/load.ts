@@ -103,10 +103,6 @@ export async function loadService(service: Service) {
   await Promise.all(
     gatherServices(service, { recursive: false }).map(loadService)
   )
-
-  if (service.serviceDidLoad) {
-    await service.serviceDidLoad()
-  }
 }
 
 export function mountComponent<P>(type: React.ComponentClass<P>, props: P, context: {}): React.Component<{}, {}> {

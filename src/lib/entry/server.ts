@@ -1,4 +1,3 @@
-import 'ts-node/register'
 import 'colors'
 import * as express from 'express'
 import { Express } from 'express-serve-static-core'

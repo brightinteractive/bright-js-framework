@@ -6,7 +6,7 @@ import { spyController } from './mocks/SpyController'
 import { spyService } from './mocks/SpyService'
 import { Service, decorateServiceProperty } from './Service'
 import { decorateController } from './Controller'
-import { ControllerTestFixture } from '../fixtures/ControllerTestFixture';
+import { ControllerTestFixture } from '../fixtures/ControllerTestFixture'
 
 describe('load()', () => {
   it('should descend shallowly through primitive element types', async () => {
@@ -114,14 +114,12 @@ describe('load()', () => {
     const {
       SpyService: ChildService,
       serviceWillLoad: childWillLoad,
-      serviceDidLoad: childDidLoad,
       serviceWillMount: childWillMount
     } = spyService()
 
     const {
       SpyService: ParentService,
       serviceWillLoad: parentWillLoad,
-      serviceDidLoad: parentDidLoad,
       serviceWillMount: parentWillMount
     } = spyService([ChildService])
 
@@ -136,8 +134,6 @@ describe('load()', () => {
     expect(parentWillMount).to.have.been.calledBefore(parentWillLoad)
     expect(parentWillLoad).to.have.been.calledBefore(childWillMount)
     expect(childWillMount).to.have.been.calledBefore(childWillLoad)
-    expect(childWillLoad).to.have.been.calledBefore(childDidLoad)
-    expect(childDidLoad).to.have.been.calledBefore(parentDidLoad)
   })
 
   it('should not call serviceDidMount on services', async () => {

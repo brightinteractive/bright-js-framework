@@ -6,6 +6,9 @@ import { filter, uniqueId } from 'lodash'
 import { PluginConstructor, PluginConfig } from '../core/PluginConfig'
 import { ApplicationContext } from '../core/ApplicationContext'
 import { createBrowserPlugin } from '../plugins/BrowserPlugin/BrowserPlugin'
+import { ServiceConstructor, Service, decorateServiceProperty } from '../core/Service'
+import { createSelectService } from '../plugins/StorePlugin/SelectService'
+import { createSelectSpyService, SelectSpy } from '../plugins/StorePlugin/SelectorSpyService'
 
 export interface TestFixtureProps {
   plugins?: PluginConstructor[]
@@ -28,6 +31,16 @@ export abstract class TestFixture<Instance> {
     ])
   }
 
+  abstract get instance(): Instance
+
+  get location(): Location {
+    return this.history.location
+  }
+
+  get store(): Store<any> {
+    return this.appContext.store
+  }
+
   getPlugin<T extends PluginConfig>(constructor: PluginConstructor<T>): T {
     const matches = filter(this.appContext.plugins, (x) => x instanceof constructor) as T[]
 
@@ -38,22 +51,51 @@ export abstract class TestFixture<Instance> {
     return matches[0]
   }
 
-  apply<T>(decorator: PropertyDecorator): T {
+  async apply<T>(decorator: PropertyDecorator): Promise<T> {
     const result: PropertyDescriptor = tslib.__decorate([decorator], this.instance, uniqueId('decoratedProperty'))
     if (!result || !result.get) {
       throw new Error('Invalid decorator')
     }
 
-    return result.get.call(this.instance)
+    const value = result.get.call(this.instance)
+
+    if (value instanceof Service) {
+      await this.initializeService(value)
+    }
+
+    return value
   }
 
-  abstract get instance(): Instance
-
-  get location(): Location {
-    return this.history.location
+  applyService<S extends Service>(serviceType: ServiceConstructor<S>): Promise<S> {
+    return this.apply(decorateServiceProperty(serviceType))
   }
 
-  get store(): Store<any> {
-    return this.appContext.store
+  async applySelector<T, Props>(selectFn: (x: any, props?: Props) => T, props?: Props): Promise<T> {
+    const selector = await this.applyService(createSelectService(selectFn, () => props))
+    return selector.value
+  }
+
+  async spySelector<T, Props>(selectFn: (x: any, props?: Props) => T, props?: Props): Promise<T[]> {
+    const spy = await this.apply<SelectSpy<T>>(createSelectSpyService(selectFn, () => props))
+    return spy.values
+  }
+
+  async nextValueOf<T, Props>(selectFn: (x: any, props?: Props) => T, props?: Props): Promise<T> {
+    const spy = await this.apply<SelectSpy<T>>(createSelectSpyService(selectFn, () => props))
+    return spy.nextValue()
+  }
+
+  private async initializeService(service: Service) {
+    if (service.serviceWillMount) {
+      service.serviceWillMount()
+    }
+
+    if (service.serviceWillLoad) {
+      await service.serviceWillLoad()
+    }
+
+    if (service.serviceDidMount) {
+      service.serviceDidMount()
+    }
   }
 }

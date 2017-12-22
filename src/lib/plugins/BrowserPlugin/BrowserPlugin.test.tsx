@@ -11,7 +11,7 @@ import { BrowserActions } from './BrowserActions'
 describe('BrowserPlugin', () => {
   @decorateController
   class LocationView extends React.PureComponent {
-    @createSelectService(locationSelect)
+    @decorateServiceProperty(createSelectService(locationSelect))
     location: StateSelector<Location>
 
     @decorateServiceProperty(BrowserActions)

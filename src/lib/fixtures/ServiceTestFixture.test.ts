@@ -111,7 +111,6 @@ describe('ServiceTestFixture', () => {
       })
 
       expect(fixture.service.serviceWillLoad).to.have.been.calledOnce
-      expect(fixture.service.serviceDidLoad).to.have.been.calledAfter(fixture.service.serviceWillLoad as SinonSpy)
     })
 
     it('component should be unmounted', async () => {

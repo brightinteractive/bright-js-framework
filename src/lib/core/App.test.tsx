@@ -94,7 +94,7 @@ describe('App', () => {
 
   it('should not render transitioned routes until data is loaded', async () => {
     const {MountSpy, didMount} = mountSpy()
-    const {SpyService, serviceDidLoad} = spyService()
+    const {SpyService, serviceWillLoad} = spyService()
     const {Controller, componentDidMount} = spyController({services: [SpyService]})
 
     const mountedApp = mount<AppProps>(
@@ -117,7 +117,7 @@ describe('App', () => {
     mountedApp.props().history.replace('/2')
     await didMount
 
-    expect(serviceDidLoad).to.have.been.calledBefore(componentDidMount)
+    expect(serviceWillLoad).to.have.been.calledBefore(componentDidMount)
   })
 
   it('calls pageWillTransition on all plugins before next route is loaded', () => {

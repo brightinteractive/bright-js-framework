@@ -10,7 +10,6 @@ import {createBrowserPlugin} from '../plugins/BrowserPlugin/BrowserPlugin'
 import {PluginConfig} from '../core/PluginConfig'
 import {getRouteComponentPath, isRouteComponent} from '../core/route'
 import {RouteConfig} from '../core/Router'
-import {asyncInvokeMethodOnAllObjects} from '../core/util'
 
 // Configuration passed from server in ‘magic’ variable
 declare const ___process_env_config: NodeJS.ProcessEnv
@@ -51,17 +50,6 @@ export default async function clientEntry(modules: { pages: RequireList, plugins
     />
   ))
 
-  /** Fetch data required for the first render before loading */
-  async function prefetchData() {
-    const {plugins} = getAppContext()
-
-    await asyncInvokeMethodOnAllObjects(plugins, (plugin) => plugin.serviceWillLoad)
-
-    await load(renderApp())
-
-    await asyncInvokeMethodOnAllObjects(plugins, (plugin) => plugin.serviceDidLoad)
-  }
-
   /** Get bundled routes and return configuration array for the router */
   function getRoutes(): RouteConfig[] {
     const routeComponents = getEntrypointExports(modules.pages, isRouteComponent)
@@ -73,7 +61,12 @@ export default async function clientEntry(modules: { pages: RequireList, plugins
   }
 
   restoreProcessEnv()
-  await prefetchData()
+
+  getAppContext().applicationWillMount()
+  await getAppContext().applicationWillLoad()
+  await load(renderApp())
 
   ReactDOM.render(renderApp(), document.getElementById('app'))
+
+  getAppContext().applicationDidMount()
 }

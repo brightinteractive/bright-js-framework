@@ -41,6 +41,8 @@ export class ControllerTestFixture<Controller extends React.Component = React.Co
           {this.markup}
         </ContextProvider>
       )
+
+      this.appContext.applicationDidMount()
     }
 
     return this.reactWrapper.update()
@@ -54,8 +56,11 @@ export class ControllerTestFixture<Controller extends React.Component = React.Co
     this.render().unmount()
   }
 
-  private load() {
-    return load(
+  private async load() {
+    this.appContext.applicationWillMount()
+    await this.appContext.applicationWillLoad()
+
+    await load(
       <ContextProvider appContext={this.appContext}>
         {this.markup}
       </ContextProvider>

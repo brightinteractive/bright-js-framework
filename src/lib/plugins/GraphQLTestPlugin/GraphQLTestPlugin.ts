@@ -6,12 +6,11 @@ import { ApolloClient } from 'apollo-client'
 import { addMockFunctionsToSchema, makeExecutableSchema } from 'graphql-tools'
 import { GraphQLFieldResolver, DocumentNode } from 'graphql'
 import { exportDependency, PluginConstructor } from '../../core/PluginConfig'
-import { getEntrypointExports, RequireList } from '../../bundler/Entrypoint'
+import { RequireList } from '../../bundler/Entrypoint'
 import { GraphQLServer } from '../GraphQLServerPlugin/GraphQLServer'
 import { LocalLink } from '../GraphQLPlugin/LocalLink'
 import GraphQLPluginBase from '../GraphQLPlugin/GraphQLPlugin.common'
 import { findGraphQLSources } from '../GraphQLServerPlugin/loadSchema'
-import { isSchemaType } from '../GraphQLServerPlugin/Resolver'
 
 export interface GraphQlPluginProps {
   schema?: DocumentNode | string
@@ -31,8 +30,7 @@ export function graphQlTestPlugin({ schema, mocks }: GraphQlPluginProps): Plugin
   if (mocks && executableSchema) {
     addMockFunctionsToSchema({
       mocks,
-      schema: executableSchema,
-      preserveResolvers: true
+      schema: executableSchema
     })
   }
 
@@ -53,7 +51,7 @@ function getApplicationSchema() {
     connectors: [],
     schema: schemas.map(({ typeDefs, resolvers }) => ({
       typeDefs: require(typeDefs),
-      resolvers: getEntrypointExports(createRequireList(resolvers), isSchemaType)
+      resolvers: []
     })),
   })
 
