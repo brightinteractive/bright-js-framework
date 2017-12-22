@@ -216,8 +216,8 @@ export interface Action {
  *
  * Passed to the @select() decorator
  */
-export interface SelectFn<T> {
-  (state: any): T
+export interface SelectFn<T, Props = {}> {
+  (state: any, props?: Props): T
 }
 
 /**
@@ -275,7 +275,7 @@ export function state(key: string): PropertyDecorator {
  *  }
  * ```
  */
-export function select<T>(selectFn: SelectFn<T>): PropertyDecorator {
+export function select<T, Props = {}>(selectFn: SelectFn<T, Props>, props?: (x: {}) => Props): PropertyDecorator {
   return createSelectService(selectFn)
 }
 
