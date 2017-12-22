@@ -7,7 +7,9 @@ import * as React from 'react'
 import { createSelectService, StateSelector } from './SelectService'
 import { Dispatch } from 'redux'
 import { injectDispatch, createStorePlugin } from './StorePlugin'
-import { ControllerTestFixture } from '../../fixtures/ControllerTestFixture';
+import { ControllerTestFixture } from '../../fixtures/ControllerTestFixture'
+import { ServiceTestFixture } from '../../fixtures/ServiceTestFixture'
+import { decorateServiceProperty } from '../../core/Service'
 
 describe('StorePlugin', () => {
   class CounterPlugin extends PluginConfig {
@@ -25,7 +27,7 @@ describe('StorePlugin', () => {
 
   @decorateController
   class CounterView extends React.PureComponent<{ overrideValue?: number }> {
-    @counter
+    @decorateServiceProperty(counter)
     counter: StateSelector<number>
 
     @injectDispatch
@@ -78,6 +80,16 @@ describe('StorePlugin', () => {
 
     expect(fixture.instance.counter.value).to.eql(123
     )
+  })
+
+  it('should use props function if provided', async () => {
+    const selector = (_: {}, props: { value: number}) => props.value
+    const fixture = await ServiceTestFixture.create({
+      plugins: [CounterPlugin],
+      service: createSelectService(selector, () => ({ value: 3 }))
+    })
+
+    expect(fixture.instance.value).to.eql(3)
   })
 
   it('should not create a store if no reducers are installed', () => {
