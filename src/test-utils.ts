@@ -28,27 +28,27 @@ export interface TestFixture<Instance> {
   /**
    * Apply a property decorator to instance and return the result of the decorated property.
    */
-  apply<T>(decorator: PropertyDecorator): T
+  apply<T>(decorator: PropertyDecorator): Promise<T>
 
   /**
    * Create and attach a service to instance and return the instance of the service.
    */
-  applyService<S extends Service>(serviceType: new (context: ServiceContext, parent: {}) => S): S
+  applyService<S extends Service>(serviceType: new (context: ServiceContext, parent: {}) => S): Promise<S>
 
   /**
    * Create and attach a selector to instance and return the selected value.
    */
-  applySelector<T, Props>(selectFn: (x: any, props?: Props) => T, props?: Props): T
+  applySelector<T, Props>(selectFn: (x: any, props?: Props) => T, props?: Props): Promise<T>
 
   /**
    * Create and attach a selector to instance and return an array that fills with each new selected value.
    */
-  spySelector<T, Props>(selectFn: (x: any, props?: Props) => T, props?: Props): T[]
+  spySelector<T, Props>(selectFn: (x: any, props?: Props) => T, props?: Props): Promise<T[]>
 
   /**
    * Create and attach a selector to instance and return a promise that resolves on the next value change.
    */
-  nextSelectorValue<T, Props>(selectFn: (x: any, props?: Props) => T, props?: Props): Promise<T>
+  nextValueOf<T, Props>(selectFn: (x: any, props?: Props) => T, props?: Props): Promise<T>
 
   /**
    * Get a plugin of a specified type. If it exists, it will be returned.

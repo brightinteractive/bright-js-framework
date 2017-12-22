@@ -50,7 +50,12 @@ export class ServiceTestFixture<ServiceType extends Service> extends TestFixture
 
     this.service = new this.serviceConstructor({'@appContext': this.appContext}, {}) as ServiceType
 
-    this.allServices.forEach(this.initializeService)
+    this.allServices.forEach((service: Service) => {
+      const container = new ServiceContainer()
+      container.props = this.serviceProps
+
+      initializeService(service, container)
+    })
 
     this.allServices.forEach((service) => {
       if (service.serviceWillMount) {
@@ -65,12 +70,5 @@ export class ServiceTestFixture<ServiceType extends Service> extends TestFixture
     })
 
     this.appContext.applicationDidMount()
-  }
-
-  private initializeService = (service: Service) => {
-    const container = new ServiceContainer()
-    container.props = this.serviceProps
-
-    initializeService(service, container)
   }
 }

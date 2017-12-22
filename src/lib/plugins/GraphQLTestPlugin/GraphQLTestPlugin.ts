@@ -30,8 +30,7 @@ export function graphQlTestPlugin({ schema, mocks }: GraphQlPluginProps): Plugin
   if (mocks && executableSchema) {
     addMockFunctionsToSchema({
       mocks,
-      schema: executableSchema,
-      preserveResolvers: true
+      schema: executableSchema
     })
   }
 
