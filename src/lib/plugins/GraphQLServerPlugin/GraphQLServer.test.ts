@@ -110,7 +110,7 @@ describe('GraphQLServer', () => {
     })
   })
 
-  it('should generate stub schema when missing a resolve', () => {
+  it('should generate stub schema when missing a resolver', () => {
     const server = new GraphQLServer({
       connectors: [],
       schema: [
