@@ -24,7 +24,7 @@ describe('isLoggedInInjector', () => {
 
   it('should return false when token expiry is in the past', () => {
     const tenSecondsAgo = new Date()
-    tenSecondsAgo.setMilliseconds(tenSecondsAgo.getSeconds() - 10)
+    tenSecondsAgo.setSeconds(tenSecondsAgo.getSeconds() - 10)
     const appState = {authTokenValue: {token: {expiresAt: tenSecondsAgo}}}
 
     expectIsLoggedInIsFalse(appState)
