@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 import { expect } from 'chai'
 import { DocumentNode } from 'graphql'
 import { decorateController } from '../../core/Controller'
-import { GraphQLQueryService, decorateGraphQLQuery, GraphQLQueryProps } from './GraphQLQueryService'
+import { GraphQLQueryService, decorateGraphQLQuery } from './GraphQLQueryService'
 import { graphQlTestPlugin, GraphQlMocks } from '../GraphQLTestPlugin/GraphQLTestPlugin'
 import { ControllerTestFixture } from '../../fixtures/ControllerTestFixture'
 
@@ -15,19 +15,25 @@ const schema = `
 `
 
 describe('GraphQLQueryService', () => {
-  async function setup(opts: { query: DocumentNode, mocks: GraphQlMocks, props?: {}, decoratorOpts?: GraphQLQueryProps }) {
+  async function setup(opts: { query: DocumentNode, mocks: GraphQlMocks, props?: {} }) {
     @decorateController
     class Example extends React.PureComponent {
-      @decorateGraphQLQuery(opts.query, opts.decoratorOpts)
+      @decorateGraphQLQuery(opts.query)
       query: GraphQLQueryService<{ someString: string }>
+
+      componentWillMount() {
+        if (opts.props) {
+          this.query.setQueryVariables(opts.props)
+        }
+      }
 
       render() {
         return <div>{JSON.stringify(this.query.data)}</div>
       }
     }
 
-    const fixture = await ControllerTestFixture.create({
-      markup: <Example {...opts.props} />,
+    const fixture = await ControllerTestFixture.create<Example>({
+      markup: <Example />,
       plugins: [
         graphQlTestPlugin({
           schema,
@@ -80,13 +86,10 @@ describe('GraphQLQueryService', () => {
     expect(fixture.render()).to.have.text(JSON.stringify({ uppercaseString: 'FOO' }))
   })
 
-  it('should allow specifying props in decorator opts', async () => {
+  it('should refetch when providing new props', async () => {
     const fixture = await setup({
       props: {
-        sourceStringProp: 'foo'
-      },
-      decoratorOpts: {
-        props: (parent) => ({ sourceString: parent.props.sourceStringProp })
+        sourceString: 'foo'
       },
       query: gql`
         query($sourceString: String) {
@@ -104,7 +107,14 @@ describe('GraphQLQueryService', () => {
       }
     })
 
-    expect(fixture.render()).to.have.text(JSON.stringify({ uppercaseString: 'FOO' }))
+    fixture.render()
+    fixture.instance.query.setQueryVariables({ sourceString: 'bar' })
+
+    do {
+      // yield to event loop
+      await Promise.resolve()
+    }
+    while (!fixture.render().text().match(JSON.stringify({ uppercaseString: 'BAR' })))
   })
 
   it('should rethrow query errors in render', async () => {
