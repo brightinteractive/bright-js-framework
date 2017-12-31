@@ -71,17 +71,17 @@ export abstract class TestFixture<Instance> {
   }
 
   async applySelector<T, Props>(selectFn: (x: any, props?: Props) => T, props?: Props): Promise<T> {
-    const selector = await this.applyService(createSelectService(selectFn, () => props))
+    const selector = await this.applyService(createSelectService(selectFn))
     return selector.value
   }
 
   async spySelector<T, Props>(selectFn: (x: any, props?: Props) => T, props?: Props): Promise<T[]> {
-    const spy = await this.apply<SelectSpy<T>>(createSelectSpyService(selectFn, () => props))
+    const spy = await this.apply<SelectSpy<T>>(createSelectSpyService(selectFn))
     return spy.values
   }
 
   async nextValueOf<T, Props>(selectFn: (x: any, props?: Props) => T, props?: Props): Promise<T> {
-    const spy = await this.apply<SelectSpy<T>>(createSelectSpyService(selectFn, () => props))
+    const spy = await this.apply<SelectSpy<T>>(createSelectSpyService(selectFn))
     return spy.nextValue()
   }
 

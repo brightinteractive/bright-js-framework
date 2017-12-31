@@ -224,8 +224,11 @@ export interface SelectFn<T, Props = {}> {
  * Service created by the @select decorator containing current value of
  * an application state subscription.
  */
-export interface StateSelection<T> {
+export interface StateSelection<T, Props = {}> {
   value: T
+
+  /** Set the parameters passed to the selector function to select state */
+  setSelectionParams(props: Props): void
 }
 
 /** Dispatcher function injected by the @dispatcher() decorator */
@@ -275,8 +278,8 @@ export function state(key: string): PropertyDecorator {
  *  }
  * ```
  */
-export function select<T, Props = {}>(selectFn: SelectFn<T, Props>, props?: (x: {}) => Props): PropertyDecorator {
-  return decorateServiceProperty(createSelectService(selectFn, props))
+export function select<T, Props = {}>(selectFn: SelectFn<T, Props>): PropertyDecorator {
+  return decorateServiceProperty(createSelectService(selectFn))
 }
 
 /**
