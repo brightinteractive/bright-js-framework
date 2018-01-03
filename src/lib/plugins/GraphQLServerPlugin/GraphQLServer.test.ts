@@ -126,6 +126,36 @@ describe('GraphQLServer', () => {
     expect(result.data!.getOrganisation.id).to.eql('2')
   })
 
+  it('should merge resolvers for types split between different SchemaType classes but defined in the same .graphql file', async () => {
+    const server = new GraphQLServer({
+      connectors: [],
+      schema: [
+        {
+          typeDefs: UserAndOrganisationSchema,
+          resolvers: [
+            UserQuery,
+            UserResolver,
+            OrganisationQuery,
+            OrganisationResolver,
+          ]
+        }
+      ]
+    })
+
+    const result = await execute({
+      schema: server.schema!,
+      document: gql`
+        query {
+          getUser(id: "1") { id }
+          getOrganisation(id: "2") { id }
+        }
+      `
+    })
+
+    expect(result.data!.getUser.id).to.eql('1')
+    expect(result.data!.getOrganisation.id).to.eql('2')
+  })
+
   it('should choose an aribitrary resolver on conflict between resolvers', async () => {
     @decorateSchemaType('Query')
     class QueryResolver1 extends SchemaType {
