@@ -34,34 +34,7 @@ describe('GraphQLServer', () => {
     ])
   })
 
-  it('should merge schemas together', () => {
-    const server = new GraphQLServer({
-      connectors: [],
-      schema: [
-        {
-          typeDefs: UserSchema,
-          resolvers: [
-            UserQuery,
-            UserResolver,
-          ]
-        },
-        {
-          typeDefs: OrganisationSchema,
-          resolvers: [
-            OrganisationQuery,
-            OrganisationResolver,
-          ]
-        }
-      ]
-    })
-
-    expect(server.schema!.getTypeMap()).to.contain.keys('User', 'Query', 'Organisation')
-
-    const queryType = server.schema!.getTypeMap().Query as GraphQLObjectType
-    expect(queryType.getFields()).to.contain.keys('getUser', 'getOrganisation')
-  })
-
-  it('should add id resolver to types', () => {
+  it('should add id resolver to types', async () => {
     const server = new GraphQLServer({
       connectors: [],
       schema: [
@@ -75,8 +48,16 @@ describe('GraphQLServer', () => {
       ]
     })
 
-    const userType = server.schema!.getTypeMap().User as GraphQLObjectType
-    expect(userType.getFields()).to.contain.keys('id')
+    const result = await execute({
+      schema: server.schema!,
+      document: gql`
+        query {
+          getUser(id: "1") { id }
+        }
+      `
+    })
+
+    expect(result.data!.getUser.id).to.eql('1')
   })
 
   rootTypes.forEach((typeName) => {
@@ -110,21 +91,42 @@ describe('GraphQLServer', () => {
     })
   })
 
-  it('should generate stub schema when missing a resolver', () => {
+  it('should merge schemas together', async () => {
     const server = new GraphQLServer({
       connectors: [],
       schema: [
         {
-          resolvers: [],
-          typeDefs: UserSchema
+          typeDefs: UserSchema,
+          resolvers: [
+            UserQuery,
+            UserResolver,
+          ]
+        },
+        {
+          typeDefs: OrganisationSchema,
+          resolvers: [
+            OrganisationQuery,
+            OrganisationResolver,
+          ]
         }
       ]
     })
 
-    expect(server.schema!.getTypeMap()).to.contain.keys('User')
+    const result = await execute({
+      schema: server.schema!,
+      document: gql`
+        query {
+          getUser(id: "1") { id }
+          getOrganisation(id: "2") { id }
+        }
+      `
+    })
+
+    expect(result.data!.getUser.id).to.eql('1')
+    expect(result.data!.getOrganisation.id).to.eql('2')
   })
 
-  it('should return an choose an aribitrary resolver on conflict between resolvers', async () => {
+  it('should choose an aribitrary resolver on conflict between resolvers', async () => {
     @decorateSchemaType('Query')
     class QueryResolver1 extends SchemaType {
       @decorateResolver
@@ -229,8 +231,8 @@ class UserResolver extends SchemaType {
 @decorateSchemaType('Query')
 class UserQuery extends SchemaType {
   @decorateResolver
-  getUser(id: string) {
-    return id
+  getUser(props: { id: string }) {
+    return props.id
   }
 }
 
@@ -256,14 +258,31 @@ class OrganisationResolver extends SchemaType {
 @decorateSchemaType('Query')
 class OrganisationQuery extends SchemaType {
   @decorateResolver
-  getOrganisation(id: string) {
-    return id
+  getOrganisation(props: { id: string }) {
+    return props.id
   }
 }
 
 const OrganisationSchema = `
   type Query {
     getOrganisation(id: String!): Organisation
+  }
+
+  type Organisation {
+    id: ID!
+    orgName: String
+  }
+`
+
+const UserAndOrganisationSchema = `
+  type Query {
+    getUser(id: String!): User
+    getOrganisation(id: String!): Organisation
+  }
+
+  type User {
+    id: ID!
+    name: String
   }
 
   type Organisation {
