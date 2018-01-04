@@ -81,7 +81,7 @@ export async function handler({ port }: RunCommandOpts) {
   })
 
   function getEntrypointFiles() {
-    const filePattern = path.join('src', 'pages', '**', '*.@(t|j)s?(x)')
+    const filePattern = 'src/pages/**/*.@(t|j)s?(x)'
     return glob.sync(filePattern).map((subpath) => path.resolve(subpath))
   }
 
