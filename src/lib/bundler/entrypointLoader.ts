@@ -54,7 +54,7 @@ export function entrypointLoaderImpl(this: LoaderContext) {
   addDependencies(this, topLevelModules)
 
   return [
-    `var entry = require("${entry}").default;`,
+    `var entry = require(${JSON.stringify(entry)}).default;`,
     `var modules = ${generateModuleMap(topLevelModules)};`,
     `var options = ${JSON.stringify(options)};`,
     `module.exports = entry(modules, options);`,
@@ -95,7 +95,7 @@ function generateMap(contents: Record<string, string>) {
 }
 
 function generateRequireFn(moduleName: string) {
-  return `function(){ return require("${moduleName}"); }`
+  return `function(){ return require(${JSON.stringify(moduleName)}); }`
 }
 
 function encodeObject(object: {}) {
