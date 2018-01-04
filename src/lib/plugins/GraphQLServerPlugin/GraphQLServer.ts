@@ -1,5 +1,5 @@
 import { GraphQLSchema, GraphQLFieldResolver, DocumentNode } from 'graphql'
-import { flatMap, fromPairs } from 'lodash'
+import { flatMap } from 'lodash'
 import { mergeSchemas, makeExecutableSchema } from 'graphql-tools'
 import { GraphQLOptions } from 'apollo-server-core'
 import { ApplicationContext } from '../../core/ApplicationContext'
@@ -94,18 +94,26 @@ export class GraphQLServer {
    */
   private createFieldResolversForTypes(resolverTypes: ResolverConstructor[]): Record<string, Record<string, GraphQLFieldResolver<string, any>>> {
     const rootTypes = ['Query', 'Mutation']
+    const resolverTypeMap: Record<string, Record<string, GraphQLFieldResolver<any, any>>> = {}
 
-    return fromPairs(resolverTypes.map((ResolverClass) => {
-      const resolveFnMap = fromPairs(
-        Array.from(getResolvers(ResolverClass)).map((key) => [key, this.createFieldResolver(ResolverClass, key)])
-      )
+    resolverTypes.forEach((ResolverClass) => {
+      const resolverMethods = getResolvers(ResolverClass)
+      const typeName = getSchemaTypename(ResolverClass)
 
-      if (!rootTypes.includes(getSchemaTypename(ResolverClass))) {
-        resolveFnMap.id = (id: string) => id
+      resolverTypeMap[typeName] = resolverTypeMap[typeName] || {}
+
+      return resolverMethods.forEach((propName) => {
+        resolverTypeMap[typeName][propName] = this.createFieldResolver(ResolverClass, propName)
+      })
+    })
+
+    Object.keys(resolverTypeMap).forEach((typeName) => {
+      if (!rootTypes.includes(typeName)) {
+        resolverTypeMap[typeName].id = (id: string) => id
       }
+    })
 
-      return [getSchemaTypename(ResolverClass), resolveFnMap]
-    }))
+    return resolverTypeMap
   }
 
   /**
