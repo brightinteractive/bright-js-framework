@@ -1,5 +1,4 @@
 import * as glob from 'glob'
-import * as dotenv from 'dotenv'
 import { runPluginLoaderHook } from '../../lib/bundler/PluginLoader'
 import { getConfig } from '../../lib/server/getConfig'
 import getImplicitProjectPluginConfigurationsFromFilepaths from '../../lib/server/getProjectPluginConfigs'
@@ -28,8 +27,6 @@ export const builder = {
 }
 
 export async function handler({ port, devServer }: RunCommandOpts) {
-  loadEnvironment()
-
   const appConfig = getConfig()
   const plugins = {
     ...appConfig.plugins,
@@ -49,9 +46,5 @@ export async function handler({ port, devServer }: RunCommandOpts) {
       config: appConfig,
       port
     })
-  }
-
-  function loadEnvironment() {
-    dotenv.config()
   }
 }

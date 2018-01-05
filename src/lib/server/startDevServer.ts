@@ -3,14 +3,13 @@ import * as devserver from 'webpack-dev-middleware'
 import * as hot from 'webpack-hot-middleware'
 import hotServer  = require('webpack-hot-server-middleware')
 import * as express from 'express'
-import * as path from 'path'
-import * as glob from 'glob'
 import errorOverlay = require('react-dev-utils/errorOverlayMiddleware')
 import { pick } from 'lodash'
 import { getWebpackConfig } from '../bundler/getWebpackConfig'
 import { renderHtmlWrapper } from './renderHtmlWrapper'
 import { PluginConstructor } from '../core/PluginConfig'
 import { Config } from './Config'
+import { getEntrypointFiles } from './setup'
 
 export interface DevServerOpts {
   port: number
@@ -47,11 +46,6 @@ export async function startDevserver({ port, plugins, config }: DevServerOpts) {
     const address = `http://localhost:${server.address().port}`
     process.stderr.write(`Development server started on ${address}\n`)
   })
-
-  function getEntrypointFiles() {
-    const filePattern = 'src/pages/**/*.@(t|j)s?(x)'
-    return glob.sync(filePattern).map((subpath) => path.resolve(subpath))
-  }
 
   function getFrontendEnvironment(): NodeJS.ProcessEnv {
     return pick(process.env, config.frontendEnvironment)
