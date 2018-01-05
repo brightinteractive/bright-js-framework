@@ -35,15 +35,6 @@ export interface GraphQLQuery<T, Variables = {}> {
 }
 
 export interface GraphQLQueryOpts {
-  /**
-   * Function mapping from the controller or service that a query is added to to an object
-   * containing props for the query.
-   *
-   * By default, the query will use any relevant props provided to the parent, however you
-   * may wish to take props from other services or perform some kind of calculation or remapping
-   * on them.
-   */
-  props?: (parent: any) => {}
 }
 
 /**
