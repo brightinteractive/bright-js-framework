@@ -7,9 +7,6 @@ import { spyService } from './mocks/SpyService'
 import { Service, decorateServiceProperty } from './Service'
 import { decorateController } from './Controller'
 import { ControllerTestFixture } from '../fixtures/ControllerTestFixture'
-import { spy } from 'sinon'
-import { PluginConfig, exportDependency } from './PluginConfig'
-import { injectDependency } from './InjectionClient';
 
 describe('load()', () => {
   it('should descend shallowly through primitive element types', async () => {
@@ -211,26 +208,15 @@ describe('load()', () => {
 
   context('when controller with load hook dynamically inserted into DOM', () => {
     function setup() {
-      class Provider extends PluginConfig {
-        @exportDependency('data')
-        data = {}
-      }
+      let state = 'not-loaded'
 
-      /** Representative example of a service that loads data and saves it to a shared cache */
       class MyService extends Service {
-        @injectDependency('data')
-        data: any 
-
         async serviceWillLoad() {
-          this.data.state = 'loaded'
+          state = 'loaded'
         }
 
         get stateValue() {
-          if (!this.data.state) {
-            throw new Error('Data is not yet available')
-          }
-
-          return this.data.state
+          return state
         }
       }
 
@@ -239,15 +225,10 @@ describe('load()', () => {
         @decorateServiceProperty(MyService)
         service: MyService
 
-        componentWillMount() {
-
-        }
-
         render() {
           return <div>{this.service.stateValue}</div>
         }
       }
-
 
       @decorateController
       class Parent extends React.PureComponent<{}, { child: React.ReactElement<{}> }> {
@@ -256,17 +237,14 @@ describe('load()', () => {
         }
       }
 
-      return { Parent, Child, Provider }
+      return { Parent, Child }
     }
 
     it('should not render the child initially', async () => {
-      const { Parent, Child, Provider } = setup()
-
-      Child.prototype.render = spy(Child.prototype.render)
+      const { Parent, Child } = setup()
 
       const fixture = await ControllerTestFixture.create({
-        markup: <Parent />,
-        plugins: [Provider]
+        markup: <Parent />
       })
 
       fixture.instance.setState({
@@ -277,11 +255,10 @@ describe('load()', () => {
     })
 
     it('should load data and render once fetched', async () => {
-      const { Parent, Child, Provider } = setup()
+      const { Parent, Child } = setup()
 
       const fixture = await ControllerTestFixture.create({
-        markup: <Parent />,
-        plugins: [Provider]
+        markup: <Parent />
       })
 
       fixture.instance.setState({
@@ -291,6 +268,5 @@ describe('load()', () => {
       await fixture.waitForController(Child)
       expect(fixture.render()).to.contain(<div>loaded</div>)
     })
-    
   })
 })

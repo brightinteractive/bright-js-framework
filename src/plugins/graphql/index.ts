@@ -14,7 +14,7 @@ export default function createGraphQLPlugin(props: GraphQlPluginOpts): PluginCon
   return _createGraphQLPlugin(props)
 }
 
-export interface GraphQLQuery<T, Variables = {}> {
+export interface GraphQLQuery<T> {
   /**
    * Current selected data for the query.
    *
@@ -22,16 +22,6 @@ export interface GraphQLQuery<T, Variables = {}> {
    * not yet be available. This will throw an exception.
    */
   readonly data: T
-
-  /**
-   * Indicate whether or not data is currently being fetched
-   */
-  readonly loading: boolean
-
-  /**
-   * Set the query variables provided to the query
-   */
-  setQueryVariables(variables: Variables): void
 }
 
 export interface GraphQLQueryOpts {

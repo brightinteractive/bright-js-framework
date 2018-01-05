@@ -12,11 +12,10 @@ import GraphQLPlugin, { GraphQLAction } from './GraphQLPlugin.common'
 export interface GraphQLQueryService<Result> extends Service {
   readonly data: Result
   readonly optionalData: Result | undefined
-
-  setQueryVariables(variables: {}): void
 }
 
 export interface GraphQLQueryProps {
+  props?: (parent: any) => {}
 }
 
 export interface GraphQLQueryServiceState {
@@ -31,8 +30,6 @@ export function decorateGraphQLQuery(query: DocumentNode, opts: GraphQLQueryProp
 
   class GraphQLQueryServiceImpl<Result> extends Service<GraphQLQueryServiceState> {
     private queryObserver: Subscription
-    private variables = {}
-    private hasMounted: boolean = false
 
     @injectDependency(ApolloClient)
     client: ApolloClient<any>
@@ -82,17 +79,13 @@ export function decorateGraphQLQuery(query: DocumentNode, opts: GraphQLQueryProp
       return this.state.loading || false
     }
 
+    get variables() {
+      return opts.props ? opts.props(this.parent) : this.controllerProps
+    }
+
     get queryConfig(): WatchQueryOptions {
       const { variables } = this
       return { query, variables, errorPolicy: 'all' }
-    }
-
-    setQueryVariables(variables: {}) {
-      this.variables = variables
-      
-      if (this.hasMounted) {
-        this.subscribe()
-      }
     }
 
     serviceWillLoad(): Promise<void> {
@@ -124,19 +117,6 @@ export function decorateGraphQLQuery(query: DocumentNode, opts: GraphQLQueryProp
     }
 
     serviceDidMount() {
-      this.hasMounted = true
-      this.subscribe()
-    }
-
-    serviceWillUnmount() {
-      this.queryObserver.unsubscribe()
-    }
-  
-    private subscribe() {
-      if (this.queryObserver) {
-        this.queryObserver.unsubscribe()
-      }
-
       this.queryObserver = this.client.watchQuery(this.queryConfig).subscribe({
         next: ({ data, loading, stale, errors }) => {
           this.setState({
@@ -147,6 +127,10 @@ export function decorateGraphQLQuery(query: DocumentNode, opts: GraphQLQueryProp
           })
         }
       })
+    }
+
+    serviceWillUnmount() {
+      this.queryObserver.unsubscribe()
     }
   }
 

@@ -2,37 +2,28 @@ import {Store} from 'redux'
 import {Service, ServiceConstructor} from '../../core/Service'
 import {injectStore} from './StorePlugin'
 
-export interface StateSelector<T, Props = {}> extends Service {
+export interface StateSelector<T> extends Service {
   readonly value: T
-  setSelectionParams(props: Props): void
 }
 
 export type SelectServiceConstructor<T> = ServiceConstructor<StateSelector<T>>
 
-export function createSelectService(selector: (x: any, props?: any) => any): SelectServiceConstructor<any> {
+export function createSelectService(selector: (x: any, props?: any) => any, getProps?: (x: any) => any): SelectServiceConstructor<any> {
   class SelectService extends Service<{ value: any }> {
-    private props: {} = {}
+    state = {value: undefined}
 
     @injectStore
     private store: Store<any>
-    
-    private unsubscribe: () => void
 
-    get value() {
-      return this.state.value
+    get selectorProps() {
+      return getProps ? getProps(this.parent) : this.controllerProps
     }
 
-    setSelectionParams(props: any) {
-      this.props = props
+    unsubscribe: () => void
 
+    handleStoreChange = () => {
       this.setState({
-        value: this.select()
-      })
-    }
-
-    serviceWillMount() {
-      this.setState({
-        value: this.select()
+        value: selector(this.store.getState(), this.selectorProps)
       })
     }
 
@@ -46,14 +37,12 @@ export function createSelectService(selector: (x: any, props?: any) => any): Sel
       }
     }
 
-    private select() {
-      return selector(this.store.getState(), this.props)
-    }
-    
-    private handleStoreChange = () => {
-      this.setState({
-        value: this.select()
-      })
+    get value() {
+      if (typeof this.state.value === 'undefined') {
+        return selector(this.store.getState(), this.selectorProps)
+      }
+
+      return this.state.value
     }
   }
 

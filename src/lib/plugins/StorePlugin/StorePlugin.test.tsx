@@ -72,33 +72,27 @@ describe('StorePlugin', () => {
     expect(unsubscribe).to.have.been.calledOnce
   })
 
-  it('should not create a store if no reducers are installed', () => {
-    expect((createStorePlugin([]) as any).store).to.be.undefined
+  it('should pass controller props through to selector', async () => {
+    const fixture = await ControllerTestFixture.create<CounterView>({
+      plugins: [CounterPlugin],
+      markup: <CounterView overrideValue={123} />
+    })
+
+    expect(fixture.instance.counter.value).to.eql(123
+    )
   })
 
-  context('when props change', () => {
-    it('should update immediately', async () => {
-      const selector = (_: {}, props: { value: number}) => props.value
-      const fixture = await ServiceTestFixture.create({
-        plugins: [CounterPlugin],
-        service: createSelectService(selector)
-      })
-
-      fixture.instance.setSelectionParams({ value: 3 })
-      expect(fixture.instance.value).to.eql(3)
+  it('should use props function if provided', async () => {
+    const selector = (_: {}, props: { value: number}) => props.value
+    const fixture = await ServiceTestFixture.create({
+      plugins: [CounterPlugin],
+      service: createSelectService(selector, () => ({ value: 3 }))
     })
-    
-    it('should use params to select in future', async () => {
-      const selector = (_: {}, props: { value: number}) => props.value
-      const fixture = await ServiceTestFixture.create({
-        plugins: [CounterPlugin],
-        service: createSelectService(selector)
-      })
 
-      fixture.instance.setSelectionParams({ value: 3 })
-      fixture.store.dispatch({ type: 'increment' })
+    expect(fixture.instance.value).to.eql(3)
+  })
 
-      expect(fixture.instance.value).to.eql(3)
-    })
+  it('should not create a store if no reducers are installed', () => {
+    expect((createStorePlugin([]) as any).store).to.be.undefined
   })
 })
