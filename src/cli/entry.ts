@@ -2,7 +2,9 @@
 
 import * as path from 'path'
 import * as fs from 'fs'
+import * as dotenv from 'dotenv'
 
+dotenv.config()
 const localCliPath = path.resolve(path.join('node_modules', '@brightinteractive', 'bright-js-framework', 'cli', 'cli.js'))
 
 if (pathExists(localCliPath)) {
