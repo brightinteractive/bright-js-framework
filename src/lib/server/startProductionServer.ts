@@ -6,12 +6,12 @@ import { renderHtmlWrapper } from './renderHtmlWrapper'
 import { Config } from './Config'
 import { enforceCustomerFacingHttps } from './enforceHttps'
 
-export interface DevServerOpts {
+export interface ProductionServerOpts {
   port: number
   config: Config
 }
 
-export async function startProductionServer({ port, config }: DevServerOpts) {
+export async function startProductionServer({ port, config }: ProductionServerOpts) {
   const app = express()
   const pluginMiddleware = require(path.resolve('build/server/bundle.js'))
 
