@@ -81,7 +81,7 @@ export function controllerSubtreeLoadingService(): PropertyDecorator {
 
       this.setState({ dynamicLoadState: 'loading' })
 
-      await load(React.createElement(controller, props))
+      await load(React.createElement(controller, props), this.context)
 
       // Mount all descendents, then reqlinquish responsibility for loading descendents.
       this.setState({ dynamicLoadState: 'mounting-subtree' }, () => {
