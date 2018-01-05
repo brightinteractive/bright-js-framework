@@ -4,12 +4,12 @@ import {TestFixture, TestFixtureProps} from './TestFixture'
 
 export interface ServiceTestFixtureProps<ServiceType extends Service> extends TestFixtureProps {
   service: ServiceConstructor<ServiceType>
-  props?: any
+  unmounted?: boolean
 }
 
 export class ServiceTestFixture<ServiceType extends Service> extends TestFixture<ServiceType>  {
   readonly serviceConstructor: ServiceConstructor
-  readonly serviceProps?: any
+  readonly unmounted?: boolean
   service: ServiceType
 
   static async create<ServiceType extends Service>(props: ServiceTestFixtureProps<ServiceType>): Promise<ServiceTestFixture<ServiceType>> {
@@ -18,10 +18,10 @@ export class ServiceTestFixture<ServiceType extends Service> extends TestFixture
     return instance
   }
 
-  private constructor({ service, props, ...superProps }: ServiceTestFixtureProps<ServiceType>) {
+  private constructor({ service, unmounted, ...superProps }: ServiceTestFixtureProps<ServiceType>) {
     super(superProps)
     this.serviceConstructor = service
-    this.serviceProps = props
+    this.unmounted = unmounted
   }
 
   get instance() {
@@ -52,7 +52,6 @@ export class ServiceTestFixture<ServiceType extends Service> extends TestFixture
 
     this.allServices.forEach((service: Service) => {
       const container = new ServiceContainer()
-      container.props = this.serviceProps
 
       initializeService(service, container)
     })
@@ -63,11 +62,13 @@ export class ServiceTestFixture<ServiceType extends Service> extends TestFixture
       }
     })
 
-    this.allServices.forEach((service) => {
-      if (service.serviceDidMount) {
-        service.serviceDidMount()
-      }
-    })
+    if (!this.unmounted) {
+      this.allServices.forEach((service) => {
+        if (service.serviceDidMount) {
+          service.serviceDidMount()
+        }
+      })
+    }
 
     this.appContext.applicationDidMount()
   }
