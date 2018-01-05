@@ -30,8 +30,10 @@ export class Link extends React.PureComponent<React.HTMLProps<{}>> {
   }
 
   render() {
+    const { href, onClick, ...props } = this.props
+
     return (
-      <a href={this.props.href} onClick={this.handleClick}>
+      <a {...props} href={this.props.href} onClick={this.handleClick}>
         {this.props.children}
       </a>
     )
