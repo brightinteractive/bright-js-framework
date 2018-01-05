@@ -7,13 +7,13 @@ import { Config } from '../../lib/server/Config'
 
 export const command = 'init'
 
-export function handler() {
-  status.stage('Initializing project', () => {
+export async function handler() {
+  await status.stage('Initializing project', () => {
     writeConfigs()
     writePlaceholderPages()
   })
 
-  status.stage('Installing dependencies', () => {
+  await status.stage('Installing dependencies', () => {
     installDependencies()
   })
 

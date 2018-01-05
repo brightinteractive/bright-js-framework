@@ -16,6 +16,14 @@ describe('<Link />', () => {
     expect(evt.defaultPrevented).to.be.true
   })
 
+  it('should pass through props', async () => {
+    const fixture = await ControllerTestFixture.create({
+      markup: <Link className="foo" />
+    })
+
+    expect(fixture.render()).to.have.className('foo')
+  })
+
   it('should use default behavior for right click', async () => {
     const fixture = await ControllerTestFixture.create({
       markup: <Link href="/foo" />
