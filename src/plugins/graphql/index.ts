@@ -48,9 +48,10 @@ export function query(queryDoc: any, opts?: GraphQLQueryOpts): PropertyDecorator
 /**
  * Install a GraphQL client.
  *
- * In general, you should use either @query or @mutation to interact with GraphQL APIs.
- * However in some plugins and services, it may be necessary to perform queries and mutations
- * with an imperative API.
+ * In general, you should use @query to fetch from GraphQL APIs.
+ *
+ * Use this decorator when you need to either perform a mutation or otherwise interact
+ * with the local GraphQL cache.
  *
  * This injects an instance of ApolloClient. Consult the Apollo documentation for details about
  * how to use it: https://www.apollographql.com/docs/react/reference/index.html
