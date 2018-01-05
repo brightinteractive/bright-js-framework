@@ -15,11 +15,18 @@ export function createSelectService(selector: (x: any, props?: any) => any): Sel
 
     @injectStore
     private store: Store<any>
-    
+
     private unsubscribe: () => void
 
     get value() {
-      return this.state.value
+      if (this.unsubscribe) {
+        return this.state.value
+
+      } else {
+        // If we haven't subscribed to store updates yet (and aren't caching the selected state)
+        // then select directly from the store
+        return this.select()
+      }
     }
 
     setSelectionParams(props: any) {
@@ -49,7 +56,7 @@ export function createSelectService(selector: (x: any, props?: any) => any): Sel
     private select() {
       return selector(this.store.getState(), this.props)
     }
-    
+
     private handleStoreChange = () => {
       this.setState({
         value: this.select()

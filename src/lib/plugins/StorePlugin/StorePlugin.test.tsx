@@ -23,7 +23,8 @@ describe('StorePlugin', () => {
     }
   }
 
-  const counter = createSelectService((state, props) => props.overrideValue || state.counter)
+  const counterValueSelector = (state: any, props: any) => props.overrideValue || state.counter
+  const counter = createSelectService(counterValueSelector)
 
   @decorateController
   class CounterView extends React.PureComponent<{ overrideValue?: number }> {
@@ -59,6 +60,10 @@ describe('StorePlugin', () => {
     expect(fixture.instance.counter.value).to.eql(1)
   })
 
+  it('should not create a store if no reducers are installed', () => {
+    expect((createStorePlugin([]) as any).store).to.be.undefined
+  })
+
   it('should unsubscribe from store updates when unmounted', async () => {
     const fixture = await ControllerTestFixture.create<CounterView>({
       plugins: [CounterPlugin],
@@ -72,8 +77,16 @@ describe('StorePlugin', () => {
     expect(unsubscribe).to.have.been.calledOnce
   })
 
-  it('should not create a store if no reducers are installed', () => {
-    expect((createStorePlugin([]) as any).store).to.be.undefined
+  it('should react to current store value before parent is mounted', async () => {
+    const fixture = await ServiceTestFixture.create({
+      plugins: [CounterPlugin],
+      service: createSelectService(counterValueSelector),
+      unmounted: true
+    })
+
+    fixture.store.dispatch({ type: 'increment' })
+
+    expect(fixture.instance.value).to.eql(1)
   })
 
   context('when props change', () => {
@@ -87,7 +100,7 @@ describe('StorePlugin', () => {
       fixture.instance.setSelectionParams({ value: 3 })
       expect(fixture.instance.value).to.eql(3)
     })
-    
+
     it('should use params to select in future', async () => {
       const selector = (_: {}, props: { value: number}) => props.value
       const fixture = await ServiceTestFixture.create({

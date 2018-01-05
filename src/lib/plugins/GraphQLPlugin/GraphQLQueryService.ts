@@ -33,6 +33,7 @@ export function decorateGraphQLQuery(query: DocumentNode, opts: GraphQLQueryProp
     private queryObserver: Subscription
     private variables = {}
     private hasMounted: boolean = false
+    state: GraphQLQueryServiceState = {}
 
     @injectDependency(ApolloClient)
     client: ApolloClient<any>
@@ -89,7 +90,7 @@ export function decorateGraphQLQuery(query: DocumentNode, opts: GraphQLQueryProp
 
     setQueryVariables(variables: {}) {
       this.variables = variables
-      
+
       if (this.hasMounted) {
         this.subscribe()
       }
@@ -131,7 +132,7 @@ export function decorateGraphQLQuery(query: DocumentNode, opts: GraphQLQueryProp
     serviceWillUnmount() {
       this.queryObserver.unsubscribe()
     }
-  
+
     private subscribe() {
       if (this.queryObserver) {
         this.queryObserver.unsubscribe()
