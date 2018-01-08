@@ -18,11 +18,11 @@ export function patchMethod(object: any, method: string, impl: (this: any) => vo
  * Override a getter method with a method that receives the overridden getter method's
  * return value as a parameter.
  */
-export function patchReturnMethod<T, Key extends keyof T, Value>(object: T, method: Key, impl: (parentValue: () => Value | undefined) => Value): () => Value
-export function patchReturnMethod(object: any, method: string, impl: (parentValue: () => any) => any) {
+export function patchReturnMethod<T, Key extends keyof T, Value>(object: T, method: Key, impl: (parentValue?: Value) => Value): () => Value
+export function patchReturnMethod(object: any, method: string, impl: (this: any) => void) {
   const existingImplementation = object[method] as any
   object[method] = function() {
-    const prev = () => existingImplementation && existingImplementation.apply(this)
+    const prev = existingImplementation && existingImplementation.apply(this)
     return impl.call(this, prev)
   }
 
